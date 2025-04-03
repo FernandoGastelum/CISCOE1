@@ -5,6 +5,7 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import javax.persistence.*;
 
 /**
@@ -12,44 +13,119 @@ import javax.persistence.*;
  * @author gaspa
  */
 @Entity
+@Table(name = "reserva")
 public class Reserva implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_reserva")
+    private Long idReserva;
+    
+    @Column(name = "fecha_reserva", nullable = false)
+    @Temporal (TemporalType.DATE)
+    private Calendar fechaReserva;
+    
+    @Column(name = "hora_inicio", nullable = false)
+    @Temporal (TemporalType.TIME)
+    private Calendar horaInicio;
+    
+    @Column(name = "hora_fin", nullable = false)
+    @Temporal (TemporalType.TIME)
+    private Calendar horaFin;
 
-    public Long getId() {
-        return id;
+    @ManyToOne
+    @JoinColumn(name = "id_computadora", nullable = false)
+    private Computadora computadora;
+
+    @ManyToOne
+    @JoinColumn(name = "id_estudiante", nullable = false)
+    private Estudiante estudiante;
+
+    @ManyToOne
+    @JoinColumn(name = "id_horario", nullable = false)
+    private Horario horario;
+
+    // Constructores
+    public Reserva() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Reserva(Calendar fechaReserva, Calendar horaInicio, Calendar horaFin, Computadora computadora, Estudiante estudiante, Horario horario) {
+        this.fechaReserva = fechaReserva;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.computadora = computadora;
+        this.estudiante = estudiante;
+        this.horario = horario;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+    // Getters y Setters
+    public Long getIdReserva() {
+        return idReserva;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Reserva)) {
-            return false;
-        }
-        Reserva other = (Reserva) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+    public void setIdReserva(Long idReserva) {
+        this.idReserva = idReserva;
+    }
+
+    public Calendar getFechaReserva() {
+        return fechaReserva;
+    }
+
+    public void setFechaReserva(Calendar fechaReserva) {
+        this.fechaReserva = fechaReserva;
+    }
+
+    public Calendar getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(Calendar horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public Calendar getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(Calendar horaFin) {
+        this.horaFin = horaFin;
+    }
+
+    public Computadora getComputadora() {
+        return computadora;
+    }
+
+    public void setComputadora(Computadora computadora) {
+        this.computadora = computadora;
+    }
+
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
+    }
+
+    public Horario getHorario() {
+        return horario;
+    }
+
+    public void setHorario(Horario horario) {
+        this.horario = horario;
     }
 
     @Override
     public String toString() {
-        return "Entidades.Reserva[ id=" + id + " ]";
+        return "Reserva{" +
+                "idReserva=" + idReserva +
+                ", fechaReserva=" + fechaReserva +
+                ", horaInicio=" + horaInicio +
+                ", horaFin=" + horaFin +
+                ", computadora=" + computadora.getIdComputadora() +
+                ", estudiante=" + estudiante.getIdEstudiante() +
+                ", horario=" + horario.getIdHorario() +
+                '}';
     }
     
 }

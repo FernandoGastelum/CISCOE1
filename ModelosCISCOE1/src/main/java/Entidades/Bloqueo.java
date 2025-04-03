@@ -22,9 +22,11 @@ public class Bloqueo implements Serializable {
     private Long idBloqueo;
 
     @Column(name = "fecha_bloqueo", nullable = false)
+    @Temporal (TemporalType.DATE)
     private Calendar fechaBloqueo;
 
     @Column(name = "fecha_liberacion", nullable = true)
+    @Temporal (TemporalType.DATE)
     private Calendar fechaLiberacion;
 
     @Column(name = "motivo", nullable = false, length = 250)

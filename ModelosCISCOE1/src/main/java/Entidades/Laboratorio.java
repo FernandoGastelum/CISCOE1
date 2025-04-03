@@ -23,11 +23,13 @@ public class Laboratorio implements Serializable {
 
     @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
-
+    
     @Column(name = "hora_apertura", nullable = false)
+    @Temporal (TemporalType.TIME)
     private Calendar horaApertura;
 
     @Column(name = "hora_cierre", nullable = false)
+    @Temporal (TemporalType.TIME)
     private Calendar horaCierre;
 
     @Column(name = "contrasena_maestra", nullable = false, length = 255)
