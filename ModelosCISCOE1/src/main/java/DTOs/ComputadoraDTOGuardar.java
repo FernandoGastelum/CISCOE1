@@ -25,10 +25,10 @@ public class ComputadoraDTOGuardar {
     public ComputadoraDTOGuardar() {
     }
 
-    public ComputadoraDTOGuardar(Integer numeroMaquina, String direccionIp, Boolean estatus, Laboratorio laboratorio, Carrera carrera) {
+    public ComputadoraDTOGuardar(Integer numeroMaquina, String direccionIp, Laboratorio laboratorio, Carrera carrera) {
         this.numeroMaquina = numeroMaquina;
         this.direccionIp = direccionIp;
-        this.estatus = estatus;
+        this.estatus = true;
         this.laboratorio = laboratorio;
         this.carrera = carrera;
     }

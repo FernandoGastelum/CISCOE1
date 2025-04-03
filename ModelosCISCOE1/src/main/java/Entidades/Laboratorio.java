@@ -36,7 +36,7 @@ public class Laboratorio implements Serializable {
     @Column(name = "contrasena_maestra", nullable = false, length = 255)
     private String contrasenaMaestra;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_instituto",nullable = false)
     private Instituto instituto;
     

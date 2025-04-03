@@ -4,16 +4,27 @@
  */
 
 import DTOs.CarreraDTOGuardar;
+import DTOs.ComputadoraDTO;
+import DTOs.ComputadoraDTOGuardar;
 import DTOs.EstudianteDTOGuardar;
+import DTOs.LaboratorioDTOGuardar;
 import Entidades.Carrera;
+import Entidades.Computadora;
 import Entidades.Estudiante;
+import Entidades.Instituto;
+import Entidades.Laboratorio;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.ICarreraDAO;
+import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Interfaz.IEstudianteDAO;
+import ModuloAdministracion.Interfaz.ILaboratorioDAO;
 import ModuloAdministracion.Persistencia.CarreraDAO;
+import ModuloAdministracion.Persistencia.ComputadoraDAO;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
 import ModuloAdministracion.Persistencia.EstudianteDAO;
+import ModuloAdministracion.Persistencia.LaboratorioDAO;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Before;
@@ -44,5 +55,47 @@ public class PersistenciaTEST {
         } catch (PersistenciaException ex) {
             Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    //@Test
+    public void agregarLaboratorio() {
+        try {
+            ILaboratorioDAO iLaboratorioDAO = new LaboratorioDAO(entityManager);
+            Instituto institutoEntidad = new Instituto("Instituto Tecnologico de Sonora", "ITSON");
+            LaboratorioDTOGuardar laboratorioDTO = new LaboratorioDTOGuardar("CISCO", this.horaInicio(), this.horaCierre(), "Maestra12345", institutoEntidad);
+            Laboratorio laboratorioEntidad = iLaboratorioDAO.guardar(laboratorioDTO);
+            assertEquals("CISCO", iLaboratorioDAO.obtenerPorID(laboratorioEntidad.getIdLaboratorio()).getNombre());
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    @Test
+    public void agregarComputadora(){
+        try {
+            IComputadoraDAO IComputadoraDAO = new ComputadoraDAO(entityManager);
+            Instituto institutoEntidad = new Instituto("Instituto Tecnologico de Sonora", "ITSON");
+            Laboratorio laboratorioEntidad = new Laboratorio("CISCO", this.horaInicio(), this.horaCierre(), "Maestra12345", institutoEntidad);
+            Carrera carreraEntidad = new Carrera("Ingenieria en Sistemas", 300, "Azul");
+            ComputadoraDTOGuardar computadoraDTO = new ComputadoraDTOGuardar(1, "192.0.1.5", laboratorioEntidad, carreraEntidad);
+            Computadora computadoraEntidad = IComputadoraDAO.guardar(computadoraDTO);
+            assertEquals("192.0.1.5", IComputadoraDAO.obtenerPorID(computadoraEntidad.getIdComputadora()).getDireccionIp());
+        } catch (PersistenciaException e) {
+            Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+    public Calendar horaInicio(){
+        Calendar hora = Calendar.getInstance();
+        hora.set(Calendar.HOUR_OF_DAY, 10);
+        hora.set(Calendar.MINUTE, 0);
+        hora.set(Calendar.SECOND, 0);
+        hora.set(Calendar.MILLISECOND, 0);
+        return hora;
+    }
+    public Calendar horaCierre(){
+        Calendar hora = Calendar.getInstance();
+        hora.set(Calendar.HOUR_OF_DAY, 22);
+        hora.set(Calendar.MINUTE, 0);
+        hora.set(Calendar.SECOND, 0);
+        hora.set(Calendar.MILLISECOND, 0);
+        return hora;
     }
 }
