@@ -6,6 +6,7 @@ package Entidades;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -35,9 +36,12 @@ public class Laboratorio implements Serializable {
     @Column(name = "contrasena_maestra", nullable = false, length = 255)
     private String contrasenaMaestra;
 
-    @ManyToOne
-    @JoinColumn(name = "id_instituto", nullable = false)
+    @ManyToOne()
+    @JoinColumn(name = "id_instituto",nullable = false)
     private Instituto instituto;
+    
+    @OneToMany(mappedBy = "laboratorio")
+    private List<Computadora> computadoras;
 
     // Constructores
     public Laboratorio() {
@@ -58,6 +62,14 @@ public class Laboratorio implements Serializable {
 
     public void setIdLaboratorio(Long idLaboratorio) {
         this.idLaboratorio = idLaboratorio;
+    }
+
+    public List<Computadora> getComputadoras() {
+        return computadoras;
+    }
+
+    public void setComputadoras(List<Computadora> computadoras) {
+        this.computadoras = computadoras;
     }
 
     public String getNombre() {

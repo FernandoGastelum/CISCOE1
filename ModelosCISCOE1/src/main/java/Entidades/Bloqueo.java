@@ -31,6 +31,10 @@ public class Bloqueo implements Serializable {
 
     @Column(name = "motivo", nullable = false, length = 250)
     private String motivo;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_estudiante",nullable = false)
+    private Estudiante estudiante;
 
     // Constructores
     public Bloqueo() {
@@ -48,6 +52,14 @@ public class Bloqueo implements Serializable {
 
     public void setIdBloqueo(Long idBloqueo) {
         this.idBloqueo = idBloqueo;
+    }
+
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
     }
 
     public Calendar getFechaBloqueo() {
@@ -76,11 +88,9 @@ public class Bloqueo implements Serializable {
 
     @Override
     public String toString() {
-        return "Bloqueo{" +
-                "idBloqueo=" + idBloqueo +
-                ", fechaBloqueo=" + fechaBloqueo +
-                ", motivo='" + motivo + '\'' +
-                '}';
+        return "Bloqueo{" + "idBloqueo=" + idBloqueo + ", fechaBloqueo=" + fechaBloqueo + ", fechaLiberacion=" + fechaLiberacion + ", motivo=" + motivo + ", estudiante=" + estudiante + '}';
     }
+
+    
     
 }

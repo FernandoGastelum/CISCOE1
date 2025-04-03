@@ -3,13 +3,13 @@
   <persistence-unit name="ConexionJPA" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>Entidades.Instituto</class>
-    <class>Entidades.laboratorio</class>
     <class>Entidades.Computadora</class>
     <class>Entidades.Estudiante</class>
     <class>Entidades.Carrera</class>
     <class>Entidades.Reserva</class>
     <class>Entidades.Bloqueo</class>
     <class>Entidades.Horario</class>
+    <class>Entidades.Laboratorio</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/CISCOE1?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

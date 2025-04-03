@@ -5,6 +5,7 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -39,26 +40,43 @@ public class Estudiante implements Serializable {
     @JoinColumn(name = "id_carrera", nullable = false)
     private Carrera carrera;
 
-    @ManyToOne
-    @JoinColumn(name = "id_bloqueo")
-    private Bloqueo bloqueo;
+    @OneToMany(mappedBy = "estudiante")
+    private List<Bloqueo> bloqueos;
+    
+    @OneToMany(mappedBy = "estudiante")
+    private List<Reserva> reservas;
 
     public Estudiante() {
     }
 
-    public Estudiante(String nombre, String apellidoPaterno, String apellidoMaterno, String contrasena, Carrera carrera, Bloqueo bloqueo) {
+    public Estudiante(String nombre, String apellidoPaterno, String apellidoMaterno, String contrasena, Carrera carrera) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.estatusInscripcion = true;
         this.contrasena = contrasena;
         this.carrera = carrera;
-        this.bloqueo = bloqueo;
     }
 
     // Getters y Setters
     public Long getIdEstudiante() {
         return idEstudiante;
+    }
+
+    public List<Bloqueo> getBloqueos() {
+        return bloqueos;
+    }
+
+    public void setBloqueos(List<Bloqueo> bloqueos) {
+        this.bloqueos = bloqueos;
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
     }
 
     public void setIdEstudiante(Long idEstudiante) {
@@ -113,25 +131,11 @@ public class Estudiante implements Serializable {
         this.carrera = carrera;
     }
 
-    public Bloqueo getBloqueo() {
-        return bloqueo;
-    }
-
-    public void setBloqueo(Bloqueo bloqueo) {
-        this.bloqueo = bloqueo;
-    }
 
     @Override
     public String toString() {
-        return "Estudiante{" +
-                "idEstudiante=" + idEstudiante +
-                ", nombre='" + nombre + '\'' +
-                ", apellidoPaterno='" + apellidoPaterno + '\'' +
-                ", apellidoMaterno='" + apellidoMaterno + '\'' +
-                ", estatusInscripcion=" + estatusInscripcion +
-                ", carrera=" + carrera.getIdCarrera() +
-                ", bloqueo=" + (bloqueo != null ? bloqueo.getIdBloqueo() : "Sin bloqueo") +
-                '}';
+        return "Estudiante{" + "idEstudiante=" + idEstudiante + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", estatusInscripcion=" + estatusInscripcion + ", contrasena=" + contrasena + ", carrera=" + carrera + ", bloqueos=" + bloqueos + '}';
     }
+    
     
 }

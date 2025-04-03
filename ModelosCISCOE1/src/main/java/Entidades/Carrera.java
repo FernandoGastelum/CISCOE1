@@ -5,6 +5,7 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -30,6 +31,12 @@ public class Carrera implements Serializable {
     @Column(name = "color", nullable = false, length = 50)
     private String color;
 
+    @OneToMany(mappedBy = "carrera")
+    private List<Computadora> computadoras;
+    
+    @OneToMany(mappedBy = "carrera", cascade = CascadeType.PERSIST)
+    private List<Estudiante> estudiantes;
+    
     public Carrera() {
     }
 
@@ -37,6 +44,22 @@ public class Carrera implements Serializable {
         this.nombreCarrera = nombreCarrera;
         this.tiempoMaximoDiario = tiempoMaximoDiario;
         this.color = color;
+    }
+
+    public List<Computadora> getComputadoras() {
+        return computadoras;
+    }
+
+    public void setComputadoras(List<Computadora> computadoras) {
+        this.computadoras = computadoras;
+    }
+
+    public List<Estudiante> getEstudiantes() {
+        return estudiantes;
+    }
+
+    public void setEstudiantes(List<Estudiante> estudiantes) {
+        this.estudiantes = estudiantes;
     }
 
     public Long getIdCarrera() {

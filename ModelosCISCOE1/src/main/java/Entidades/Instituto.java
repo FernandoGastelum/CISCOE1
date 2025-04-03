@@ -5,6 +5,7 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -25,6 +26,9 @@ public class Instituto implements Serializable {
 
     @Column(name = "nombre_abreviado", nullable = false, length = 30)
     private String nombreAbreviado;
+    
+    @OneToMany(mappedBy = "instituto")
+    private List<Laboratorio> laboratorios;
 
     public Instituto() {
     }
@@ -40,6 +44,14 @@ public class Instituto implements Serializable {
 
     public void setIdInstituto(Long idInstituto) {
         this.idInstituto = idInstituto;
+    }
+
+    public List<Laboratorio> getLaboratorios() {
+        return laboratorios;
+    }
+
+    public void setLaboratorios(List<Laboratorio> laboratorios) {
+        this.laboratorios = laboratorios;
     }
 
     public String getNombreOficial() {
