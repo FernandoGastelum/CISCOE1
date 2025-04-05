@@ -8,12 +8,12 @@ package ModuloAdministracion;
  *
  * @author Knocmare
  */
-public class panelEstudiantesListado extends javax.swing.JPanel {
+public class panelInstitutosListado extends javax.swing.JPanel {
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelEstudiantesListado() {
+    public panelInstitutosListado() {
         initComponents();
     }
 
@@ -29,7 +29,7 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
         jPanelPantalla = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaEstudiantes = new javax.swing.JTable();
+        tablaBloqueos = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
 
@@ -41,7 +41,7 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 96)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Estudiantes");
+        jLabel1.setText("Institutos");
 
         javax.swing.GroupLayout jPanelPantallaLayout = new javax.swing.GroupLayout(jPanelPantalla);
         jPanelPantalla.setLayout(jPanelPantallaLayout);
@@ -57,8 +57,8 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        tablaEstudiantes.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
-        tablaEstudiantes.setModel(new javax.swing.table.DefaultTableModel(
+        tablaBloqueos.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+        tablaBloqueos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -66,7 +66,7 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Nombré", "Estatus", "Editar", "Eliminar"
+                "ID", "Nombré Oficial", "Abreviatura", "Editar", "Eliminar"
             }
         ) {
             Class[] types = new Class [] {
@@ -84,16 +84,16 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tablaEstudiantes);
+        jScrollPane1.setViewportView(tablaBloqueos);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 64)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Lista de Estudiantes");
+        jLabel2.setText("Lista de Institutos");
 
         btnAgregar.setBackground(new java.awt.Color(27, 54, 143));
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
-        btnAgregar.setText("+ Agregar Estudiante");
+        btnAgregar.setText("+ Agregar Instituo");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -130,6 +130,6 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanelPantalla;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tablaEstudiantes;
+    private javax.swing.JTable tablaBloqueos;
     // End of variables declaration//GEN-END:variables
 }
