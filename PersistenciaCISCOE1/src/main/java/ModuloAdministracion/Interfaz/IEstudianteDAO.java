@@ -15,11 +15,12 @@ import java.util.List;
  * @author gaspa
  */
 public interface IEstudianteDAO {
+    
     Estudiante guardar(EstudianteDTOGuardar alumno) throws PersistenciaException;
     
     Estudiante obtenerPorID(Long id) throws PersistenciaException;
     
     List<Estudiante> obtener() throws PersistenciaException;
     
-    EstudianteDTO obtenerEstudianteDTO(Long id);
+    EstudianteDTO obtenerDTO(Long id);
 }

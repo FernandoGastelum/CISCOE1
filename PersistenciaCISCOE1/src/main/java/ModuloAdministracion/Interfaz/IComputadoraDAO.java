@@ -4,17 +4,23 @@
  */
 package ModuloAdministracion.Interfaz;
 
-import DTOs.CarreraDTOGuardar;
+import DTOs.ComputadoraDTO;
 import DTOs.ComputadoraDTOGuardar;
-import Entidades.Carrera;
 import Entidades.Computadora;
 import Excepcion.PersistenciaException;
+import java.util.List;
 
 /**
  *
  * @author gaspa
  */
 public interface IComputadoraDAO {
+    
     Computadora guardar(ComputadoraDTOGuardar computadora) throws PersistenciaException;
+    
     Computadora obtenerPorID(Long id) throws PersistenciaException;
+    
+    List<Computadora> obtener() throws PersistenciaException;
+    
+    ComputadoraDTO obtenerDTO(Long id);
 }

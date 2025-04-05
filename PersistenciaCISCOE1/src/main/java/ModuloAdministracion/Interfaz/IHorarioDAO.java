@@ -4,17 +4,23 @@
  */
 package ModuloAdministracion.Interfaz;
 
-import DTOs.ComputadoraDTOGuardar;
+import DTOs.HorarioDTO;
 import DTOs.HorarioDTOGuardar;
-import Entidades.Computadora;
 import Entidades.Horario;
 import Excepcion.PersistenciaException;
+import java.util.List;
 
 /**
  *
  * @author gaspa
  */
 public interface IHorarioDAO {
+    
     Horario guardar(HorarioDTOGuardar horario) throws PersistenciaException;
+    
     Horario obtenerPorID(Long id) throws PersistenciaException;
+    
+    List<Horario> obtener() throws PersistenciaException;
+    
+    HorarioDTO obtenerDTO(Long id);
 }

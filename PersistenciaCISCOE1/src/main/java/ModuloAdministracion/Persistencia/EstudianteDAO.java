@@ -12,23 +12,31 @@ import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  *
  * @author gaspa
  */
-public class EstudianteDAO implements IEstudianteDAO{
+public class EstudianteDAO implements IEstudianteDAO {
+
     private IEntityManager em;
-    public EstudianteDAO(IEntityManager em){
+
+    public EstudianteDAO(IEntityManager em) {
         this.em = em;
     }
+
     @Override
     public Estudiante guardar(EstudianteDTOGuardar estudiante) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
-        
+
         Estudiante estudianteEntidad = new Estudiante(estudiante.getNombre(), estudiante.getApellidoPaterno(), estudiante.getApellidoPaterno(), estudiante.getContrasena(), estudiante.getCarrera());
-        
+
         entity.persist(estudianteEntidad);
         entity.getTransaction().commit();
         return estudianteEntidad;
@@ -38,21 +46,50 @@ public class EstudianteDAO implements IEstudianteDAO{
     public Estudiante obtenerPorID(Long id) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         Estudiante alumno = entity.find(Estudiante.class, id);
-        if(alumno!=null){
+        if (alumno != null) {
             return alumno;
-        }else{
-            throw new PersistenciaException("No se encontro un estudiante con el id "+id);
+        } else {
+            throw new PersistenciaException("No se encontro un estudiante con el id " + id);
         }
     }
 
     @Override
     public List<Estudiante> obtener() throws PersistenciaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EntityManager entity = em.crearEntityManager();
+        TypedQuery<Estudiante> query = entity.createQuery("""
+                                                         SELECT e
+                                                         FROM Estudiante e
+                                                         """, Estudiante.class);
+        if(query.getResultList()==null){
+            throw new PersistenciaException("No se encontraron resultados");
+        }
+        return query.getResultList();
     }
 
     @Override
-    public EstudianteDTO obtenerEstudianteDTO(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public EstudianteDTO obtenerDTO(Long id) {
+        EntityManager entity = em.crearEntityManager();
+        CriteriaBuilder cb = entity.getCriteriaBuilder();
+        CriteriaQuery<EstudianteDTO> cq = cb.createQuery(EstudianteDTO.class);
+        Root<Estudiante> estudiante = cq.from(Estudiante.class);
+        cq.select(cb.construct(EstudianteDTO.class,
+                estudiante.get("idEstudiante"),
+                estudiante.get("nombre"),
+                estudiante.get("apellidoPaterno"),
+                estudiante.get("apellidoMaterno"),
+                estudiante.get("estatusInscripcion"),
+                estudiante.get("contrasena"),
+                estudiante.get("carrera"),
+                estudiante.get("bloqueo")))
+          .where(cb.equal(estudiante.get("idEstudiante"), id));
+
+        TypedQuery<EstudianteDTO> query = entity.createQuery(cq);
+
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
-    
+
 }

@@ -4,13 +4,20 @@
  */
 package ModuloAdministracion.Persistencia;
 
+import DTOs.BloqueoDTO;
 import DTOs.BloqueoDTOGuardar;
 import Entidades.Bloqueo;
 import Entidades.Carrera;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IBloqueoDAO;
 import ModuloAdministracion.Interfaz.IEntityManager;
+import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  *
@@ -42,6 +49,42 @@ public class BloqueoDAO implements IBloqueoDAO{
             return bloqueo;
         }else{
             throw new PersistenciaException("No se encontro un bloqueo con el id "+id);
+        }
+    }
+
+    @Override
+    public List<Bloqueo> obtener() throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        TypedQuery<Bloqueo> query = entity.createQuery("""
+                                                         SELECT b
+                                                         FROM Bloqueo b
+                                                         """, Bloqueo.class);
+        if(query.getResultList()==null){
+            throw new PersistenciaException("No se encontraron resultados");
+        }
+        return query.getResultList();
+    }
+
+    @Override
+    public BloqueoDTO obtenerDTO(Long id) {
+        EntityManager entity = em.crearEntityManager();
+        CriteriaBuilder cb = entity.getCriteriaBuilder();
+        CriteriaQuery<BloqueoDTO> cq = cb.createQuery(BloqueoDTO.class);
+        Root<Bloqueo> bloqueo = cq.from(Bloqueo.class);
+        
+        cq.select(cb.construct(BloqueoDTO.class,
+                bloqueo.get("idBloqueo"),
+                bloqueo.get("fechaBloqueo"),
+                bloqueo.get("fechaLiberacion"),
+                bloqueo.get("motivo")))
+          .where(cb.equal(bloqueo.get("idBloqueo"), id));
+
+        TypedQuery<BloqueoDTO> query = entity.createQuery(cq);
+
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
         }
     }
 }

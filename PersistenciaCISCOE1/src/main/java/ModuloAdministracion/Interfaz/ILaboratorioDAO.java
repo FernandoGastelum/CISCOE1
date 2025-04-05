@@ -4,17 +4,23 @@
  */
 package ModuloAdministracion.Interfaz;
 
-import DTOs.ComputadoraDTOGuardar;
+import DTOs.LaboratorioDTO;
 import DTOs.LaboratorioDTOGuardar;
-import Entidades.Computadora;
 import Entidades.Laboratorio;
 import Excepcion.PersistenciaException;
+import java.util.List;
 
 /**
  *
  * @author gaspa
  */
 public interface ILaboratorioDAO {
+    
     Laboratorio guardar(LaboratorioDTOGuardar laboratorio) throws PersistenciaException;
+    
     Laboratorio obtenerPorID(Long id) throws PersistenciaException;
+    
+    List<Laboratorio> obtener() throws PersistenciaException;
+    
+    LaboratorioDTO obtenerDTO(Long id);
 }

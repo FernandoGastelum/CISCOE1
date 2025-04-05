@@ -5,7 +5,6 @@
 package ModuloAdministracion.Interfaz;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
 /**
  *
