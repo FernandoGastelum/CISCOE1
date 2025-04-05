@@ -4,6 +4,7 @@
  */
 package ModuloReservas.Persistencia;
 
+import DTOs.ReservaDTO;
 import DTOs.ReservaDTOGuardar;
 import Entidades.Reserva;
 import Excepcion.PersistenciaException;
@@ -11,7 +12,11 @@ import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloReservas.Interfaz.IReservaDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  *
@@ -56,6 +61,32 @@ public class ReservaDAO implements IReservaDAO{
         }else{
             throw new PersistenciaException("No se encontro una reserva con el id "+id);
         }
+    }
+
+    @Override
+    public ReservaDTO obtenerReservaDTO(Long id) {
+        EntityManager entity = em.crearEntityManager();
+        CriteriaBuilder cb = entity.getCriteriaBuilder();
+        CriteriaQuery<ReservaDTO> cq = cb.createQuery(ReservaDTO.class);
+        Root<Reserva> reserva = cq.from(Reserva.class);
+        cq.select(cb.construct(ReservaDTO.class,
+                reserva.get("idReserva"),
+                reserva.get("fechaReserva"),
+                reserva.get("horaInicio"),
+                reserva.get("horaFin"),
+                reserva.get("computadora"),
+                reserva.get("estudiante"),
+                reserva.get("horario")))
+          .where(cb.equal(reserva.get("idReserva"), id));
+
+        TypedQuery<ReservaDTO> query = entity.createQuery(cq);
+
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    
     }
     
 }

@@ -14,7 +14,9 @@ import java.util.List;
  * @author gaspa
  */
 public interface IReservaNegocio {
-    ReservaDTO guardar(ReservaDTOGuardar alumno) throws NegocioException;
+    ReservaDTO guardar(ReservaDTOGuardar reserva) throws NegocioException;
     
     List<ReservaDTO> obtener() throws NegocioException;
+    
+    ReservaDTO obtenerPorID() throws NegocioException;
 }

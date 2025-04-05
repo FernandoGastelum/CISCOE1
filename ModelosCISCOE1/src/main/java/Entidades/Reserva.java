@@ -33,15 +33,15 @@ public class Reserva implements Serializable {
     @Temporal (TemporalType.TIME)
     private Calendar horaFin;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "id_computadora", nullable = false)
     private Computadora computadora;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "id_estudiante", nullable = false)
     private Estudiante estudiante;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "id_horario", nullable = false)
     private Horario horario;
 

@@ -5,6 +5,7 @@
 package ModuloReservas.Interfaz;
 
 import DTOs.BloqueoDTOGuardar;
+import DTOs.ReservaDTO;
 import DTOs.ReservaDTOGuardar;
 import Entidades.Bloqueo;
 import Entidades.Reserva;
@@ -19,4 +20,5 @@ public interface IReservaDAO {
     Reserva guardar(ReservaDTOGuardar reserva) throws PersistenciaException;
     List<Reserva> obtener() throws PersistenciaException;
     Reserva obtenerPorID(Long id) throws PersistenciaException;
+    ReservaDTO obtenerReservaDTO(Long id);
 }
