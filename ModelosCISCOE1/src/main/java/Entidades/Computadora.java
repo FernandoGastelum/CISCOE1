@@ -41,10 +41,10 @@ public class Computadora implements Serializable {
     public Computadora() {
     }
 
-    public Computadora(Integer numeroMaquina, String direccionIp, Boolean estatus, Laboratorio laboratorio, Carrera carrera) {
+    public Computadora(Integer numeroMaquina, String direccionIp, Laboratorio laboratorio, Carrera carrera) {
         this.numeroMaquina = numeroMaquina;
         this.direccionIp = direccionIp;
-        this.estatus = estatus;
+        this.estatus = true;
         this.laboratorio = laboratorio;
         this.carrera = carrera;
     }

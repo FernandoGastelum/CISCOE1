@@ -28,10 +28,9 @@ public class ReservaDTOGuardar {
     public ReservaDTOGuardar() {
     }
 
-    public ReservaDTOGuardar(Calendar fechaReserva, Calendar horaInicio, Calendar horaFin, Computadora computadora, Estudiante estudiante, Horario horario) {
+    public ReservaDTOGuardar(Calendar fechaReserva, Calendar horaInicio, Computadora computadora, Estudiante estudiante, Horario horario) {
         this.fechaReserva = fechaReserva;
         this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
         this.computadora = computadora;
         this.estudiante = estudiante;
         this.horario = horario;

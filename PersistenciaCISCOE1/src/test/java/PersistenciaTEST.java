@@ -8,11 +8,14 @@ import DTOs.ComputadoraDTO;
 import DTOs.ComputadoraDTOGuardar;
 import DTOs.EstudianteDTOGuardar;
 import DTOs.LaboratorioDTOGuardar;
+import DTOs.ReservaDTOGuardar;
 import Entidades.Carrera;
 import Entidades.Computadora;
 import Entidades.Estudiante;
+import Entidades.Horario;
 import Entidades.Instituto;
 import Entidades.Laboratorio;
+import Entidades.Reserva;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.ICarreraDAO;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
@@ -24,6 +27,8 @@ import ModuloAdministracion.Persistencia.ComputadoraDAO;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
 import ModuloAdministracion.Persistencia.EstudianteDAO;
 import ModuloAdministracion.Persistencia.LaboratorioDAO;
+import ModuloReservas.Interfaz.IReservaDAO;
+import ModuloReservas.Persistencia.ReservaDAO;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +47,6 @@ public class PersistenciaTEST {
     public void setUp() {
         entityManager = new EntityManagerDAO();
     }
-    @Test
     public void agregarEstudiante(){
         try {
             IEstudianteDAO IEstudianteDAO = new EstudianteDAO(entityManager);
@@ -56,7 +60,6 @@ public class PersistenciaTEST {
             Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    //@Test
     public void agregarLaboratorio() {
         try {
             ILaboratorioDAO iLaboratorioDAO = new LaboratorioDAO(entityManager);
@@ -68,7 +71,7 @@ public class PersistenciaTEST {
             Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    @Test
+    
     public void agregarComputadora(){
         try {
             IComputadoraDAO IComputadoraDAO = new ComputadoraDAO(entityManager);
@@ -98,4 +101,40 @@ public class PersistenciaTEST {
         hora.set(Calendar.MILLISECOND, 0);
         return hora;
     }
+    public Calendar horaInicioReserva(){
+        Calendar hora = Calendar.getInstance();
+        hora.set(Calendar.HOUR_OF_DAY, 12);
+        hora.set(Calendar.MINUTE, 0);
+        hora.set(Calendar.SECOND, 0);
+        hora.set(Calendar.MILLISECOND, 0);
+        return hora;
+    }
+    public Calendar horaCierreReserva(){
+        Calendar hora = Calendar.getInstance();
+        hora.set(Calendar.HOUR_OF_DAY, 22);
+        hora.set(Calendar.MINUTE, 0);
+        hora.set(Calendar.SECOND, 0);
+        hora.set(Calendar.MILLISECOND, 0);
+        return hora;
+    }
+    @Test
+    public void agregarReserva(){
+        try {
+            IReservaDAO reservaDAO = new ReservaDAO(entityManager);
+            
+            Instituto institutoEntidad = new Instituto("Instituto Tecnologico de Sonora", "ITSON");
+            Laboratorio laboratorioEntidad = new Laboratorio("CISCO", this.horaInicio(), this.horaCierre(), "Maestra12345", institutoEntidad);
+            Carrera carreraEntidad = new Carrera("Ingenieria en Sistemas", 300, "Azul");
+            Estudiante estudianteEntidad = new Estudiante("Estudiante", "Paterno", "Materno", "12345", carreraEntidad);
+            Computadora computadoraEntidad = new Computadora(1, "192.0.1.5", laboratorioEntidad, carreraEntidad);
+            Horario horarioEntidad = new Horario(this.horaInicio(), this.horaCierre(), Calendar.getInstance(), laboratorioEntidad);
+            ReservaDTOGuardar reservaDTO = new ReservaDTOGuardar(Calendar.getInstance(), this.horaInicioReserva(), computadoraEntidad, estudianteEntidad, horarioEntidad);
+            Reserva reservaEntidad = reservaDAO.guardar(reservaDTO);
+            
+            assertEquals("192.0.1.5", reservaDAO.obtenerPorID(reservaEntidad.getIdReserva()).getComputadora().getDireccionIp());
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 }

@@ -9,6 +9,7 @@ import DTOs.ReservaDTOGuardar;
 import Entidades.Bloqueo;
 import Entidades.Reserva;
 import Excepcion.PersistenciaException;
+import java.util.List;
 
 /**
  *
@@ -16,4 +17,6 @@ import Excepcion.PersistenciaException;
  */
 public interface IReservaDAO {
     Reserva guardar(ReservaDTOGuardar reserva) throws PersistenciaException;
+    List<Reserva> obtener() throws PersistenciaException;
+    Reserva obtenerPorID(Long id) throws PersistenciaException;
 }

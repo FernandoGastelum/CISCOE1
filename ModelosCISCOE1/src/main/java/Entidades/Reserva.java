@@ -29,19 +29,19 @@ public class Reserva implements Serializable {
     @Temporal (TemporalType.TIME)
     private Calendar horaInicio;
     
-    @Column(name = "hora_fin", nullable = false)
+    @Column(name = "hora_fin", nullable = true)
     @Temporal (TemporalType.TIME)
     private Calendar horaFin;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_computadora", nullable = false)
     private Computadora computadora;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_estudiante", nullable = false)
     private Estudiante estudiante;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_horario", nullable = false)
     private Horario horario;
 
@@ -49,10 +49,9 @@ public class Reserva implements Serializable {
     public Reserva() {
     }
 
-    public Reserva(Calendar fechaReserva, Calendar horaInicio, Calendar horaFin, Computadora computadora, Estudiante estudiante, Horario horario) {
+    public Reserva(Calendar fechaReserva, Calendar horaInicio, Computadora computadora, Estudiante estudiante, Horario horario) {
         this.fechaReserva = fechaReserva;
         this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
         this.computadora = computadora;
         this.estudiante = estudiante;
         this.horario = horario;

@@ -26,7 +26,7 @@ public class ComputadoraDAO implements IComputadoraDAO{
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
         
-        Computadora computadoraEntidad = new Computadora(computadora.getNumeroMaquina(), computadora.getDireccionIp(), computadora.getEstatus(), computadora.getLaboratorio(), computadora.getCarrera());
+        Computadora computadoraEntidad = new Computadora(computadora.getNumeroMaquina(), computadora.getDireccionIp(), computadora.getLaboratorio(), computadora.getCarrera());
         
         entity.persist(computadoraEntidad);
         entity.getTransaction().commit();
