@@ -78,7 +78,7 @@ public class ReservaPruebas {
     }
     public ComputadoraDTO registrarComputadora() throws NegocioException{
         try {
-            ComputadoraDTOGuardar computadoraDTO = new ComputadoraDTOGuardar(4, "192.1.2.245", this.obtenerLab(1L), this.obtenerCarrera(1L));
+            ComputadoraDTOGuardar computadoraDTO = new ComputadoraDTOGuardar(2, "192.2.2.245", this.obtenerLab(1L), this.obtenerCarrera(1L));
             return computadoraNegocio.guardar(computadoraDTO);
         } catch (PersistenciaException | NegocioException ex) {
             throw new NegocioException(ex.getMessage());

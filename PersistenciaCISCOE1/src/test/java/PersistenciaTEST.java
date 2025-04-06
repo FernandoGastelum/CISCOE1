@@ -60,6 +60,7 @@ public class PersistenciaTEST {
             Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    @Test
     public void agregarLaboratorio() {
         try {
             ILaboratorioDAO iLaboratorioDAO = new LaboratorioDAO(entityManager);
@@ -85,7 +86,6 @@ public class PersistenciaTEST {
             Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-    @Test
     public void agregarCarrera(){
         ICarreraDAO carreraDAO = new CarreraDAO(entityManager);
         CarreraDTOGuardar carreraDTO = new CarreraDTOGuardar("ISW", 350, "ROJO");

@@ -6,30 +6,38 @@ package ModuloReservas;
 
 import DTOs.EstudianteDTO;
 import Excepcion.NegocioException;
+import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
 import ModuloAdministracion.Negocio.EstudianteNegocio;
+import ModuloAdministracion.Persistencia.ComputadoraDAO;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
 import ModuloAdministracion.Persistencia.EstudianteDAO;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
  *
- * @author gaspa
+ * @author Ilian Gastelum,
  */
 public class FrmLoginReservas extends javax.swing.JFrame {
     private final IEstudianteNegocio estudianteNegocio;
+    private IComputadoraDAO computadoraDAO;
+    
     /**
      * Creates new form FrmLoginReservas
      * @param estudianteDAO
+     * @param computadoraDAO
      */
-    public FrmLoginReservas(IEstudianteDAO estudianteDAO) {
-        estudianteNegocio = new EstudianteNegocio(estudianteDAO);
+    public FrmLoginReservas(IEstudianteDAO estudianteDAO, IComputadoraDAO computadoraDAO) {
+        this.estudianteNegocio = new EstudianteNegocio(estudianteDAO);
+        this.computadoraDAO = computadoraDAO;
         initComponents();
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
     public boolean validarUsuario(String id){
         try {
@@ -68,7 +76,7 @@ public class FrmLoginReservas extends javax.swing.JFrame {
         setMaximumSize(new java.awt.Dimension(1980, 1080));
         setPreferredSize(new java.awt.Dimension(1980, 1080));
 
-        jPanel1.setBackground(new java.awt.Color(103, 103, 103));
+        jPanel1.setBackground(new java.awt.Color(86, 86, 86));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 60)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -174,7 +182,7 @@ public class FrmLoginReservas extends javax.swing.JFrame {
     private void LoginBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBTNActionPerformed
         if(validarUsuario(usuarioTextField.getText())){
             this.dispose();
-            FrmReservas frmReserva = new FrmReservas();
+            FrmReservas frmReserva = new FrmReservas(computadoraDAO);
             frmReserva.setVisible(true);
         }else{
             JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+usuarioTextField.getText()+" No existe");
@@ -214,7 +222,8 @@ public class FrmLoginReservas extends javax.swing.JFrame {
             public void run() {
                 
                 IEstudianteDAO estudianteDAO = new EstudianteDAO(entityManager);
-                new FrmLoginReservas(estudianteDAO).setVisible(true);
+                IComputadoraDAO computadoraDAO = new ComputadoraDAO(entityManager);
+                new FrmLoginReservas(estudianteDAO,computadoraDAO).setVisible(true);
             }
         });
     }
