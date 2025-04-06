@@ -20,7 +20,6 @@ public class EstudianteDTO {
     private Boolean estatusInscripcion;
     private String contrasena;
     private Carrera carrera;
-    private Bloqueo bloqueo;
 
     /**
      * Constructor por ausencia
@@ -28,7 +27,7 @@ public class EstudianteDTO {
     public EstudianteDTO() {
     }
 
-    public EstudianteDTO(Long idEstudiante, String nombre, String apellidoPaterno, String apellidoMaterno, Boolean estatusInscripcion, String contrasena, Carrera carrera, Bloqueo bloqueo) {
+    public EstudianteDTO(Long idEstudiante, String nombre, String apellidoPaterno, String apellidoMaterno, Boolean estatusInscripcion, String contrasena, Carrera carrera) {
         this.idEstudiante = idEstudiante;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -36,7 +35,6 @@ public class EstudianteDTO {
         this.estatusInscripcion = estatusInscripcion;
         this.contrasena = contrasena;
         this.carrera = carrera;
-        this.bloqueo = bloqueo;
     }
 
     public Long getIdEstudiante() {
@@ -95,13 +93,6 @@ public class EstudianteDTO {
         this.carrera = carrera;
     }
 
-    public Bloqueo getBloqueo() {
-        return bloqueo;
-    }
-
-    public void setBloqueo(Bloqueo bloqueo) {
-        this.bloqueo = bloqueo;
-    }
     
     @Override
     public String toString() {
@@ -112,7 +103,6 @@ public class EstudianteDTO {
                 ", apellidoMaterno='" + apellidoMaterno + '\'' +
                 ", estatusInscripcion=" + estatusInscripcion +
                 ", carrera=" + carrera.getIdCarrera() +
-                ", bloqueo=" + (bloqueo != null ? bloqueo.getIdBloqueo() : "Sin bloqueo") +
                 '}';
     }
     

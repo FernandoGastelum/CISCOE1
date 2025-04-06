@@ -22,5 +22,5 @@ public interface IComputadoraDAO {
     
     List<Computadora> obtener() throws PersistenciaException;
     
-    ComputadoraDTO obtenerDTO(Long id);
+    ComputadoraDTO obtenerDTO(Long id)throws PersistenciaException;
 }

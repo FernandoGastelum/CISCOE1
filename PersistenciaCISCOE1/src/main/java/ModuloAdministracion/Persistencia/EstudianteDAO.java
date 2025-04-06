@@ -13,6 +13,7 @@ import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -67,7 +68,7 @@ public class EstudianteDAO implements IEstudianteDAO {
     }
 
     @Override
-    public EstudianteDTO obtenerDTO(Long id) {
+    public EstudianteDTO obtenerDTO(Long id) throws PersistenciaException{
         EntityManager entity = em.crearEntityManager();
         CriteriaBuilder cb = entity.getCriteriaBuilder();
         CriteriaQuery<EstudianteDTO> cq = cb.createQuery(EstudianteDTO.class);
@@ -79,12 +80,13 @@ public class EstudianteDAO implements IEstudianteDAO {
                 estudiante.get("apellidoMaterno"),
                 estudiante.get("estatusInscripcion"),
                 estudiante.get("contrasena"),
-                estudiante.get("carrera"),
-                estudiante.get("bloqueo")))
+                estudiante.get("carrera")))
           .where(cb.equal(estudiante.get("idEstudiante"), id));
 
         TypedQuery<EstudianteDTO> query = entity.createQuery(cq);
-
+        if(query.getSingleResult()==null){
+            throw new PersistenciaException("No se encontraron resultados");
+        }
         try {
             return query.getSingleResult();
         } catch (NoResultException e) {

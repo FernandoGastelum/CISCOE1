@@ -22,5 +22,5 @@ public interface IEstudianteDAO {
     
     List<Estudiante> obtener() throws PersistenciaException;
     
-    EstudianteDTO obtenerDTO(Long id);
+    EstudianteDTO obtenerDTO(Long id)throws PersistenciaException;
 }

@@ -65,7 +65,7 @@ public class ComputadoraDAO implements IComputadoraDAO{
     }
 
     @Override
-    public ComputadoraDTO obtenerDTO(Long id) {
+    public ComputadoraDTO obtenerDTO(Long id)throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         CriteriaBuilder cb = entity.getCriteriaBuilder();
         CriteriaQuery<ComputadoraDTO> cq = cb.createQuery(ComputadoraDTO.class);
@@ -80,7 +80,9 @@ public class ComputadoraDAO implements IComputadoraDAO{
           .where(cb.equal(computadora.get("idComputadora"), id));
 
         TypedQuery<ComputadoraDTO> query = entity.createQuery(cq);
-
+        if(query.getSingleResult()==null){
+            throw new PersistenciaException("No se encontraron resultados");
+        }
         try {
             return query.getSingleResult();
         } catch (NoResultException e) {

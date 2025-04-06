@@ -44,7 +44,7 @@ public class ReservaNegocio implements IReservaNegocio{
     }
 
     @Override
-    public ReservaDTO obtenerPorID() throws NegocioException {
+    public ReservaDTO obtenerPorID(Long id) throws NegocioException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

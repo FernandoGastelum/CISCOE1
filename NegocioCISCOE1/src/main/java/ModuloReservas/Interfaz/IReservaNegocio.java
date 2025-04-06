@@ -18,5 +18,5 @@ public interface IReservaNegocio {
     
     List<ReservaDTO> obtener() throws NegocioException;
     
-    ReservaDTO obtenerPorID() throws NegocioException;
+    ReservaDTO obtenerPorID(Long id) throws NegocioException;
 }
