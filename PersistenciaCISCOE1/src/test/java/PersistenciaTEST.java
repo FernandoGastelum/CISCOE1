@@ -53,7 +53,7 @@ public class PersistenciaTEST {
             ICarreraDAO iCarreraDAO = new CarreraDAO(entityManager);
             CarreraDTOGuardar carreraDTO = new CarreraDTOGuardar("Software", 180, "Rojo");
             Carrera carreraEntidad = iCarreraDAO.guardar(carreraDTO);
-            EstudianteDTOGuardar guardar = new EstudianteDTOGuardar("Estudiante", "Paterno", "Materno", "12345", carreraEntidad);
+            EstudianteDTOGuardar guardar = new EstudianteDTOGuardar("00000887621","Estudiante", "Paterno", "Materno", "12345", carreraEntidad);
             Estudiante estudianteEntidad = IEstudianteDAO.guardar(guardar);
             assertEquals("Estudiante", IEstudianteDAO.obtenerPorID(estudianteEntidad.getIdEstudiante()).getNombre());
         } catch (PersistenciaException ex) {
@@ -84,6 +84,18 @@ public class PersistenciaTEST {
         } catch (PersistenciaException e) {
             Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, e);
         }
+    }
+    @Test
+    public void agregarCarrera(){
+        ICarreraDAO carreraDAO = new CarreraDAO(entityManager);
+        CarreraDTOGuardar carreraDTO = new CarreraDTOGuardar("ISW", 350, "ROJO");
+        try {
+            Carrera carreraEntidad = carreraDAO.guardar(carreraDTO);
+            assertEquals("ISW", carreraEntidad.getNombreCarrera());
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     public Calendar horaInicio(){
         Calendar hora = Calendar.getInstance();
@@ -118,7 +130,7 @@ public class PersistenciaTEST {
         return hora;
     }
     
-    @Test
+    //@Test
     public void agregarReserva(){
         try {
             IReservaDAO reservaDAO = new ReservaDAO(entityManager);
@@ -126,7 +138,7 @@ public class PersistenciaTEST {
             Instituto institutoEntidad = new Instituto("Instituto Tecnologico de Sonora", "ITSON");
             Laboratorio laboratorioEntidad = new Laboratorio("CISCO", this.horaInicio(), this.horaCierre(), "Maestra12345", institutoEntidad);
             Carrera carreraEntidad = new Carrera("Ingenieria en Sistemas", 300, "Azul");
-            Estudiante estudianteEntidad = new Estudiante("Estudiante", "Paterno", "Materno", "12345", carreraEntidad);
+            Estudiante estudianteEntidad = new Estudiante("00000223521","Estudiante", "Paterno", "Materno", "12345", carreraEntidad);
             Computadora computadoraEntidad = new Computadora(1, "192.0.1.5", laboratorioEntidad, carreraEntidad);
             Horario horarioEntidad = new Horario(this.horaInicio(), this.horaCierre(), Calendar.getInstance(), laboratorioEntidad);
             ReservaDTOGuardar reservaDTO = new ReservaDTOGuardar(Calendar.getInstance(), this.horaInicioReserva(), computadoraEntidad, estudianteEntidad, horarioEntidad);

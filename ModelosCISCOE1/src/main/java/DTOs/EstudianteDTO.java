@@ -14,6 +14,7 @@ import Entidades.Carrera;
 public class EstudianteDTO {
     
     private Long idEstudiante;
+    private String idInstitucional;
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
@@ -27,14 +28,23 @@ public class EstudianteDTO {
     public EstudianteDTO() {
     }
 
-    public EstudianteDTO(Long idEstudiante, String nombre, String apellidoPaterno, String apellidoMaterno, Boolean estatusInscripcion, String contrasena, Carrera carrera) {
+    public EstudianteDTO(Long idEstudiante, String idInstitucional, String nombre, String apellidoPaterno, String apellidoMaterno, Boolean estatusInscripcion, String contrasena, Carrera carrera) {
         this.idEstudiante = idEstudiante;
+        this.idInstitucional = idInstitucional;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.estatusInscripcion = estatusInscripcion;
         this.contrasena = contrasena;
         this.carrera = carrera;
+    }
+
+    public String getIdInstitucional() {
+        return idInstitucional;
+    }
+
+    public void setIdInstitucional(String idInstitucional) {
+        this.idInstitucional = idInstitucional;
     }
 
     public Long getIdEstudiante() {
@@ -93,17 +103,11 @@ public class EstudianteDTO {
         this.carrera = carrera;
     }
 
-    
     @Override
     public String toString() {
-        return "Estudiante{" +
-                "idEstudiante=" + idEstudiante +
-                ", nombre='" + nombre + '\'' +
-                ", apellidoPaterno='" + apellidoPaterno + '\'' +
-                ", apellidoMaterno='" + apellidoMaterno + '\'' +
-                ", estatusInscripcion=" + estatusInscripcion +
-                ", carrera=" + carrera.getIdCarrera() +
-                '}';
+        return "EstudianteDTO{" + "idEstudiante=" + idEstudiante + ", idInstitucional=" + idInstitucional + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", estatusInscripcion=" + estatusInscripcion + ", contrasena=" + contrasena + ", carrera=" + carrera + '}';
     }
+
+    
     
 }

@@ -4,20 +4,45 @@
  */
 package ModuloReservas;
 
+import DTOs.EstudianteDTO;
+import Excepcion.NegocioException;
+import ModuloAdministracion.Interfaz.IEntityManager;
+import ModuloAdministracion.Interfaz.IEstudianteDAO;
+import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import ModuloAdministracion.Negocio.EstudianteNegocio;
+import ModuloAdministracion.Persistencia.EntityManagerDAO;
+import ModuloAdministracion.Persistencia.EstudianteDAO;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author gaspa
  */
 public class FrmLoginReservas extends javax.swing.JFrame {
-
+    private final IEstudianteNegocio estudianteNegocio;
     /**
      * Creates new form FrmLoginReservas
+     * @param estudianteDAO
      */
-    public FrmLoginReservas() {
+    public FrmLoginReservas(IEstudianteDAO estudianteDAO) {
+        estudianteNegocio = new EstudianteNegocio(estudianteDAO);
         initComponents();
     }
-    public void validarUsuario(){
-        
+    public boolean validarUsuario(String id){
+        try {
+            List<EstudianteDTO> listaEstudiantes = estudianteNegocio.obtener();
+            for (EstudianteDTO listaEstudiante : listaEstudiantes) {
+                if(listaEstudiante.getIdInstitucional().equals(id)){
+                    return true;
+                }
+            }
+        } catch (NegocioException ex) {
+            System.out.println("Error "+ex.getMessage());
+        }
+        return false;
     }
 
     /**
@@ -147,13 +172,20 @@ public class FrmLoginReservas extends javax.swing.JFrame {
     }//GEN-LAST:event_usuarioTextFieldActionPerformed
 
     private void LoginBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBTNActionPerformed
-        
+        if(validarUsuario(usuarioTextField.getText())){
+            this.dispose();
+            FrmReservas frmReserva = new FrmReservas();
+            frmReserva.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+usuarioTextField.getText()+" No existe");
+        }
     }//GEN-LAST:event_LoginBTNActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        IEntityManager entityManager = new EntityManagerDAO();
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -180,7 +212,9 @@ public class FrmLoginReservas extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmLoginReservas().setVisible(true);
+                
+                IEstudianteDAO estudianteDAO = new EstudianteDAO(entityManager);
+                new FrmLoginReservas(estudianteDAO).setVisible(true);
             }
         });
     }

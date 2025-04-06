@@ -36,7 +36,7 @@ public class EstudianteDAO implements IEstudianteDAO {
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
 
-        Estudiante estudianteEntidad = new Estudiante(estudiante.getNombre(), estudiante.getApellidoPaterno(), estudiante.getApellidoPaterno(), estudiante.getContrasena(), estudiante.getCarrera());
+        Estudiante estudianteEntidad = new Estudiante(estudiante.getIdInstitucional(), estudiante.getNombre(), estudiante.getApellidoPaterno(), estudiante.getApellidoPaterno(), estudiante.getContrasena(), estudiante.getCarrera());
 
         entity.persist(estudianteEntidad);
         entity.getTransaction().commit();
@@ -75,6 +75,7 @@ public class EstudianteDAO implements IEstudianteDAO {
         Root<Estudiante> estudiante = cq.from(Estudiante.class);
         cq.select(cb.construct(EstudianteDTO.class,
                 estudiante.get("idEstudiante"),
+                estudiante.get("idInstitucional"),
                 estudiante.get("nombre"),
                 estudiante.get("apellidoPaterno"),
                 estudiante.get("apellidoMaterno"),

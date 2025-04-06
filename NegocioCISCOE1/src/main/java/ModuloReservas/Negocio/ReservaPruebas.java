@@ -67,9 +67,10 @@ public class ReservaPruebas {
             System.out.println("Error: "+ ex.getMessage());
         }
     }
+    
     public EstudianteDTO registrarEstudiante() throws NegocioException{
         try {
-            EstudianteDTOGuardar estudianteDTO = new EstudianteDTOGuardar("Bethlehem", "hola", "como estas", "1234566", this.obtenerCarrera(1L));
+            EstudianteDTOGuardar estudianteDTO = new EstudianteDTOGuardar("00000887671","Bethlehem", "hola", "como estas", "1234566", this.obtenerCarrera(1L));
             return estudianteNegocio.guardar(estudianteDTO);
         } catch (PersistenciaException e) {
             throw new NegocioException(e.getMessage());
@@ -142,7 +143,7 @@ public class ReservaPruebas {
         ReservaPruebas prueba = new ReservaPruebas(reservaNegocio,estudianteNegocio, computadoraNegocio);
         
         try {
-            prueba.registrarComputadora();
+            System.out.println(prueba.registrarEstudiante());
         } catch (NegocioException ex) {
             System.out.println("error "+ex.getMessage());
         }

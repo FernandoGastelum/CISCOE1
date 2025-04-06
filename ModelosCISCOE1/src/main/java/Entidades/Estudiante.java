@@ -20,6 +20,8 @@ public class Estudiante implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_estudiante")
     private Long idEstudiante;
+    @Column(name = "id_institucional", unique = true)
+    private String idInstitucional;
 
     @Column(name = "nombre", nullable = false, length = 70)
     private String nombre;
@@ -49,7 +51,8 @@ public class Estudiante implements Serializable {
     public Estudiante() {
     }
 
-    public Estudiante(String nombre, String apellidoPaterno, String apellidoMaterno, String contrasena, Carrera carrera) {
+    public Estudiante(String idInstitucional, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasena, Carrera carrera) {
+        this.idInstitucional = idInstitucional;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -58,7 +61,14 @@ public class Estudiante implements Serializable {
         this.carrera = carrera;
     }
 
-    // Getters y Setters
+    public String getIdInstitucional() {
+        return idInstitucional;
+    }
+
+    public void setIdInstitucional(String idInstitucional) {
+        this.idInstitucional = idInstitucional;
+    }
+
     public Long getIdEstudiante() {
         return idEstudiante;
     }

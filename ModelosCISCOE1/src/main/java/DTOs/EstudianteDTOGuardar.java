@@ -12,7 +12,7 @@ import Entidades.Carrera;
  * @author Ángel Ruíz
  */
 public class EstudianteDTOGuardar {
-    
+    private String idInstitucional;
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
@@ -25,12 +25,21 @@ public class EstudianteDTOGuardar {
     public EstudianteDTOGuardar() {
     }
 
-    public EstudianteDTOGuardar(String nombre, String apellidoPaterno, String apellidoMaterno, String contrasena, Carrera carrera) {
+    public EstudianteDTOGuardar(String idInstitucional, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasena, Carrera carrera) {
+        this.idInstitucional = idInstitucional;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.contrasena = contrasena;
         this.carrera = carrera;
+    }
+
+    public String getIdInstitucional() {
+        return idInstitucional;
+    }
+
+    public void setIdInstitucional(String idInstitucional) {
+        this.idInstitucional = idInstitucional;
     }
 
     public String getNombre() {
