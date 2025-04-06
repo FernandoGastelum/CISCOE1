@@ -182,7 +182,7 @@ public class FrmLoginReservas extends javax.swing.JFrame {
     private void LoginBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBTNActionPerformed
         if(validarUsuario(usuarioTextField.getText())){
             this.dispose();
-            FrmReservas frmReserva = new FrmReservas(computadoraDAO);
+            FrmReservas frmReserva = new FrmReservas(computadoraDAO, usuarioTextField.getText());
             frmReserva.setVisible(true);
         }else{
             JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+usuarioTextField.getText()+" No existe");

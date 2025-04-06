@@ -11,6 +11,7 @@ import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import ModuloAdministracion.Negocio.ComputadoraNegocio;
 import ModuloAdministracion.Persistencia.ComputadoraDAO;
 import ModuloReservas.util.ComputadoraPanel;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -19,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 /**
@@ -27,12 +29,17 @@ import javax.swing.JScrollPane;
  */
 public class FrmReservas extends javax.swing.JFrame {
     private IComputadoraNegocio computadoraNegocio;
+    private IComputadoraDAO computadoraDAO;
+    private String idUsuario;
+    private boolean ventanaReservaAbierta = false;
     /**
      * Creates new form FrmReservas
      * @param computadoraDAO
      */
-    public FrmReservas(IComputadoraDAO computadoraDAO) {
-        computadoraNegocio = new ComputadoraNegocio(computadoraDAO);
+    public FrmReservas(IComputadoraDAO computadoraDAO, String idUsuario) {
+        this.computadoraNegocio = new ComputadoraNegocio(computadoraDAO);
+        this.computadoraDAO = computadoraDAO;
+        this.idUsuario = idUsuario;
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
@@ -52,7 +59,7 @@ public class FrmReservas extends javax.swing.JFrame {
             List<ComputadoraDTO> listaComputadoras = computadoraNegocio.obtener();
             if(listaComputadoras != null){
                 for (ComputadoraDTO listaComputadora : listaComputadoras) {
-                    ComputadoraPanel panel = new ComputadoraPanel(listaComputadora);
+                    ComputadoraPanel panel = new ComputadoraPanel(listaComputadora,computadoraDAO, idUsuario,this.minutosTextField.getText(),true,this);
                     this.computadorasPanel.add(panel);
                 }
             }
@@ -62,6 +69,27 @@ public class FrmReservas extends javax.swing.JFrame {
         this.revalidate();
         this.repaint();
         
+    }
+    public void deshabilitarVentana() {
+        this.setEnabled(false);
+
+        // Crear un glass pane translúcido
+        JPanel glass = new JPanel();
+        glass.setOpaque(true);
+        glass.setBackground(new Color(0, 0, 0, 80)); // Color negro translúcido
+        this.setGlassPane(glass);
+        glass.setVisible(true);
+    }
+    public void habilitarVentana() {
+        this.setEnabled(true);
+        this.getGlassPane().setVisible(false);
+    }
+    public boolean isVentanaReservaAbierta() {
+        return ventanaReservaAbierta;
+    }
+
+    public void setVentanaReservaAbierta(boolean abierta) {
+        this.ventanaReservaAbierta = abierta;
     }
 
     /**

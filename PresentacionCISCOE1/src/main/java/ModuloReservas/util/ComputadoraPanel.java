@@ -5,11 +5,16 @@
 package ModuloReservas.util;
 
 import DTOs.ComputadoraDTO;
+import ModuloAdministracion.Interfaz.IComputadoraDAO;
+import ModuloReservas.FrmConfirmarReserva;
+import ModuloReservas.FrmReservas;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -18,17 +23,18 @@ import javax.swing.SwingConstants;
 
 /**
  *
- * @author Ilian Gastelum
+ * @author Ilian Gastelum 
  */
 public class ComputadoraPanel extends javax.swing.JPanel { // Atributo para almacenar la imagen
     
     private static final int ANCHO  = 150;
     private static final int ALTO = 150;
+    private boolean ventanaAbierta = false;
     /**
      * Creates new form ComputadoraPanel
      * @param computadora
      */
-    public ComputadoraPanel(ComputadoraDTO computadora) {
+    public ComputadoraPanel(ComputadoraDTO computadora,IComputadoraDAO computadoraDAO, String idUsuario, String minutos, boolean lista, FrmReservas frmReserva) {
         
         initComponents();
         Icon icono = new ImageIcon(new ImageIcon(getClass().getResource("/images/PcIcon.png")).getImage().getScaledInstance(150, 150, 0));
@@ -41,7 +47,23 @@ public class ComputadoraPanel extends javax.swing.JPanel { // Atributo para alma
         this.colorPanel.setPreferredSize(new Dimension(ANCHO, ALTO));
         this.colorPanel.setMaximumSize(new Dimension(ANCHO, ALTO));
         this.colorPanel.setMinimumSize(new Dimension(ANCHO, ALTO));
-        
+        if(lista==true){
+            this.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (!frmReserva.isVentanaReservaAbierta()) {
+                        frmReserva.setVentanaReservaAbierta(true); 
+
+                        FrmConfirmarReserva nuevaVentana = new FrmConfirmarReserva(
+                            computadora, computadoraDAO, idUsuario, minutos, frmReserva
+                        );
+
+                        frmReserva.deshabilitarVentana();
+                        nuevaVentana.setVisible(true);
+                    }
+                }
+            });
+        }
         
     }
     public class ColorUtil {
