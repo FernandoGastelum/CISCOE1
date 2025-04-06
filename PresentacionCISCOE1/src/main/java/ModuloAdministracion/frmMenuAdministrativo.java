@@ -4,6 +4,8 @@
  */
 package ModuloAdministracion;
 
+import java.awt.BorderLayout;
+
 /**
  *
  * @author Knocmare
@@ -31,11 +33,23 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuEstudiantes = new javax.swing.JMenu();
+        OpcionEstudiantesListado = new javax.swing.JMenuItem();
+        OpcionAgregarEstudiante = new javax.swing.JMenuItem();
         jMenuCarreras = new javax.swing.JMenu();
+        OpcionCarrerasListado = new javax.swing.JMenuItem();
+        OpcionAgregarCarrera = new javax.swing.JMenuItem();
         jMenuComputadoras = new javax.swing.JMenu();
+        OpcionComputadorasListado = new javax.swing.JMenuItem();
+        OpcionAgregarComputadora = new javax.swing.JMenuItem();
         jMenuBloqueos = new javax.swing.JMenu();
+        OpcionBloqueosListado = new javax.swing.JMenuItem();
+        OpcionAgregarBloqueo = new javax.swing.JMenuItem();
         jMenuLaboratorio = new javax.swing.JMenu();
+        OpcionLaboratoriosListado = new javax.swing.JMenuItem();
+        OpcionAgregarLaboratorio = new javax.swing.JMenuItem();
         jMenuInstituto = new javax.swing.JMenu();
+        OpcionInstitutosListado = new javax.swing.JMenuItem();
+        OpcionAgregarInstituto = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -82,26 +96,128 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
 
         jMenuEstudiantes.setText("Estudiantes");
         jMenuEstudiantes.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        OpcionEstudiantesListado.setText("Lista de Estudiantes");
+        OpcionEstudiantesListado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionEstudiantesListadoActionPerformed(evt);
+            }
+        });
+        jMenuEstudiantes.add(OpcionEstudiantesListado);
+
+        OpcionAgregarEstudiante.setText("Agregar Estudiante");
+        OpcionAgregarEstudiante.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionAgregarEstudianteActionPerformed(evt);
+            }
+        });
+        jMenuEstudiantes.add(OpcionAgregarEstudiante);
+
         jMenuBar1.add(jMenuEstudiantes);
 
         jMenuCarreras.setText("Carreras");
         jMenuCarreras.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        OpcionCarrerasListado.setText("Lista de Carreras");
+        OpcionCarrerasListado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionCarrerasListadoActionPerformed(evt);
+            }
+        });
+        jMenuCarreras.add(OpcionCarrerasListado);
+
+        OpcionAgregarCarrera.setText("Agregar Carrera");
+        OpcionAgregarCarrera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionAgregarCarreraActionPerformed(evt);
+            }
+        });
+        jMenuCarreras.add(OpcionAgregarCarrera);
+
         jMenuBar1.add(jMenuCarreras);
 
         jMenuComputadoras.setText("Computadoras");
         jMenuComputadoras.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        OpcionComputadorasListado.setText("Lista de Computaros");
+        OpcionComputadorasListado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionComputadorasListadoActionPerformed(evt);
+            }
+        });
+        jMenuComputadoras.add(OpcionComputadorasListado);
+
+        OpcionAgregarComputadora.setText("Agregar Computadora");
+        OpcionAgregarComputadora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionAgregarComputadoraActionPerformed(evt);
+            }
+        });
+        jMenuComputadoras.add(OpcionAgregarComputadora);
+
         jMenuBar1.add(jMenuComputadoras);
 
         jMenuBloqueos.setText("Bloqueos");
         jMenuBloqueos.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        OpcionBloqueosListado.setText("Lista de Bloqueos");
+        OpcionBloqueosListado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionBloqueosListadoActionPerformed(evt);
+            }
+        });
+        jMenuBloqueos.add(OpcionBloqueosListado);
+
+        OpcionAgregarBloqueo.setText("Agregar Bloqueos");
+        OpcionAgregarBloqueo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionAgregarBloqueoActionPerformed(evt);
+            }
+        });
+        jMenuBloqueos.add(OpcionAgregarBloqueo);
+
         jMenuBar1.add(jMenuBloqueos);
 
         jMenuLaboratorio.setText("Laboratorio");
         jMenuLaboratorio.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        OpcionLaboratoriosListado.setText("Lista de Laboratorios");
+        OpcionLaboratoriosListado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionLaboratoriosListadoActionPerformed(evt);
+            }
+        });
+        jMenuLaboratorio.add(OpcionLaboratoriosListado);
+
+        OpcionAgregarLaboratorio.setText("Agregar Laboratorio");
+        OpcionAgregarLaboratorio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionAgregarLaboratorioActionPerformed(evt);
+            }
+        });
+        jMenuLaboratorio.add(OpcionAgregarLaboratorio);
+
         jMenuBar1.add(jMenuLaboratorio);
 
         jMenuInstituto.setText("Instituto");
         jMenuInstituto.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        OpcionInstitutosListado.setText("Lista de Institutos");
+        OpcionInstitutosListado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionInstitutosListadoActionPerformed(evt);
+            }
+        });
+        jMenuInstituto.add(OpcionInstitutosListado);
+
+        OpcionAgregarInstituto.setText("Agregar Instituto");
+        OpcionAgregarInstituto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionAgregarInstitutoActionPerformed(evt);
+            }
+        });
+        jMenuInstituto.add(OpcionAgregarInstituto);
+
         jMenuBar1.add(jMenuInstituto);
 
         setJMenuBar(jMenuBar1);
@@ -120,6 +236,114 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void OpcionEstudiantesListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionEstudiantesListadoActionPerformed
+        panelEstudiantesListado panelEstudiante = new panelEstudiantesListado();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelEstudiante, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionEstudiantesListadoActionPerformed
+
+    private void OpcionAgregarEstudianteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarEstudianteActionPerformed
+        panelEstudianteNuevo panelEstudiante = new panelEstudianteNuevo();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelEstudiante, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionAgregarEstudianteActionPerformed
+
+    private void OpcionCarrerasListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionCarrerasListadoActionPerformed
+        panelCarrerasListado panelCarrera = new panelCarrerasListado();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelCarrera, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionCarrerasListadoActionPerformed
+
+    private void OpcionAgregarCarreraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarCarreraActionPerformed
+        panelCarreraNuevo panelCarrera = new panelCarreraNuevo();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelCarrera, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionAgregarCarreraActionPerformed
+
+    private void OpcionComputadorasListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionComputadorasListadoActionPerformed
+        panelComputadorasListado panelComputadora = new panelComputadorasListado();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelComputadora, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionComputadorasListadoActionPerformed
+
+    private void OpcionAgregarComputadoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarComputadoraActionPerformed
+        panelComputadoraNuevo panelComputadora = new panelComputadoraNuevo();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelComputadora, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionAgregarComputadoraActionPerformed
+
+    private void OpcionBloqueosListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionBloqueosListadoActionPerformed
+        panelBloqueosListado panelBloqueo = new panelBloqueosListado();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelBloqueo, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionBloqueosListadoActionPerformed
+
+    private void OpcionAgregarBloqueoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarBloqueoActionPerformed
+        panelBloqueoNuevo panelBloqueo = new panelBloqueoNuevo();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelBloqueo, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionAgregarBloqueoActionPerformed
+
+    private void OpcionLaboratoriosListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionLaboratoriosListadoActionPerformed
+        panelLaboratoriosListado panelLaboratorio = new panelLaboratoriosListado();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelLaboratorio, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionLaboratoriosListadoActionPerformed
+
+    private void OpcionAgregarLaboratorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarLaboratorioActionPerformed
+        panelLaboratorioNuevo panelLaboratorio = new panelLaboratorioNuevo();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelLaboratorio, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionAgregarLaboratorioActionPerformed
+
+    private void OpcionInstitutosListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionInstitutosListadoActionPerformed
+        panelInstitutosListado panelInstituto = new panelInstitutosListado();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelInstituto, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionInstitutosListadoActionPerformed
+
+    private void OpcionAgregarInstitutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarInstitutoActionPerformed
+        panelInstitutoNuevo panelInstituto = new panelInstitutoNuevo();
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelInstituto, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionAgregarInstitutoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -160,6 +384,18 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem OpcionAgregarBloqueo;
+    private javax.swing.JMenuItem OpcionAgregarCarrera;
+    private javax.swing.JMenuItem OpcionAgregarComputadora;
+    private javax.swing.JMenuItem OpcionAgregarEstudiante;
+    private javax.swing.JMenuItem OpcionAgregarInstituto;
+    private javax.swing.JMenuItem OpcionAgregarLaboratorio;
+    private javax.swing.JMenuItem OpcionBloqueosListado;
+    private javax.swing.JMenuItem OpcionCarrerasListado;
+    private javax.swing.JMenuItem OpcionComputadorasListado;
+    private javax.swing.JMenuItem OpcionEstudiantesListado;
+    private javax.swing.JMenuItem OpcionInstitutosListado;
+    private javax.swing.JMenuItem OpcionLaboratoriosListado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuBloqueos;

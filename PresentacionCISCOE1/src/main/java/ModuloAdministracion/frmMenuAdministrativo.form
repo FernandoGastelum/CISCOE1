@@ -16,6 +16,24 @@
               <Font name="Segoe UI" size="40" style="0"/>
             </Property>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionEstudiantesListado">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Lista de Estudiantes"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionEstudiantesListadoActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionAgregarEstudiante">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Agregar Estudiante"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionAgregarEstudianteActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenuCarreras">
           <Properties>
@@ -24,6 +42,24 @@
               <Font name="Segoe UI" size="40" style="0"/>
             </Property>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionCarrerasListado">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Lista de Carreras"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionCarrerasListadoActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionAgregarCarrera">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Agregar Carrera"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionAgregarCarreraActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenuComputadoras">
           <Properties>
@@ -32,6 +68,24 @@
               <Font name="Segoe UI" size="40" style="0"/>
             </Property>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionComputadorasListado">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Lista de Computaros"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionComputadorasListadoActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionAgregarComputadora">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Agregar Computadora"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionAgregarComputadoraActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenuBloqueos">
           <Properties>
@@ -40,6 +94,24 @@
               <Font name="Segoe UI" size="40" style="0"/>
             </Property>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionBloqueosListado">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Lista de Bloqueos"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionBloqueosListadoActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionAgregarBloqueo">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Agregar Bloqueos"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionAgregarBloqueoActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenuLaboratorio">
           <Properties>
@@ -48,6 +120,24 @@
               <Font name="Segoe UI" size="40" style="0"/>
             </Property>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionLaboratoriosListado">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Lista de Laboratorios"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionLaboratoriosListadoActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionAgregarLaboratorio">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Agregar Laboratorio"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionAgregarLaboratorioActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenuInstituto">
           <Properties>
@@ -56,6 +146,24 @@
               <Font name="Segoe UI" size="40" style="0"/>
             </Property>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionInstitutosListado">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Lista de Institutos"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionInstitutosListadoActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="OpcionAgregarInstituto">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Agregar Instituto"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpcionAgregarInstitutoActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
       </SubComponents>
     </Menu>
