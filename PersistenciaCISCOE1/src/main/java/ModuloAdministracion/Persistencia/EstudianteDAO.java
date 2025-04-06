@@ -68,7 +68,7 @@ public class EstudianteDAO implements IEstudianteDAO {
     }
 
     @Override
-    public EstudianteDTO obtenerDTO(Long id) throws PersistenciaException{
+    public EstudianteDTO obtenerDTO(Long id) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         CriteriaBuilder cb = entity.getCriteriaBuilder();
         CriteriaQuery<EstudianteDTO> cq = cb.createQuery(EstudianteDTO.class);

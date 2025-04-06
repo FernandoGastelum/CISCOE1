@@ -65,7 +65,7 @@ public class HorarioDAO implements IHorarioDAO{
     }
 
     @Override
-    public HorarioDTO obtenerDTO(Long id) {
+    public HorarioDTO obtenerDTO(Long id) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         CriteriaBuilder cb = entity.getCriteriaBuilder();
         CriteriaQuery<HorarioDTO> cq = cb.createQuery(HorarioDTO.class);

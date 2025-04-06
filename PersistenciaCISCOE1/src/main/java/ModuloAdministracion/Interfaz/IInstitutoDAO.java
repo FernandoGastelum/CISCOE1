@@ -22,5 +22,5 @@ public interface IInstitutoDAO {
     
     List<Instituto> obtener() throws PersistenciaException;
     
-    InstitutoDTO obtenerDTO(Long id);
+    InstitutoDTO obtenerDTO(Long id) throws PersistenciaException;
 }

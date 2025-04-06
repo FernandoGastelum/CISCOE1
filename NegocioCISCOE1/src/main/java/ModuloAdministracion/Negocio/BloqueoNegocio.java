@@ -1,0 +1,71 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package ModuloAdministracion.Negocio;
+
+import DTOs.BloqueoDTO;
+import DTOs.BloqueoDTOGuardar;
+import Entidades.Bloqueo;
+import Excepcion.NegocioException;
+import Excepcion.PersistenciaException;
+import ModuloAdministracion.Interfaz.IBloqueoDAO;
+import ModuloAdministracion.Interfaz.IBloqueoNegocio;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author Knocmare
+ */
+public class BloqueoNegocio implements IBloqueoNegocio {
+    private final IBloqueoDAO bloqueoDAO;
+
+    public BloqueoNegocio(IBloqueoDAO bloqueoDAO) {
+        this.bloqueoDAO = bloqueoDAO;
+    }
+
+    @Override
+    public BloqueoDTO guardar(BloqueoDTOGuardar bloqueo) throws NegocioException {
+        try {
+            this.reglasNegocioGuardar(bloqueo);
+            Bloqueo bloqueoGuardado = this.bloqueoDAO.guardar(bloqueo);
+            return this.bloqueoDAO.obtenerDTO(bloqueoGuardado.getIdBloqueo());
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
+
+    @Override
+    public List<BloqueoDTO> obtener() throws NegocioException {
+        try {
+            List<Bloqueo> listaBloqueos = this.bloqueoDAO.obtener();
+            List<BloqueoDTO> dtos = new ArrayList<>();
+            for (Bloqueo bloqueo : listaBloqueos) {
+                dtos.add(this.bloqueoDAO.obtenerDTO(bloqueo.getIdBloqueo()));
+            }
+            return dtos;
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
+
+    @Override
+    public BloqueoDTO obtenerPorID(Long id) throws NegocioException {
+        try {
+            return bloqueoDAO.obtenerDTO(id);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
+    
+    private boolean reglasNegocioGuardar(BloqueoDTOGuardar bloqueo) throws NegocioException {
+        if (bloqueo.getFechaBloqueo() == null) {
+            throw new NegocioException("La fecha no puede estar vacía");
+        }
+        if (bloqueo.getMotivo() == null) {
+            throw new NegocioException("El motivo no puede estar vacía");
+        }
+        return true;
+    }
+}

@@ -20,6 +20,7 @@ public class Estudiante implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_estudiante")
     private Long idEstudiante;
+    
     @Column(name = "id_institucional", unique = true)
     private String idInstitucional;
 

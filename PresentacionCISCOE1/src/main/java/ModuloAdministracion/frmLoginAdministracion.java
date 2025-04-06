@@ -4,17 +4,61 @@
  */
 package ModuloAdministracion;
 
+import DTOs.LaboratorioDTO;
+import Excepcion.NegocioException;
+import ModuloAdministracion.Interfaz.IEntityManager;
+import ModuloAdministracion.Interfaz.ILaboratorioDAO;
+import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
+import ModuloAdministracion.Negocio.LaboratorioNegocio;
+import ModuloAdministracion.Persistencia.EntityManagerDAO;
+import ModuloAdministracion.Persistencia.LaboratorioDAO;
+import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Knocmare
  */
 public class frmLoginAdministracion extends javax.swing.JFrame {
-
+    private final ILaboratorioNegocio laboratorioNegocio;
+    
     /**
      * Creates new form frmLoginAdministracion
+     * @param laboratorioDAO
      */
-    public frmLoginAdministracion() {
+    public frmLoginAdministracion(ILaboratorioDAO laboratorioDAO) {
+        this.laboratorioNegocio = new LaboratorioNegocio(laboratorioDAO);
         initComponents();
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+    }
+    
+    private boolean validarUsuario(String id){
+        try {
+            List<LaboratorioDTO> listaLaboratorios = laboratorioNegocio.obtener();
+            for (LaboratorioDTO laboratorio : listaLaboratorios) {
+                if(laboratorio.getIdLaboratorio().equals(id)){
+                    return true;
+                }
+            }
+        } catch (NegocioException ex) {
+            System.out.println("Error "+ex.getMessage());
+        }
+        return false;
+    }
+    
+    private boolean validarContrasena(String contrasena){
+        try {
+            List<LaboratorioDTO> listaLaboratorios = laboratorioNegocio.obtener();
+            for (LaboratorioDTO laboratorio : listaLaboratorios) {
+                if(laboratorio.getContrasenaMaestra().equals(contrasena)){
+                    return true;
+                }
+            }
+        } catch (NegocioException ex) {
+            System.out.println("Error "+ex.getMessage());
+        }
+        return false;
     }
 
     /**
@@ -34,7 +78,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JTextField();
         txtContrasena = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnLogin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -82,10 +126,15 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
 
         txtContrasena.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
 
-        jButton1.setBackground(new java.awt.Color(44, 44, 44));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Login");
+        btnLogin.setBackground(new java.awt.Color(44, 44, 44));
+        btnLogin.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnLogin.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogin.setText("Login");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelLoginLayout = new javax.swing.GroupLayout(jPanelLogin);
         jPanelLogin.setLayout(jPanelLoginLayout);
@@ -100,7 +149,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
                     .addComponent(txtUsuario)
                     .addComponent(jLabel3)
                     .addComponent(txtContrasena)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE))
+                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelLoginLayout.setVerticalGroup(
@@ -118,7 +167,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
-                .addComponent(jButton1)
+                .addComponent(btnLogin)
                 .addGap(0, 217, Short.MAX_VALUE))
         );
 
@@ -137,10 +186,21 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        if(validarUsuario(txtUsuario.getText()) && validarContrasena(txtContrasena.getText())){
+            this.dispose();
+            frmMenuAdministrativo menuAdministrativo = new frmMenuAdministrativo();
+            menuAdministrativo.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+txtUsuario.getText()+" no existe");
+        }
+    }//GEN-LAST:event_btnLoginActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        IEntityManager entityManager = new EntityManagerDAO();
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -167,13 +227,14 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmLoginAdministracion().setVisible(true);
+                ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(entityManager);
+                new frmLoginAdministracion(laboratorioDAO).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnLogin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -22,5 +22,5 @@ public interface IBloqueoDAO {
     
     List<Bloqueo> obtener() throws PersistenciaException;
     
-    BloqueoDTO obtenerDTO(Long id);
+    BloqueoDTO obtenerDTO(Long id) throws PersistenciaException;
 }

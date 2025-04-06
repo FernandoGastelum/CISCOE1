@@ -65,7 +65,7 @@ public class InstitutoDAO implements IInstitutoDAO{
     }
 
     @Override
-    public InstitutoDTO obtenerDTO(Long id) {
+    public InstitutoDTO obtenerDTO(Long id) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         CriteriaBuilder cb = entity.getCriteriaBuilder();
         CriteriaQuery<InstitutoDTO> cq = cb.createQuery(InstitutoDTO.class);

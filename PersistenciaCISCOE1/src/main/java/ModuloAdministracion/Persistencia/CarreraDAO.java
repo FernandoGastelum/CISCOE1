@@ -66,7 +66,7 @@ public class CarreraDAO implements ICarreraDAO{
     }
 
     @Override
-    public CarreraDTO obtenerDTO(Long id) {
+    public CarreraDTO obtenerDTO(Long id) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         CriteriaBuilder cb = entity.getCriteriaBuilder();
         CriteriaQuery<CarreraDTO> cq = cb.createQuery(CarreraDTO.class);

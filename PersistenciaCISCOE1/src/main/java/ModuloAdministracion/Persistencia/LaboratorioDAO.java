@@ -65,7 +65,7 @@ public class LaboratorioDAO implements ILaboratorioDAO{
     }
 
     @Override
-    public LaboratorioDTO obtenerDTO(Long id) {
+    public LaboratorioDTO obtenerDTO(Long id) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         CriteriaBuilder cb = entity.getCriteriaBuilder();
         CriteriaQuery<LaboratorioDTO> cq = cb.createQuery(LaboratorioDTO.class);

@@ -66,7 +66,7 @@ public class BloqueoDAO implements IBloqueoDAO{
     }
 
     @Override
-    public BloqueoDTO obtenerDTO(Long id) {
+    public BloqueoDTO obtenerDTO(Long id) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         CriteriaBuilder cb = entity.getCriteriaBuilder();
         CriteriaQuery<BloqueoDTO> cq = cb.createQuery(BloqueoDTO.class);

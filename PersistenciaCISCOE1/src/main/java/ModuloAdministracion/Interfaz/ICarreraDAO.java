@@ -22,6 +22,6 @@ public interface ICarreraDAO {
     
     List<Carrera> obtener() throws PersistenciaException;
     
-    CarreraDTO obtenerDTO(Long id);
+    CarreraDTO obtenerDTO(Long id) throws PersistenciaException;
     
 }

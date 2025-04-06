@@ -22,5 +22,5 @@ public interface IHorarioDAO {
     
     List<Horario> obtener() throws PersistenciaException;
     
-    HorarioDTO obtenerDTO(Long id);
+    HorarioDTO obtenerDTO(Long id) throws PersistenciaException;
 }
