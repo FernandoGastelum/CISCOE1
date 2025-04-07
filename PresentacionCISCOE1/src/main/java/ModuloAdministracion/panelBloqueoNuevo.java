@@ -4,16 +4,20 @@
  */
 package ModuloAdministracion;
 
+import ModuloAdministracion.Interfaz.IBloqueoNegocio;
+
 /**
  *
  * @author Knocmare
  */
 public class panelBloqueoNuevo extends javax.swing.JPanel {
+    private final IBloqueoNegocio bloqueoNegocio;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelBloqueoNuevo() {
+    public panelBloqueoNuevo(IBloqueoNegocio bloqueoNegocio) {
+        this.bloqueoNegocio = bloqueoNegocio;
         initComponents();
     }
 

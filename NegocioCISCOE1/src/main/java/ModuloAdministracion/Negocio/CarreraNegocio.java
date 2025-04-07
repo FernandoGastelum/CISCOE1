@@ -6,6 +6,7 @@ package ModuloAdministracion.Negocio;
 
 import DTOs.CarreraDTO;
 import DTOs.CarreraDTOGuardar;
+import DTOs.CarreraTablaDTO;
 import Entidades.Carrera;
 import Excepcion.NegocioException;
 import Excepcion.PersistenciaException;
@@ -48,6 +49,32 @@ public class CarreraNegocio implements ICarreraNegocio {
         } catch (PersistenciaException ex) {
             throw new NegocioException("Error " + ex.getMessage());
         }
+    }
+    
+    @Override
+    public List<CarreraTablaDTO> obtenerTabla() throws NegocioException {
+        try {
+            List<Carrera> listaCarreras = this.carreraDAO.obtener();
+            List<CarreraDTO> dtos = new ArrayList<>();
+            for (Carrera carrera : listaCarreras) {
+                dtos.add(this.carreraDAO.obtenerDTO(carrera.getIdCarrera()));
+            }
+            return this.convertirTablaDTO(dtos);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
+
+    private List<CarreraTablaDTO> convertirTablaDTO(List<CarreraDTO> carreras) {
+        if (carreras == null) {
+            return null;
+        }
+        List<CarreraTablaDTO> carrerasDTO = new ArrayList<>();
+        for (CarreraDTO carrera : carreras) {
+            CarreraTablaDTO dato = new CarreraTablaDTO(carrera.getIdCarrera(), carrera.getNombreCarrera(), carrera.getTiempoMaximoDiario());
+            carrerasDTO.add(dato);
+        }
+        return carrerasDTO;
     }
 
     @Override

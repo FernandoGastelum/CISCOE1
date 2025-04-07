@@ -4,16 +4,20 @@
  */
 package ModuloAdministracion;
 
+import ModuloAdministracion.Interfaz.IComputadoraNegocio;
+
 /**
  *
  * @author Knocmare
  */
 public class panelComputadorasListado extends javax.swing.JPanel {
+    private final IComputadoraNegocio computadoraNegocio;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelComputadorasListado() {
+    public panelComputadorasListado(IComputadoraNegocio computadoraNegocio) {
+        this.computadoraNegocio = computadoraNegocio;
         initComponents();
     }
 
@@ -69,16 +73,9 @@ public class panelComputadorasListado extends javax.swing.JPanel {
                 "ID", "Número Máquina", "IP", "Estatus", "Editar", "Eliminar"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
-            };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true
+                false, false, false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];

@@ -4,16 +4,21 @@
  */
 package ModuloAdministracion;
 
+import ModuloAdministracion.Interfaz.ICarreraNegocio;
+
 /**
  *
  * @author Knocmare
  */
 public class panelCarrerasListado extends javax.swing.JPanel {
 
+    private final ICarreraNegocio carreraNegocio;
+
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelCarrerasListado() {
+    public panelCarrerasListado(ICarreraNegocio carreraNegocio) {
+        this.carreraNegocio = carreraNegocio;
         initComponents();
     }
 
@@ -69,16 +74,9 @@ public class panelCarrerasListado extends javax.swing.JPanel {
                 "ID", "Nombré", "Tiempo Limite", "Editar", "Eliminar"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
-            };
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, true
+                false, false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];

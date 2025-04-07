@@ -4,16 +4,20 @@
  */
 package ModuloAdministracion;
 
+import ModuloAdministracion.Interfaz.ICarreraNegocio;
+
 /**
  *
  * @author Knocmare
  */
 public class panelCarreraEditar extends javax.swing.JPanel {
+    private final ICarreraNegocio carreraNegocio;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelCarreraEditar() {
+    public panelCarreraEditar(ICarreraNegocio carreraNegocio) {
+        this.carreraNegocio = carreraNegocio;
         initComponents();
     }
 

@@ -4,16 +4,21 @@
  */
 package ModuloAdministracion;
 
+import ModuloAdministracion.Interfaz.IComputadoraNegocio;
+
 /**
  *
  * @author Knocmare
  */
 public class panelComputadoraEditar extends javax.swing.JPanel {
 
+    private final IComputadoraNegocio computadoraNegocio;
+
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelComputadoraEditar() {
+    public panelComputadoraEditar(IComputadoraNegocio computadoraNegocio) {
+        this.computadoraNegocio = computadoraNegocio;
         initComponents();
     }
 

@@ -6,6 +6,7 @@ package ModuloAdministracion.Negocio;
 
 import DTOs.InstitutoDTO;
 import DTOs.InstitutoDTOGuardar;
+import DTOs.InstitutoTablaDTO;
 import Entidades.Instituto;
 import Excepcion.NegocioException;
 import Excepcion.PersistenciaException;
@@ -19,13 +20,13 @@ import java.util.List;
  * @author Knocmare
  */
 public class InstitutoNegocio implements IInstitutoNegocio {
-    
+
     private final IInstitutoDAO institutoDAO;
 
     public InstitutoNegocio(IInstitutoDAO institutoDAO) {
         this.institutoDAO = institutoDAO;
     }
-    
+
     @Override
     public InstitutoDTO guardar(InstitutoDTOGuardar instituto) throws NegocioException {
         try {
@@ -52,6 +53,32 @@ public class InstitutoNegocio implements IInstitutoNegocio {
     }
 
     @Override
+    public List<InstitutoTablaDTO> obtenerTabla() throws NegocioException {
+        try {
+            List<Instituto> listaInstitutos = this.institutoDAO.obtener();
+            List<InstitutoDTO> dtos = new ArrayList<>();
+            for (Instituto instituto : listaInstitutos) {
+                dtos.add(this.institutoDAO.obtenerDTO(instituto.getIdInstituto()));
+            }
+            return this.convertirTablaDTO(dtos);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
+
+    private List<InstitutoTablaDTO> convertirTablaDTO(List<InstitutoDTO> institutos) {
+        if (institutos == null) {
+            return null;
+        }
+        List<InstitutoTablaDTO> institutosDTO = new ArrayList<>();
+        for (InstitutoDTO instituto : institutos) {
+            InstitutoTablaDTO dato = new InstitutoTablaDTO(instituto.getIdInstituto(), instituto.getNombreOficial(), instituto.getNombreAbreviado());
+            institutosDTO.add(dato);
+        }
+        return institutosDTO;
+    }
+
+    @Override
     public InstitutoDTO obtenerPorID(Long id) throws NegocioException {
         try {
             return institutoDAO.obtenerDTO(id);
@@ -59,7 +86,7 @@ public class InstitutoNegocio implements IInstitutoNegocio {
             throw new NegocioException("Error " + ex.getMessage());
         }
     }
-    
+
     private boolean reglasNegocioGuardar(InstitutoDTOGuardar instituto) throws NegocioException {
         if (instituto.getNombreOficial() == null) {
             throw new NegocioException("El nombre oficial no puede estar vacío");
@@ -69,5 +96,5 @@ public class InstitutoNegocio implements IInstitutoNegocio {
         }
         return true;
     }
-    
+
 }

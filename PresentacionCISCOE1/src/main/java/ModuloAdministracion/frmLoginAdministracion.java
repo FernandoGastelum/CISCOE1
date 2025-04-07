@@ -6,11 +6,31 @@ package ModuloAdministracion;
 
 import DTOs.LaboratorioDTO;
 import Excepcion.NegocioException;
+import ModuloAdministracion.Interfaz.IBloqueoDAO;
+import ModuloAdministracion.Interfaz.IBloqueoNegocio;
+import ModuloAdministracion.Interfaz.ICarreraDAO;
+import ModuloAdministracion.Interfaz.ICarreraNegocio;
+import ModuloAdministracion.Interfaz.IComputadoraDAO;
+import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import ModuloAdministracion.Interfaz.IEntityManager;
+import ModuloAdministracion.Interfaz.IEstudianteDAO;
+import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import ModuloAdministracion.Interfaz.IInstitutoDAO;
+import ModuloAdministracion.Interfaz.IInstitutoNegocio;
 import ModuloAdministracion.Interfaz.ILaboratorioDAO;
 import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
+import ModuloAdministracion.Negocio.BloqueoNegocio;
+import ModuloAdministracion.Negocio.CarreraNegocio;
+import ModuloAdministracion.Negocio.ComputadoraNegocio;
+import ModuloAdministracion.Negocio.EstudianteNegocio;
+import ModuloAdministracion.Negocio.InstitutoNegocio;
 import ModuloAdministracion.Negocio.LaboratorioNegocio;
+import ModuloAdministracion.Persistencia.BloqueoDAO;
+import ModuloAdministracion.Persistencia.CarreraDAO;
+import ModuloAdministracion.Persistencia.ComputadoraDAO;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
+import ModuloAdministracion.Persistencia.EstudianteDAO;
+import ModuloAdministracion.Persistencia.InstitutoDAO;
 import ModuloAdministracion.Persistencia.LaboratorioDAO;
 import java.util.List;
 import javax.swing.JFrame;
@@ -22,13 +42,30 @@ import javax.swing.JOptionPane;
  */
 public class frmLoginAdministracion extends javax.swing.JFrame {
     private final ILaboratorioNegocio laboratorioNegocio;
+    private final IInstitutoNegocio institutoNegocio;
+    private final IEstudianteNegocio estudianteNegocio;
+    private final IComputadoraNegocio computadoraNegocio;
+    private final ICarreraNegocio carreraNegocio;
+    private final IBloqueoNegocio bloqueoNegocio;
     
     /**
      * Creates new form frmLoginAdministracion
      * @param laboratorioDAO
+     * @param institutoDAO
+     * @param estudianteDAO
+     * @param computadoraDAO
+     * @param carreraDAO
+     * @param bloqueoDAO
      */
-    public frmLoginAdministracion(ILaboratorioDAO laboratorioDAO) {
+    public frmLoginAdministracion(ILaboratorioDAO laboratorioDAO, IInstitutoDAO institutoDAO, 
+            IEstudianteDAO estudianteDAO, IComputadoraDAO computadoraDAO, 
+            ICarreraDAO carreraDAO, IBloqueoDAO bloqueoDAO) {
         this.laboratorioNegocio = new LaboratorioNegocio(laboratorioDAO);
+        this.institutoNegocio = new InstitutoNegocio(institutoDAO);
+        this.estudianteNegocio = new EstudianteNegocio(estudianteDAO);
+        this.computadoraNegocio = new ComputadoraNegocio(computadoraDAO);
+        this.carreraNegocio = new CarreraNegocio(carreraDAO);
+        this.bloqueoNegocio = new BloqueoNegocio(bloqueoDAO);
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
@@ -189,7 +226,8 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         if(validarUsuario(txtUsuario.getText()) && validarContrasena(txtContrasena.getText())){
             this.dispose();
-            frmMenuAdministrativo menuAdministrativo = new frmMenuAdministrativo();
+            frmMenuAdministrativo menuAdministrativo = new frmMenuAdministrativo(
+                    laboratorioNegocio, institutoNegocio, estudianteNegocio, computadoraNegocio, carreraNegocio, bloqueoNegocio);
             menuAdministrativo.setVisible(true);
         }else{
             JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+txtUsuario.getText()+" no existe");
@@ -228,7 +266,12 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(entityManager);
-                new frmLoginAdministracion(laboratorioDAO).setVisible(true);
+                IInstitutoDAO institutoDAO = new InstitutoDAO(entityManager);
+                IEstudianteDAO estudianteDAO = new EstudianteDAO(entityManager);
+                IComputadoraDAO computadoraNegocio = new ComputadoraDAO(entityManager);
+                ICarreraDAO carreraNegocio = new CarreraDAO(entityManager);
+                IBloqueoDAO bloqueoNegocio = new BloqueoDAO(entityManager);
+                new frmLoginAdministracion(laboratorioDAO, institutoDAO, estudianteDAO, computadoraNegocio, carreraNegocio, bloqueoNegocio).setVisible(true);
             }
         });
     }

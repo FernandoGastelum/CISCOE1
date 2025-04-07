@@ -4,6 +4,7 @@
  */
 package DTOs;
 
+import Entidades.Estudiante;
 import java.util.Calendar;
 
 /**
@@ -16,6 +17,7 @@ public class BloqueoDTO {
     private Calendar fechaBloqueo;
     private Calendar fechaLiberacion;
     private String motivo;
+    private Estudiante estudiante;
 
     /**
      * Constructor por ausencia
@@ -23,11 +25,12 @@ public class BloqueoDTO {
     public BloqueoDTO() {
     }
 
-    public BloqueoDTO(Long idBloqueo, Calendar fechaBloqueo, Calendar fechaLiberacion, String motivo) {
+    public BloqueoDTO(Long idBloqueo, Calendar fechaBloqueo, Calendar fechaLiberacion, String motivo, Estudiante estudiante) {
         this.idBloqueo = idBloqueo;
         this.fechaBloqueo = fechaBloqueo;
         this.fechaLiberacion = fechaLiberacion;
         this.motivo = motivo;
+        this.estudiante = estudiante;
     }
 
     public Long getIdBloqueo() {
@@ -62,11 +65,17 @@ public class BloqueoDTO {
         this.motivo = motivo;
     }
 
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
+    }
+
     @Override
     public String toString() {
-        return "BloqueoDTO{" + "idBloqueo=" + idBloqueo + ", fechaBloqueo=" + fechaBloqueo + ", fechaLiberacion=" + fechaLiberacion + ", motivo=" + motivo + '}';
+        return "BloqueoDTO{" + "idBloqueo=" + idBloqueo + ", fechaBloqueo=" + fechaBloqueo + ", fechaLiberacion=" + fechaLiberacion + ", motivo=" + motivo + ", estudiante=" + estudiante + '}';
     }
-    
-    
     
 }

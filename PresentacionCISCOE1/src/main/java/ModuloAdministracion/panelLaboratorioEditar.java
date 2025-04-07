@@ -4,16 +4,21 @@
  */
 package ModuloAdministracion;
 
+import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
+
 /**
  *
  * @author Knocmare
  */
 public class panelLaboratorioEditar extends javax.swing.JPanel {
 
+    private final ILaboratorioNegocio laboratorioNegocio;
+
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelLaboratorioEditar() {
+    public panelLaboratorioEditar(ILaboratorioNegocio laboratorioNegocio) {
+        this.laboratorioNegocio = laboratorioNegocio;
         initComponents();
     }
 

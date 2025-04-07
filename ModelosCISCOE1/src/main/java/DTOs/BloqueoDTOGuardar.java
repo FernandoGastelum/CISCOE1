@@ -4,6 +4,7 @@
  */
 package DTOs;
 
+import Entidades.Estudiante;
 import java.util.Calendar;
 
 /**
@@ -14,6 +15,7 @@ public class BloqueoDTOGuardar {
     
     private Calendar fechaBloqueo;
     private String motivo;
+    private Estudiante estudiante;
 
     /**
      * Constructor por ausencia
@@ -21,9 +23,10 @@ public class BloqueoDTOGuardar {
     public BloqueoDTOGuardar() {
     }
 
-    public BloqueoDTOGuardar(Calendar fechaBloqueo, String motivo) {
+    public BloqueoDTOGuardar(Calendar fechaBloqueo, String motivo, Estudiante estudiante) {
         this.fechaBloqueo = fechaBloqueo;
         this.motivo = motivo;
+        this.estudiante = estudiante;
     }
 
     public Calendar getFechaBloqueo() {
@@ -42,10 +45,17 @@ public class BloqueoDTOGuardar {
         this.motivo = motivo;
     }
 
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
+    }
+
     @Override
     public String toString() {
-        return "BloqueoDTOGuardar{" + "fechaBloqueo=" + fechaBloqueo + ", motivo=" + motivo + '}';
+        return "BloqueoDTOGuardar{" + "fechaBloqueo=" + fechaBloqueo + ", motivo=" + motivo + ", estudiante=" + estudiante + '}';
     }
-    
     
 }

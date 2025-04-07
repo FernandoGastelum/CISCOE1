@@ -2,6 +2,7 @@ package ModuloAdministracion.Negocio;
 
 import DTOs.LaboratorioDTO;
 import DTOs.LaboratorioDTOGuardar;
+import DTOs.LaboratorioTablaDTO;
 import Entidades.Laboratorio;
 import Excepcion.NegocioException;
 import Excepcion.PersistenciaException;
@@ -45,6 +46,32 @@ public class LaboratorioNegocio implements ILaboratorioNegocio {
         } catch (PersistenciaException ex) {
             throw new NegocioException("Error " + ex.getMessage());
         }
+    }
+    
+    @Override
+    public List<LaboratorioTablaDTO> obtenerTabla() throws NegocioException {
+        try {
+            List<Laboratorio> listaLaboratorios = this.laboratorioDAO.obtener();
+            List<LaboratorioDTO> dtos = new ArrayList<>();
+            for (Laboratorio laboratorio : listaLaboratorios) {
+                dtos.add(this.laboratorioDAO.obtenerDTO(laboratorio.getIdLaboratorio()));
+            }
+            return this.convertirTablaDTO(dtos);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
+
+    private List<LaboratorioTablaDTO> convertirTablaDTO(List<LaboratorioDTO> laboratorios) {
+        if (laboratorios == null) {
+            return null;
+        }
+        List<LaboratorioTablaDTO> laboratoriosDTO = new ArrayList<>();
+        for (LaboratorioDTO laboratorio : laboratorios) {
+            LaboratorioTablaDTO dato = new LaboratorioTablaDTO(laboratorio.getIdLaboratorio(), laboratorio.getNombre(), laboratorio.getHoraApertura(), laboratorio.getHoraCierre());
+            laboratoriosDTO.add(dato);
+        }
+        return laboratoriosDTO;
     }
 
     @Override

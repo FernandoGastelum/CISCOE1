@@ -4,16 +4,20 @@
  */
 package ModuloAdministracion;
 
+import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+
 /**
  *
  * @author Knocmare
  */
 public class panelEstudianteNuevo extends javax.swing.JPanel {
 
+    private IEstudianteNegocio estudianteNegocio;
+
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelEstudianteNuevo() {
+    public panelEstudianteNuevo(IEstudianteNegocio estudianteNegocio) {
         initComponents();
     }
 

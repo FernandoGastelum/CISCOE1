@@ -6,6 +6,7 @@ package ModuloAdministracion.Negocio;
 
 import DTOs.BloqueoDTO;
 import DTOs.BloqueoDTOGuardar;
+import DTOs.BloqueoTablaDTO;
 import Entidades.Bloqueo;
 import Excepcion.NegocioException;
 import Excepcion.PersistenciaException;
@@ -48,6 +49,35 @@ public class BloqueoNegocio implements IBloqueoNegocio {
         } catch (PersistenciaException ex) {
             throw new NegocioException("Error " + ex.getMessage());
         }
+    }
+    
+    @Override
+    public List<BloqueoTablaDTO> obtenerTabla() throws NegocioException {
+        try {
+            List<Bloqueo> listaBloqueos = this.bloqueoDAO.obtener();
+            List<BloqueoDTO> dtos = new ArrayList<>();
+            for (Bloqueo bloqueo : listaBloqueos) {
+                dtos.add(this.bloqueoDAO.obtenerDTO(bloqueo.getIdBloqueo()));
+            }
+            return this.convertirTablaDTO(dtos);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
+
+    private List<BloqueoTablaDTO> convertirTablaDTO(List<BloqueoDTO> bloqueos) {
+        if (bloqueos == null) {
+            return null;
+        }
+        List<BloqueoTablaDTO> bloqueosDTO = new ArrayList<>();
+        for (BloqueoDTO bloqueo : bloqueos) {
+            BloqueoTablaDTO dato = new BloqueoTablaDTO(bloqueo.getIdBloqueo(), 
+                    bloqueo.getFechaBloqueo(), bloqueo.getMotivo(), 
+                    bloqueo.getEstudiante().getIdInstitucional(), 
+                    bloqueo.getFechaLiberacion());
+            bloqueosDTO.add(dato);
+        }
+        return bloqueosDTO;
     }
 
     @Override

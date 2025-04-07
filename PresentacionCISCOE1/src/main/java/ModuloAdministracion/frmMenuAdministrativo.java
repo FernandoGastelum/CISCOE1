@@ -4,19 +4,47 @@
  */
 package ModuloAdministracion;
 
+import ModuloAdministracion.Interfaz.IBloqueoNegocio;
+import ModuloAdministracion.Interfaz.ICarreraNegocio;
+import ModuloAdministracion.Interfaz.IComputadoraNegocio;
+import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import ModuloAdministracion.Interfaz.IInstitutoNegocio;
+import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
 import java.awt.BorderLayout;
+import javax.swing.JFrame;
 
 /**
  *
  * @author Knocmare
  */
 public class frmMenuAdministrativo extends javax.swing.JFrame {
-
+    private final ILaboratorioNegocio laboratorioNegocio;
+    private final IInstitutoNegocio institutoNegocio;
+    private final IEstudianteNegocio estudianteNegocio;
+    private final IComputadoraNegocio computadoraNegocio;
+    private final ICarreraNegocio carreraNegocio;
+    private final IBloqueoNegocio bloqueoNegocio;
+    
     /**
      * Creates new form frmLoginPresentacion
+     * @param laboratorioNegocio
+     * @param institutoNegocio
+     * @param estudianteNegocio
+     * @param computadoraNegocio
+     * @param carreraNegocio
+     * @param bloqueoNegocio
      */
-    public frmMenuAdministrativo() {
+    public frmMenuAdministrativo(ILaboratorioNegocio laboratorioNegocio, 
+            IInstitutoNegocio institutoNegocio, IEstudianteNegocio estudianteNegocio, 
+            IComputadoraNegocio computadoraNegocio, ICarreraNegocio carreraNegocio, IBloqueoNegocio bloqueoNegocio) {
+        this.laboratorioNegocio = laboratorioNegocio;
+        this.institutoNegocio = institutoNegocio;
+        this.estudianteNegocio = estudianteNegocio;
+        this.computadoraNegocio = computadoraNegocio;
+        this.carreraNegocio = carreraNegocio;
+        this.bloqueoNegocio = bloqueoNegocio;
         initComponents();
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     /**
@@ -238,7 +266,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void OpcionEstudiantesListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionEstudiantesListadoActionPerformed
-        panelEstudiantesListado panelEstudiante = new panelEstudiantesListado();
+        panelEstudiantesListado panelEstudiante = new panelEstudiantesListado(estudianteNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelEstudiante, BorderLayout.CENTER);
@@ -247,7 +275,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionEstudiantesListadoActionPerformed
 
     private void OpcionAgregarEstudianteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarEstudianteActionPerformed
-        panelEstudianteNuevo panelEstudiante = new panelEstudianteNuevo();
+        panelEstudianteNuevo panelEstudiante = new panelEstudianteNuevo(estudianteNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelEstudiante, BorderLayout.CENTER);
@@ -256,7 +284,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionAgregarEstudianteActionPerformed
 
     private void OpcionCarrerasListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionCarrerasListadoActionPerformed
-        panelCarrerasListado panelCarrera = new panelCarrerasListado();
+        panelCarrerasListado panelCarrera = new panelCarrerasListado(carreraNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelCarrera, BorderLayout.CENTER);
@@ -265,7 +293,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionCarrerasListadoActionPerformed
 
     private void OpcionAgregarCarreraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarCarreraActionPerformed
-        panelCarreraNuevo panelCarrera = new panelCarreraNuevo();
+        panelCarreraNuevo panelCarrera = new panelCarreraNuevo(carreraNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelCarrera, BorderLayout.CENTER);
@@ -274,7 +302,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionAgregarCarreraActionPerformed
 
     private void OpcionComputadorasListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionComputadorasListadoActionPerformed
-        panelComputadorasListado panelComputadora = new panelComputadorasListado();
+        panelComputadorasListado panelComputadora = new panelComputadorasListado(computadoraNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelComputadora, BorderLayout.CENTER);
@@ -283,7 +311,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionComputadorasListadoActionPerformed
 
     private void OpcionAgregarComputadoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarComputadoraActionPerformed
-        panelComputadoraNuevo panelComputadora = new panelComputadoraNuevo();
+        panelComputadoraNuevo panelComputadora = new panelComputadoraNuevo(computadoraNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelComputadora, BorderLayout.CENTER);
@@ -292,7 +320,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionAgregarComputadoraActionPerformed
 
     private void OpcionBloqueosListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionBloqueosListadoActionPerformed
-        panelBloqueosListado panelBloqueo = new panelBloqueosListado();
+        panelBloqueosListado panelBloqueo = new panelBloqueosListado(bloqueoNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelBloqueo, BorderLayout.CENTER);
@@ -301,7 +329,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionBloqueosListadoActionPerformed
 
     private void OpcionAgregarBloqueoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarBloqueoActionPerformed
-        panelBloqueoNuevo panelBloqueo = new panelBloqueoNuevo();
+        panelBloqueoNuevo panelBloqueo = new panelBloqueoNuevo(bloqueoNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelBloqueo, BorderLayout.CENTER);
@@ -310,7 +338,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionAgregarBloqueoActionPerformed
 
     private void OpcionLaboratoriosListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionLaboratoriosListadoActionPerformed
-        panelLaboratoriosListado panelLaboratorio = new panelLaboratoriosListado();
+        panelLaboratoriosListado panelLaboratorio = new panelLaboratoriosListado(laboratorioNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelLaboratorio, BorderLayout.CENTER);
@@ -319,7 +347,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionLaboratoriosListadoActionPerformed
 
     private void OpcionAgregarLaboratorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarLaboratorioActionPerformed
-        panelLaboratorioNuevo panelLaboratorio = new panelLaboratorioNuevo();
+        panelLaboratorioNuevo panelLaboratorio = new panelLaboratorioNuevo(laboratorioNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelLaboratorio, BorderLayout.CENTER);
@@ -328,7 +356,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionAgregarLaboratorioActionPerformed
 
     private void OpcionInstitutosListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionInstitutosListadoActionPerformed
-        panelInstitutosListado panelInstituto = new panelInstitutosListado();
+        panelInstitutosListado panelInstituto = new panelInstitutosListado(institutoNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelInstituto, BorderLayout.CENTER);
@@ -337,52 +365,15 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionInstitutosListadoActionPerformed
 
     private void OpcionAgregarInstitutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarInstitutoActionPerformed
-        panelInstitutoNuevo panelInstituto = new panelInstitutoNuevo();
+        panelInstitutoNuevo panelInstituto = new panelInstitutoNuevo(institutoNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelInstituto, BorderLayout.CENTER);
         jPanelCambiante.revalidate();
         jPanelCambiante.repaint();
     }//GEN-LAST:event_OpcionAgregarInstitutoActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmMenuAdministrativo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmMenuAdministrativo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmMenuAdministrativo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmMenuAdministrativo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmMenuAdministrativo().setVisible(true);
-            }
-        });
-    }
-
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem OpcionAgregarBloqueo;
     private javax.swing.JMenuItem OpcionAgregarCarrera;
