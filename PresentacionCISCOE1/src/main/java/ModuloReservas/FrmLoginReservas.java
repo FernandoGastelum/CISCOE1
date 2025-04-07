@@ -7,13 +7,19 @@ package ModuloReservas;
 import DTOs.EstudianteDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
+import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import ModuloAdministracion.Negocio.ComputadoraNegocio;
 import ModuloAdministracion.Negocio.EstudianteNegocio;
 import ModuloAdministracion.Persistencia.ComputadoraDAO;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
 import ModuloAdministracion.Persistencia.EstudianteDAO;
+import ModuloReservas.Interfaz.IReservaDAO;
+import ModuloReservas.Interfaz.IReservaNegocio;
+import ModuloReservas.Negocio.ReservaNegocio;
+import ModuloReservas.Persistencia.ReservaDAO;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,16 +32,16 @@ import javax.swing.JOptionPane;
  */
 public class FrmLoginReservas extends javax.swing.JFrame {
     private final IEstudianteNegocio estudianteNegocio;
-    private IComputadoraDAO computadoraDAO;
+    private IComputadoraNegocio computadoraNegocio;
+    private IReservaNegocio reservaNegocio;
     
     /**
      * Creates new form FrmLoginReservas
-     * @param estudianteDAO
-     * @param computadoraDAO
      */
-    public FrmLoginReservas(IEstudianteDAO estudianteDAO, IComputadoraDAO computadoraDAO) {
-        this.estudianteNegocio = new EstudianteNegocio(estudianteDAO);
-        this.computadoraDAO = computadoraDAO;
+    public FrmLoginReservas(IEstudianteNegocio estudianteNegocio, IComputadoraNegocio computadoraNegocio,IReservaNegocio reservaNegocio) {
+        this.estudianteNegocio = estudianteNegocio;
+        this.computadoraNegocio = computadoraNegocio;
+        this.reservaNegocio = reservaNegocio;
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
@@ -182,7 +188,7 @@ public class FrmLoginReservas extends javax.swing.JFrame {
     private void LoginBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBTNActionPerformed
         if(validarUsuario(usuarioTextField.getText())){
             this.dispose();
-            FrmReservas frmReserva = new FrmReservas(computadoraDAO, usuarioTextField.getText());
+            FrmReservas frmReserva = new FrmReservas(computadoraNegocio, usuarioTextField.getText(),reservaNegocio);
             frmReserva.setVisible(true);
         }else{
             JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+usuarioTextField.getText()+" No existe");
@@ -220,10 +226,13 @@ public class FrmLoginReservas extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                
                 IEstudianteDAO estudianteDAO = new EstudianteDAO(entityManager);
                 IComputadoraDAO computadoraDAO = new ComputadoraDAO(entityManager);
-                new FrmLoginReservas(estudianteDAO,computadoraDAO).setVisible(true);
+                IReservaDAO reservaDAO = new ReservaDAO(entityManager);
+                IEstudianteNegocio estudianteNegocio = new EstudianteNegocio(estudianteDAO);
+                IComputadoraNegocio computadoraNegocio = new ComputadoraNegocio(computadoraDAO);
+                IReservaNegocio reservaNegocio = new ReservaNegocio(reservaDAO,estudianteNegocio);
+                new FrmLoginReservas(estudianteNegocio, computadoraNegocio,reservaNegocio).setVisible(true);
             }
         });
     }

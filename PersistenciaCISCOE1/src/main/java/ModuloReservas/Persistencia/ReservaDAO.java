@@ -4,8 +4,11 @@
  */
 package ModuloReservas.Persistencia;
 
+import DTOs.ComputadoraDTO;
 import DTOs.ReservaDTO;
 import DTOs.ReservaDTOGuardar;
+import Entidades.Carrera;
+import Entidades.Computadora;
 import Entidades.Reserva;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IEntityManager;
@@ -28,7 +31,7 @@ public class ReservaDAO implements IReservaDAO{
         this.em = em;
     }
     @Override
-    public Reserva guardar(ReservaDTOGuardar reserva) throws PersistenciaException {
+    public Reserva guardar(Reserva reserva) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
         

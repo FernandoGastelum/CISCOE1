@@ -1,3 +1,5 @@
+package Test;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
@@ -131,24 +133,24 @@ public class PersistenciaTEST {
     }
     
     //@Test
-    public void agregarReserva(){
-        try {
-            IReservaDAO reservaDAO = new ReservaDAO(entityManager);
-            
-            Instituto institutoEntidad = new Instituto("Instituto Tecnologico de Sonora", "ITSON");
-            Laboratorio laboratorioEntidad = new Laboratorio("CISCO", this.horaInicio(), this.horaCierre(), "Maestra12345", institutoEntidad);
-            Carrera carreraEntidad = new Carrera("Ingenieria en Sistemas", 300, "Azul");
-            Estudiante estudianteEntidad = new Estudiante("00000223521","Estudiante", "Paterno", "Materno", "12345", carreraEntidad);
-            Computadora computadoraEntidad = new Computadora(1, "192.0.1.5", laboratorioEntidad, carreraEntidad);
-            Horario horarioEntidad = new Horario(this.horaInicio(), this.horaCierre(), Calendar.getInstance(), laboratorioEntidad);
-            ReservaDTOGuardar reservaDTO = new ReservaDTOGuardar(Calendar.getInstance(), this.horaInicioReserva(), computadoraEntidad, estudianteEntidad, horarioEntidad);
-            Reserva reservaEntidad = reservaDAO.guardar(reservaDTO);
-            
-            assertEquals("192.0.1.5", reservaDAO.obtenerPorID(reservaEntidad.getIdReserva()).getComputadora().getDireccionIp());
-        } catch (PersistenciaException ex) {
-            Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public void agregarReserva(){
+//        try {
+//            IReservaDAO reservaDAO = new ReservaDAO(entityManager);
+//            
+//            Instituto institutoEntidad = new Instituto("Instituto Tecnologico de Sonora", "ITSON");
+//            Laboratorio laboratorioEntidad = new Laboratorio("CISCO", this.horaInicio(), this.horaCierre(), "Maestra12345", institutoEntidad);
+//            Carrera carreraEntidad = new Carrera("Ingenieria en Sistemas", 300, "Azul");
+//            Estudiante estudianteEntidad = new Estudiante("00000223521","Estudiante", "Paterno", "Materno", "12345", carreraEntidad);
+//            Computadora computadoraEntidad = new Computadora(1, "192.0.1.5", laboratorioEntidad, carreraEntidad);
+//            Horario horarioEntidad = new Horario(this.horaInicio(), this.horaCierre(), Calendar.getInstance(), laboratorioEntidad);
+//            ReservaDTOGuardar reservaDTO = new ReservaDTOGuardar(Calendar.getInstance(), this.horaInicioReserva(), computadoraEntidad, estudianteEntidad, horarioEntidad);
+//            Reserva reservaEntidad = reservaDAO.guardar(reservaDTO);
+//            
+//            assertEquals("192.0.1.5", reservaDAO.obtenerPorID(reservaEntidad.getIdReserva()).getComputadora().getDireccionIp());
+//        } catch (PersistenciaException ex) {
+//            Logger.getLogger(PersistenciaTEST.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     
     
     

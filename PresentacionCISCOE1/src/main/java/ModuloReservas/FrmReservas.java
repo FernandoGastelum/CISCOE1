@@ -10,6 +10,7 @@ import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import ModuloAdministracion.Negocio.ComputadoraNegocio;
 import ModuloAdministracion.Persistencia.ComputadoraDAO;
+import ModuloReservas.Interfaz.IReservaNegocio;
 import ModuloReservas.util.ComputadoraPanel;
 import java.awt.Color;
 import java.awt.Component;
@@ -29,16 +30,16 @@ import javax.swing.JScrollPane;
  */
 public class FrmReservas extends javax.swing.JFrame {
     private IComputadoraNegocio computadoraNegocio;
-    private IComputadoraDAO computadoraDAO;
+    private IReservaNegocio reservaNegocio;
     private String idUsuario;
     private boolean ventanaReservaAbierta = false;
     /**
      * Creates new form FrmReservas
      * @param computadoraDAO
      */
-    public FrmReservas(IComputadoraDAO computadoraDAO, String idUsuario) {
-        this.computadoraNegocio = new ComputadoraNegocio(computadoraDAO);
-        this.computadoraDAO = computadoraDAO;
+    public FrmReservas(IComputadoraNegocio computadoraNegocio, String idUsuario,IReservaNegocio reservaNegocio) {
+        this.computadoraNegocio = computadoraNegocio;
+        this.reservaNegocio = reservaNegocio;
         this.idUsuario = idUsuario;
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -59,7 +60,7 @@ public class FrmReservas extends javax.swing.JFrame {
             List<ComputadoraDTO> listaComputadoras = computadoraNegocio.obtener();
             if(listaComputadoras != null){
                 for (ComputadoraDTO listaComputadora : listaComputadoras) {
-                    ComputadoraPanel panel = new ComputadoraPanel(listaComputadora,computadoraDAO, idUsuario,this.minutosTextField.getText(),true,this);
+                    ComputadoraPanel panel = new ComputadoraPanel(listaComputadora, idUsuario,this.minutosTextField.getText(),true,this,reservaNegocio);
                     this.computadorasPanel.add(panel);
                 }
             }

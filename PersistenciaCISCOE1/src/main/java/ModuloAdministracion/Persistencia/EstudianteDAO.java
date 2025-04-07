@@ -95,4 +95,16 @@ public class EstudianteDAO implements IEstudianteDAO {
         }
     }
 
+    @Override
+    public Estudiante obtenerPorIdInstitucional(String id) throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        TypedQuery<Estudiante> query = entity.createQuery("""
+                                                             SELECT e 
+                                                             FROM Estudiante e 
+                                                             WHERE e.idInstitucional = :id
+                                                             """,Estudiante.class);
+        query.setParameter("id", id);
+        return query.getSingleResult();
+    }
+
 }

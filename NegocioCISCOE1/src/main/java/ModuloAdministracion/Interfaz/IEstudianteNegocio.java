@@ -18,4 +18,6 @@ public interface IEstudianteNegocio {
     List<EstudianteTablaDTO> obtenerTabla() throws NegocioException;
     
     EstudianteDTO obtenerPorID(Long id) throws NegocioException;
+    EstudianteDTO obtenerPorIdInstitucional(String id) throws NegocioException;
+    
 }

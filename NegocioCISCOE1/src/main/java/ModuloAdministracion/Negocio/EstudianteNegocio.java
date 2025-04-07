@@ -79,6 +79,15 @@ public class EstudianteNegocio implements IEstudianteNegocio {
         }
         return estudiantesDTO;
     }
+    @Override
+    public EstudianteDTO obtenerPorIdInstitucional(String id) throws NegocioException{
+        try {
+             Estudiante estudianteEntidad = estudianteDAO.obtenerPorIdInstitucional(id);
+             return estudianteDAO.obtenerDTO(estudianteEntidad.getIdEstudiante());
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error " + e.getMessage());
+        }
+    }
 
     @Override
     public EstudianteDTO obtenerPorID(Long id) throws NegocioException {

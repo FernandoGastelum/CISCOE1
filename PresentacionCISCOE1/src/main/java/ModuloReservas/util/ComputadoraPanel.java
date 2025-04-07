@@ -8,6 +8,7 @@ import DTOs.ComputadoraDTO;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloReservas.FrmConfirmarReserva;
 import ModuloReservas.FrmReservas;
+import ModuloReservas.Interfaz.IReservaNegocio;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,7 +35,7 @@ public class ComputadoraPanel extends javax.swing.JPanel { // Atributo para alma
      * Creates new form ComputadoraPanel
      * @param computadora
      */
-    public ComputadoraPanel(ComputadoraDTO computadora,IComputadoraDAO computadoraDAO, String idUsuario, String minutos, boolean lista, FrmReservas frmReserva) {
+    public ComputadoraPanel(ComputadoraDTO computadora, String idUsuario, String minutos, boolean lista, FrmReservas frmReserva, IReservaNegocio reservaNegocio) {
         
         initComponents();
         Icon icono = new ImageIcon(new ImageIcon(getClass().getResource("/images/PcIcon.png")).getImage().getScaledInstance(150, 150, 0));
@@ -55,7 +56,7 @@ public class ComputadoraPanel extends javax.swing.JPanel { // Atributo para alma
                         frmReserva.setVentanaReservaAbierta(true); 
 
                         FrmConfirmarReserva nuevaVentana = new FrmConfirmarReserva(
-                            computadora, computadoraDAO, idUsuario, minutos, frmReserva
+                            computadora, idUsuario, minutos, frmReserva, reservaNegocio
                         );
 
                         frmReserva.deshabilitarVentana();

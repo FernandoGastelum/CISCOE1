@@ -5,22 +5,33 @@
 package ModuloReservas;
 
 import DTOs.ComputadoraDTO;
+import DTOs.EstudianteDTO;
+import DTOs.HorarioDTO;
+import DTOs.ReservaDTO;
+import DTOs.ReservaDTOGuardar;
+import Entidades.Computadora;
+import Entidades.Estudiante;
+import Entidades.Horario;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
+import ModuloReservas.Interfaz.IReservaNegocio;
+import ModuloReservas.Negocio.ReservaNegocio;
 import ModuloReservas.util.ComputadoraPanel;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author gaspa
  */
 public class FrmConfirmarReserva extends javax.swing.JFrame {
-    private final ComputadoraDTO computadora;
-    private IComputadoraDAO computadoraDAO;
+    private final ComputadoraDTO computadoraDTO;
+    private IReservaNegocio reservaNegocio;
     private FrmReservas frmReservas;
     private String idUsuario;
     private String minutos;
@@ -29,10 +40,10 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
      * Creates new form FrmConfirmarReserva
      * @param computadora
      */
-    public FrmConfirmarReserva(ComputadoraDTO computadora,IComputadoraDAO computadoraDAO, String idUsuario, String minutos,FrmReservas frmReservas) {
-        this.computadora = computadora;
+    public FrmConfirmarReserva(ComputadoraDTO computadoraDTO, String idUsuario, String minutos,FrmReservas frmReservas,IReservaNegocio reservaNegocio) {
+        this.computadoraDTO = computadoraDTO;
         this.frmReservas = frmReservas;
-        this.computadoraDAO = computadoraDAO;
+        this.reservaNegocio = reservaNegocio;
         this.idUsuario = idUsuario;
         this.minutos = minutos;
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -46,13 +57,13 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
         this.computadorasPanel.removeAll();
         this.computadorasPanel.repaint();
         
-        ComputadoraPanel panel = new ComputadoraPanel(computadora,computadoraDAO,idUsuario,minutos,false,frmReservas);
+        ComputadoraPanel panel = new ComputadoraPanel(computadoraDTO,idUsuario,minutos,false,frmReservas,reservaNegocio);
         this.computadorasPanel.add(panel);
         
         this.estudianteLabel.setText("Estudiante: "+idUsuario);
         this.tiempoLabel.setText("Tiempo: "+minutos+" minutos");
-        this.numeroEquipoLabel.setText("Equipo numero: "+computadora.getNumeroMaquina().toString());
-        this.SoftwareLabel.setText("Software del equipo: "+computadora.getCarrera().getNombreCarrera());
+        this.numeroEquipoLabel.setText("Equipo numero: "+computadoraDTO.getNumeroMaquina().toString());
+        this.SoftwareLabel.setText("Software del equipo: "+computadoraDTO.getCarrera().getNombreCarrera());
         this.revalidate();
         this.repaint();
     }
@@ -61,6 +72,24 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
         frmReservas.setVentanaReservaAbierta(false); // Reset del flag
         this.dispose();
     }
+    private void guardarReserva(){
+        ReservaDTOGuardar dto = new ReservaDTOGuardar();
+        dto.setFechaReserva(Calendar.getInstance());
+        dto.setHoraInicio(Calendar.getInstance());
+        dto.setComputadora(computadoraDTO.getIdComputadora());
+        dto.setEstudiante(idUsuario);
+        dto.setHorario(1L); 
+        try {
+            ReservaDTO resultado = reservaNegocio.guardar(dto);
+            JOptionPane.showMessageDialog(this, "Reserva guardada con éxito para equipo " + resultado.getComputadora().getNumeroMaquina());
+            this.dispose();
+            frmReservas.habilitarVentana();
+        } catch (NegocioException ex) {
+            JOptionPane.showMessageDialog(this, "Error al guardar la reserva: " + ex.getMessage());
+        }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -248,7 +277,7 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmarBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmarBTNActionPerformed
-        // TODO add your handling code here:
+        this.guardarReserva();
     }//GEN-LAST:event_confirmarBTNActionPerformed
 
     private void cancelarBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarBTNActionPerformed

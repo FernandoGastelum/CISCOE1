@@ -18,9 +18,9 @@ public class ReservaDTOGuardar {
     private Calendar fechaReserva;
     private Calendar horaInicio;
     private Calendar horaFin;
-    private Computadora computadora;
-    private Estudiante estudiante;
-    private Horario horario;
+    private Long idComputadora;
+    private String idEstudiante;
+    private Long idHorario;
 
     /**
      * Constructor por ausencia
@@ -28,12 +28,12 @@ public class ReservaDTOGuardar {
     public ReservaDTOGuardar() {
     }
 
-    public ReservaDTOGuardar(Calendar fechaReserva, Calendar horaInicio, Computadora computadora, Estudiante estudiante, Horario horario) {
+    public ReservaDTOGuardar(Calendar fechaReserva, Calendar horaInicio, Long idComputadora, String idEstudiante, Long idHorario) {
         this.fechaReserva = fechaReserva;
         this.horaInicio = horaInicio;
-        this.computadora = computadora;
-        this.estudiante = estudiante;
-        this.horario = horario;
+        this.idComputadora = idComputadora;
+        this.idEstudiante = idEstudiante;
+        this.idHorario = idHorario;
     }
 
     public Calendar getFechaReserva() {
@@ -60,33 +60,33 @@ public class ReservaDTOGuardar {
         this.horaFin = horaFin;
     }
 
-    public Computadora getComputadora() {
-        return computadora;
+    public Long getComputadora() {
+        return idComputadora;
     }
 
-    public void setComputadora(Computadora computadora) {
-        this.computadora = computadora;
+    public void setComputadora(Long idComputadora) {
+        this.idComputadora = idComputadora;
     }
 
-    public Estudiante getEstudiante() {
-        return estudiante;
+    public String getEstudiante() {
+        return idEstudiante;
     }
 
-    public void setEstudiante(Estudiante estudiante) {
-        this.estudiante = estudiante;
+    public void setEstudiante(String idEstudiante) {
+        this.idEstudiante = idEstudiante;
     }
 
-    public Horario getHorario() {
-        return horario;
+    public Long getHorario() {
+        return idHorario;
     }
 
-    public void setHorario(Horario horario) {
-        this.horario = horario;
+    public void setHorario(Long idHorario) {
+        this.idHorario = idHorario;
     }
 
     @Override
     public String toString() {
-        return "ReservaDTOGuardar{" + "fechaReserva=" + fechaReserva + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", computadora=" + computadora + ", estudiante=" + estudiante + ", horario=" + horario + '}';
+        return "ReservaDTOGuardar{" + "fechaReserva=" + fechaReserva + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", computadora=" + idComputadora + ", estudiante=" + idEstudiante + ", horario=" + idHorario + '}';
     }
     
     

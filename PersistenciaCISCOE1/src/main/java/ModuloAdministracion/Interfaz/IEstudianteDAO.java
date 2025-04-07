@@ -23,4 +23,6 @@ public interface IEstudianteDAO {
     List<Estudiante> obtener() throws PersistenciaException;
     
     EstudianteDTO obtenerDTO(Long id)throws PersistenciaException;
+    
+    Estudiante obtenerPorIdInstitucional(String id)throws PersistenciaException;
 }
