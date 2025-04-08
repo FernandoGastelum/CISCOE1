@@ -56,7 +56,7 @@ public class FrmLoginReservas extends javax.swing.JFrame {
             List<EstudianteDTO> listaEstudiantes = estudianteNegocio.obtener();
             for (EstudianteDTO listaEstudiante : listaEstudiantes) {
                 if(listaEstudiante.getIdInstitucional().equals(id)){
-                    return true;
+                    return listaEstudiante.getEstatusInscripcion()==true;
                 }
             }
         } catch (NegocioException ex) {
@@ -197,7 +197,7 @@ public class FrmLoginReservas extends javax.swing.JFrame {
             FrmReservas frmReserva = new FrmReservas(computadoraNegocio,estudianteNegocio,horarioNegocio,usuarioTextField.getText(),reservaNegocio);
             frmReserva.setVisible(true);
         }else{
-            JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+usuarioTextField.getText()+" No existe");
+            JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+usuarioTextField.getText()+" No existe o no esta inscrito");
         }
     }//GEN-LAST:event_LoginBTNActionPerformed
 

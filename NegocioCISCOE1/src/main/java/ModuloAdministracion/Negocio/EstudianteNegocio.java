@@ -14,6 +14,7 @@ import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.NoResultException;
 
 /**
  *
@@ -84,7 +85,9 @@ public class EstudianteNegocio implements IEstudianteNegocio {
         try {
              Estudiante estudianteEntidad = estudianteDAO.obtenerPorIdInstitucional(id);
              return estudianteDAO.obtenerDTO(estudianteEntidad.getIdEstudiante());
-        } catch (PersistenciaException e) {
+        }catch (NoResultException e) {
+        throw new NegocioException("No se encontró el estudiante con el ID: " + id);
+        }catch (PersistenciaException e) {
             throw new NegocioException("Error " + e.getMessage());
         }
     }
@@ -99,7 +102,7 @@ public class EstudianteNegocio implements IEstudianteNegocio {
     }
 
     private boolean reglasNegocioGuardar(EstudianteDTOGuardar estudiante) throws NegocioException {
-        if (estudiante.getCarrera() == null) {
+        if (estudiante.getCarreraDTO()== null) {
             throw new NegocioException("La carrera no puede estar vacia");
         }
         if (estudiante.getNombre() == null) {

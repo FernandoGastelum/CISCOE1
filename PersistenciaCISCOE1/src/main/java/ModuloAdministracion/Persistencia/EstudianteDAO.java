@@ -6,8 +6,10 @@ package ModuloAdministracion.Persistencia;
 
 import DTOs.EstudianteDTO;
 import DTOs.EstudianteDTOGuardar;
+import Entidades.Carrera;
 import Entidades.Estudiante;
 import Excepcion.PersistenciaException;
+import ModuloAdministracion.Interfaz.ICarreraDAO;
 import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import java.util.List;
@@ -36,10 +38,17 @@ public class EstudianteDAO implements IEstudianteDAO {
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
 
-        Estudiante estudianteEntidad = new Estudiante(estudiante.getIdInstitucional(), estudiante.getNombre(), estudiante.getApellidoPaterno(), estudiante.getApellidoPaterno(), estudiante.getContrasena(), estudiante.getCarrera());
+        Estudiante estudianteEntidad = this.convertirEntidad(estudiante);
 
         entity.persist(estudianteEntidad);
         entity.getTransaction().commit();
+        return estudianteEntidad;
+    }
+    public Estudiante convertirEntidad(EstudianteDTOGuardar estudiante) throws PersistenciaException{
+        ICarreraDAO carreraDAO = new CarreraDAO(em);
+        
+        Carrera carreraEntidad = carreraDAO.obtenerPorID(estudiante.getCarreraDTO().getIdCarrera());
+        Estudiante estudianteEntidad = new Estudiante(estudiante.getIdInstitucional(), estudiante.getNombre(), estudiante.getApellidoPaterno(), estudiante.getApellidoMaterno(), estudiante.getContrasena(), carreraEntidad);
         return estudianteEntidad;
     }
 

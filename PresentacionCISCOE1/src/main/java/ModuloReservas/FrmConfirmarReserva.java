@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.Calendar;
+import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -81,10 +82,12 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
     }
     private void volver() {
         frmReservas.habilitarVentana();
+        frmReservas.cargarComputadoras();
         frmReservas.setVentanaReservaAbierta(false); // Reset del flag
         this.dispose();
     }
     private void guardarReserva(){
+        Boolean reservaActiva = false;
         ReservaDTOGuardar dto = new ReservaDTOGuardar();
         dto.setFechaReserva(Calendar.getInstance());
         dto.setHoraInicio(Calendar.getInstance());
@@ -92,10 +95,21 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
         dto.setEstudianteDTO(estudianteDTO);
         dto.setHorario(horarioDTO);
         try {
-            ReservaDTO resultado = reservaNegocio.guardar(dto);
-            JOptionPane.showMessageDialog(this, "Reserva guardada con éxito para equipo " + resultado.getComputadora().getNumeroMaquina());
-            this.dispose();
-            frmReservas.habilitarVentana();
+            List<ReservaDTO> listaReservas = reservaNegocio.obtener();
+            for (ReservaDTO listaReserva : listaReservas) {
+                if(listaReserva.getEstudiante().getIdInstitucional().equals(estudianteDTO.getIdInstitucional())){
+                    if(listaReserva.getHoraFin()==null){
+                        reservaActiva=true;
+                        JOptionPane.showMessageDialog(this, "El estudiante tiene una reserva activa, primero libere la reserva antes de hacer una nueva");
+                    }
+                }
+            }
+            if(reservaActiva==false){
+                ReservaDTO resultado = reservaNegocio.guardar(dto);
+                JOptionPane.showMessageDialog(this, "Reserva guardada con éxito para equipo " + resultado.getComputadora().getNumeroMaquina());
+                this.volver();
+            }
+            
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, "Error al guardar la reserva: " + ex.getMessage());
         }

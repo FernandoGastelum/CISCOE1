@@ -5,7 +5,6 @@
 package DTOs;
 
 import Entidades.Bloqueo;
-import Entidades.Carrera;
 
 /**
  *
@@ -17,7 +16,7 @@ public class EstudianteDTOGuardar {
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String contrasena;
-    private Carrera carrera;
+    private CarreraDTO carreraDTO;
 
     /**
      * Constructor por ausencia
@@ -25,13 +24,13 @@ public class EstudianteDTOGuardar {
     public EstudianteDTOGuardar() {
     }
 
-    public EstudianteDTOGuardar(String idInstitucional, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasena, Carrera carrera) {
+    public EstudianteDTOGuardar(String idInstitucional, String nombre, String apellidoPaterno, String apellidoMaterno, String contrasena, CarreraDTO carreraDTO) {
         this.idInstitucional = idInstitucional;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.contrasena = contrasena;
-        this.carrera = carrera;
+        this.carreraDTO = carreraDTO;
     }
 
     public String getIdInstitucional() {
@@ -74,17 +73,17 @@ public class EstudianteDTOGuardar {
         this.contrasena = contrasena;
     }
 
-    public Carrera getCarrera() {
-        return carrera;
+    public CarreraDTO getCarreraDTO() {
+        return carreraDTO;
     }
 
-    public void setCarrera(Carrera carrera) {
-        this.carrera = carrera;
+    public void setCarreraDTO(CarreraDTO carreraDTO) {
+        this.carreraDTO = carreraDTO;
     }
 
     @Override
     public String toString() {
-        return "GuardarEstudianteDTO{" + "nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", contrasena=" + contrasena + ", carrera=" + carrera + '}';
+        return "GuardarEstudianteDTO{" + "nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", contrasena=" + contrasena + ", carreraDTO=" + carreraDTO + '}';
     }
     
     

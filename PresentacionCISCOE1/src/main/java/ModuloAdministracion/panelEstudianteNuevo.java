@@ -4,12 +4,18 @@
  */
 package ModuloAdministracion;
 
+import DTOs.CarreraDTO;
+import DTOs.EstudianteDTO;
 import DTOs.EstudianteDTOGuardar;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import Utilidades.ContraseniaUtil;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 
 /**
  *
@@ -32,31 +38,72 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
         this.estudianteNegocio = estudianteNegocio;
         this.carreraNegocio = carreraNegocio;
         initComponents();
+        this.cargarCarreras();
     }
 
     private void guardarAlumno() throws NegocioException {
-//        try {
-//            int randomNumber = 100000 + x.nextInt(900000);
-//            String ID = String.valueOf(randomNumber);
-//            EstudianteDTOGuardar estudianteNuevo = new EstudianteDTOGuardar(ID,
-//                    txtNombre.getText(), txtApellidoPaterno.getText(),
-//                    txtApellidoMaterno.getText(), txtContrasena.getText(), cboCarrera.getSelectedItem());
-//            estudianteNegocio.guardar(estudianteNuevo);
-//        } catch (NegocioException ex) {
-//            throw new NegocioException("Error " + ex.getMessage());
-//        }
+        int randomNumber = 100000 + x.nextInt(900000);
+        EstudianteDTOGuardar estudianteDTO = new EstudianteDTOGuardar();
+        estudianteDTO.setNombre(txtNombre.getText());
+        estudianteDTO.setApellidoPaterno(txtApellidoPaterno.getText());
+        estudianteDTO.setApellidoMaterno(txtApellidoMaterno.getText());
+        estudianteDTO.setCarreraDTO((CarreraDTO) cboCarrera.getSelectedItem());
+        estudianteDTO.setIdInstitucional(String.valueOf(randomNumber));
+        if (verificarContrasenias(this.contraseniaFIeld, this.confirmarContraseniaField)) {
+            String contrasenia = new String(this.contraseniaFIeld.getPassword());
+            String contraseniaEncriptada = ContraseniaUtil.encriptar(contrasenia);
+            estudianteDTO.setContrasena(contraseniaEncriptada);
+            estudianteDTO.setContrasena(contraseniaEncriptada);
+        }
+        try {
+            EstudianteDTO resultado = estudianteNegocio.guardar(estudianteDTO);
+            JOptionPane.showMessageDialog(this, "Estudiante guardado con éxito con el id institucional: " + resultado.getIdInstitucional());
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar el estudiante: " + e.getMessage());
+        }
+    }
+    private boolean verificarContrasenias(JPasswordField contrasenia, JPasswordField confirmarContrasenia) {
+        String pass1 = new String(contrasenia.getPassword());
+        String pass2 = new String(confirmarContrasenia.getPassword());
+
+        if (pass1.isEmpty() || pass2.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Por favor, llena ambos campos de contraseña.", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        if (!pass1.equals(pass2)) {
+            JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden.", "Error de coincidencia", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (pass1.length() < 8) {
+            JOptionPane.showMessageDialog(null, "La contraseña debe tener al menos 8 caracteres.", "Contraseña muy corta", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (!pass1.matches(".*[!@#$%^&*()_+\\-={}:;\"'?<>,.\\[\\]\\\\/].*")) {
+            JOptionPane.showMessageDialog(null, "La contraseña debe contener al menos un símbolo especial.", "Contraseña insegura", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+    private void cargarCarreras(){
+        try {
+            List<CarreraDTO> listaCarreras = carreraNegocio.obtener();
+            if(listaCarreras!=null){
+                for (CarreraDTO listaCarrera : listaCarreras) {
+                    this.cboCarrera.addItem(listaCarrera);
+                }
+            }
+            else{
+                throw new NegocioException("No hay carreras registradas");
+            }
+        } catch (NegocioException ex) {
+            System.out.println("Error al cargar las combo boxes "+ex.getMessage());
+        }
     }
     
-    
-//    private void cargarCarreras() {
-//        List<Carrera> carreras = carreraNegocio.obtener();
-//        
-//        cboCarrera.removeAllItems();
-//        
-//        for (Carrera carrera : carreras) {
-//            cboCarrera.addItem(carrera.getIdCarrera());
-//        }
-//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -79,11 +126,11 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
         txtNombre = new javax.swing.JTextField();
         txtApellidoPaterno = new javax.swing.JTextField();
         txtApellidoMaterno = new javax.swing.JTextField();
-        txtContrasena = new javax.swing.JTextField();
-        txtConfirmarContrasena = new javax.swing.JTextField();
         btnCancelar = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         cboCarrera = new javax.swing.JComboBox<>();
+        contraseniaFIeld = new javax.swing.JPasswordField();
+        confirmarContraseniaField = new javax.swing.JPasswordField();
 
         setBackground(new java.awt.Color(35, 35, 35));
 
@@ -141,17 +188,13 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Nombré");
+        jLabel7.setText("Nombre");
 
         txtNombre.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
         txtApellidoPaterno.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
         txtApellidoMaterno.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
-
-        txtContrasena.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
-
-        txtConfirmarContrasena.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
         btnCancelar.setBackground(new java.awt.Color(246, 255, 0));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
@@ -168,6 +211,10 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
 
         cboCarrera.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
+        contraseniaFIeld.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        confirmarContraseniaField.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -180,31 +227,33 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
                 .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(80, 80, 80))
             .addGroup(layout.createSequentialGroup()
+                .addGap(126, 126, 126)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(cboCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(126, 126, 126)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(309, 309, 309)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING))
-                                .addGap(68, 68, 68)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtConfirmarContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtApellidoPaterno, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtApellidoMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel9)
+                        .addComponent(jLabel2)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel7)
+                            .addGap(309, 309, 309)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel6)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(68, 68, 68)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtApellidoPaterno, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtApellidoMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(contraseniaFIeld, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(confirmarContraseniaField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addComponent(cboCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(865, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -232,12 +281,12 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                    .addComponent(contraseniaFIeld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(txtConfirmarContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                    .addComponent(confirmarContraseniaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addGap(18, 86, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar)
                     .addComponent(btnCancelar))
@@ -247,9 +296,9 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         try {
-            guardarAlumno();
+            this.guardarAlumno();
         } catch (NegocioException ex) {
-            Logger.getLogger(panelEstudianteNuevo.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error: "+ex.getMessage());
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
@@ -261,7 +310,9 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
-    private javax.swing.JComboBox<String> cboCarrera;
+    private javax.swing.JComboBox<CarreraDTO> cboCarrera;
+    private javax.swing.JPasswordField confirmarContraseniaField;
+    private javax.swing.JPasswordField contraseniaFIeld;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -273,8 +324,6 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
     private javax.swing.JPanel jPanelPantalla;
     private javax.swing.JTextField txtApellidoMaterno;
     private javax.swing.JTextField txtApellidoPaterno;
-    private javax.swing.JTextField txtConfirmarContrasena;
-    private javax.swing.JTextField txtContrasena;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }
