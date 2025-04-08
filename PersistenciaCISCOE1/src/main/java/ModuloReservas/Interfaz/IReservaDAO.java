@@ -17,7 +17,7 @@ import java.util.List;
  * @author gaspa
  */
 public interface IReservaDAO {
-    Reserva guardar(Reserva reserva) throws PersistenciaException;
+    Reserva guardar(ReservaDTOGuardar reserva) throws PersistenciaException;
     List<Reserva> obtener() throws PersistenciaException;
     Reserva obtenerPorID(Long id) throws PersistenciaException;
     ReservaDTO obtenerReservaDTO(Long id);

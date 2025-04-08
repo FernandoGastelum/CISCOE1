@@ -9,11 +9,21 @@ import DTOs.ReservaDTO;
 import DTOs.ReservaDTOGuardar;
 import Entidades.Carrera;
 import Entidades.Computadora;
+import Entidades.Estudiante;
+import Entidades.Horario;
 import Entidades.Reserva;
 import Excepcion.PersistenciaException;
+import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IEntityManager;
+import ModuloAdministracion.Interfaz.IEstudianteDAO;
+import ModuloAdministracion.Interfaz.IHorarioDAO;
+import ModuloAdministracion.Persistencia.ComputadoraDAO;
+import ModuloAdministracion.Persistencia.EstudianteDAO;
+import ModuloAdministracion.Persistencia.HorarioDAO;
 import ModuloReservas.Interfaz.IReservaDAO;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
@@ -31,15 +41,29 @@ public class ReservaDAO implements IReservaDAO{
         this.em = em;
     }
     @Override
-    public Reserva guardar(Reserva reserva) throws PersistenciaException {
+    public Reserva guardar(ReservaDTOGuardar reserva) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
         
-        Reserva reservaEntidad = new Reserva(reserva.getFechaReserva(), reserva.getHoraInicio(), reserva.getComputadora(), reserva.getEstudiante(), reserva.getHorario());
+        Reserva reservaEntidad = this.convertirEntidad(reserva);
         
         entity.persist(reservaEntidad);
         entity.getTransaction().commit();
         return reservaEntidad;
+    }
+    public Reserva convertirEntidad(ReservaDTOGuardar reservaDTO) throws PersistenciaException{
+        try {
+            IComputadoraDAO computadoraDAO = new ComputadoraDAO(em);
+            Computadora computadora = computadoraDAO.obtenerPorID(reservaDTO.getComputadoraDTO().getIdComputadora());
+            IEstudianteDAO estudianteDAO = new EstudianteDAO(em);
+            Estudiante estudiante = estudianteDAO.obtenerPorID(reservaDTO.getEstudianteDTO().getIdEstudiante());
+            IHorarioDAO horarioDAO = new HorarioDAO(em);
+            Horario horario = horarioDAO.obtenerPorID(reservaDTO.getHorario().getIdHorario());
+            Reserva reserva = new Reserva(reservaDTO.getFechaReserva(), reservaDTO.getHoraInicio(), computadora, estudiante, horario);
+            return reserva;
+        } catch (PersistenciaException ex) {
+            throw new PersistenciaException("Error "+ex.getMessage());
+        }
     }
 
     @Override

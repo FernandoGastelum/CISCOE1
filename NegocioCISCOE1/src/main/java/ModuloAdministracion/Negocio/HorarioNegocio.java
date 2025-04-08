@@ -74,4 +74,14 @@ public class HorarioNegocio implements IHorarioNegocio {
         }
         return true;
     }
+
+    @Override
+    public HorarioDTO obtenerHorarioActivoPorLaboratorio(Long idLaboratorio) throws NegocioException {
+        try {
+            Horario horarioEntidad = horarioDAO.obtenerUltimoHorarioActivoPorLaboratorio(idLaboratorio);
+            return horarioDAO.obtenerDTO(horarioEntidad.getIdHorario());
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error " + e.getMessage());
+        }
+    }
 }

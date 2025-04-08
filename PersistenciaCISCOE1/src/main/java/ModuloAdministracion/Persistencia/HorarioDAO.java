@@ -10,6 +10,7 @@ import Entidades.Horario;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Interfaz.IHorarioDAO;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -85,6 +86,35 @@ public class HorarioDAO implements IHorarioDAO{
         } catch (NoResultException e) {
             return null;
         }
+    }
+    @Override
+    public Horario obtenerUltimoHorarioActivoPorLaboratorio(Long idLaboratorio) throws PersistenciaException{
+        EntityManager entity = em.crearEntityManager();
+        TypedQuery<Horario> query = entity.createQuery("""
+                                                       SELECT h 
+                                                       FROM Horario h 
+                                                       WHERE h.laboratorio.idLaboratorio = :id 
+                                                       AND h.fecha <= :hoy 
+                                                       ORDER BY h.fecha DESC
+                                                             """,Horario.class);
+        query.setParameter("id", idLaboratorio);
+        query.setParameter("hoy", this.getFecha());
+        List<Horario> resultados = query.getResultList();
+        if (!resultados.isEmpty()) {
+            return resultados.get(0);
+        }
+        else{
+            throw new PersistenciaException("No se encontraron horarios con el id de laboratorio: "+idLaboratorio);
+        }
+    }
+    public Calendar getFecha(){
+        Calendar hoy = Calendar.getInstance();
+        // Limpiar hora, minutos, segundos para comparar solo fechas
+        hoy.set(Calendar.HOUR_OF_DAY, 0);
+        hoy.set(Calendar.MINUTE, 0);
+        hoy.set(Calendar.SECOND, 0);
+        hoy.set(Calendar.MILLISECOND, 0);
+        return hoy;
     }
     
 }

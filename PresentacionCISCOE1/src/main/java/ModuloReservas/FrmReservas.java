@@ -5,13 +5,16 @@
 package ModuloReservas;
 
 import DTOs.ComputadoraDTO;
+import DTOs.EstudianteDTO;
+import DTOs.HorarioDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
+import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import ModuloAdministracion.Interfaz.IHorarioNegocio;
 import ModuloAdministracion.Negocio.ComputadoraNegocio;
 import ModuloAdministracion.Persistencia.ComputadoraDAO;
 import ModuloReservas.Interfaz.IReservaNegocio;
-import ModuloReservas.util.ComputadoraPanel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -30,6 +33,8 @@ import javax.swing.JScrollPane;
  */
 public class FrmReservas extends javax.swing.JFrame {
     private IComputadoraNegocio computadoraNegocio;
+    private IEstudianteNegocio estudianteNegocio;
+    private IHorarioNegocio horarioNegocio;
     private IReservaNegocio reservaNegocio;
     private String idUsuario;
     private boolean ventanaReservaAbierta = false;
@@ -37,9 +42,11 @@ public class FrmReservas extends javax.swing.JFrame {
      * Creates new form FrmReservas
      * @param computadoraDAO
      */
-    public FrmReservas(IComputadoraNegocio computadoraNegocio, String idUsuario,IReservaNegocio reservaNegocio) {
+    public FrmReservas(IComputadoraNegocio computadoraNegocio,IEstudianteNegocio estudianteNegocio, IHorarioNegocio horarioNegocio,String idUsuario,IReservaNegocio reservaNegocio) {
         this.computadoraNegocio = computadoraNegocio;
+        this.estudianteNegocio = estudianteNegocio;
         this.reservaNegocio = reservaNegocio;
+        this.horarioNegocio = horarioNegocio;
         this.idUsuario = idUsuario;
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -60,7 +67,16 @@ public class FrmReservas extends javax.swing.JFrame {
             List<ComputadoraDTO> listaComputadoras = computadoraNegocio.obtener();
             if(listaComputadoras != null){
                 for (ComputadoraDTO listaComputadora : listaComputadoras) {
-                    ComputadoraPanel panel = new ComputadoraPanel(listaComputadora, idUsuario,this.minutosTextField.getText(),true,this,reservaNegocio);
+                    System.out.println("Id Laboratorio: "+listaComputadora.getLaboratorio().getIdLaboratorio());
+                    ComputadoraPanel panel = new ComputadoraPanel(
+                            listaComputadora,
+                            this.cargarEstudianteLogeado(),
+                            this.cargarHorario(listaComputadora.getLaboratorio().getIdLaboratorio()),
+                            idUsuario,
+                            this.minutosTextField.getText(),
+                            true,
+                            this,
+                            reservaNegocio);
                     this.computadorasPanel.add(panel);
                 }
             }
@@ -69,7 +85,14 @@ public class FrmReservas extends javax.swing.JFrame {
         }
         this.revalidate();
         this.repaint();
-        
+    }
+    public EstudianteDTO cargarEstudianteLogeado() throws NegocioException{
+        EstudianteDTO estudianteDTO = estudianteNegocio.obtenerPorIdInstitucional(idUsuario);
+        return estudianteDTO;
+    }
+    public HorarioDTO cargarHorario(Long idLaboratorio) throws NegocioException{
+        HorarioDTO horarioDTO = horarioNegocio.obtenerHorarioActivoPorLaboratorio(idLaboratorio);
+        return horarioDTO;
     }
     public void deshabilitarVentana() {
         this.setEnabled(false);
@@ -135,6 +158,11 @@ public class FrmReservas extends javax.swing.JFrame {
         minutosDisponiblesLabel.setText("---");
 
         minutosTextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        minutosTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minutosTextFieldActionPerformed(evt);
+            }
+        });
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -296,6 +324,10 @@ public class FrmReservas extends javax.swing.JFrame {
     private void salirBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBTNActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_salirBTNActionPerformed
+
+    private void minutosTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minutosTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_minutosTextFieldActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -9,20 +9,15 @@ import DTOs.EstudianteDTO;
 import DTOs.HorarioDTO;
 import DTOs.ReservaDTO;
 import DTOs.ReservaDTOGuardar;
-import Entidades.Computadora;
-import Entidades.Estudiante;
-import Entidades.Horario;
 import Excepcion.NegocioException;
-import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloReservas.Interfaz.IReservaNegocio;
-import ModuloReservas.Negocio.ReservaNegocio;
-import ModuloReservas.util.ComputadoraPanel;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.util.Calendar;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -31,17 +26,26 @@ import javax.swing.JOptionPane;
  */
 public class FrmConfirmarReserva extends javax.swing.JFrame {
     private final ComputadoraDTO computadoraDTO;
-    private IReservaNegocio reservaNegocio;
-    private FrmReservas frmReservas;
-    private String idUsuario;
-    private String minutos;
+    private final EstudianteDTO estudianteDTO;
+    private final HorarioDTO horarioDTO;
+    private final IReservaNegocio reservaNegocio;
+    private final FrmReservas frmReservas;
+    private final String idUsuario;
+    private final String minutos;
     
     /**
-     * Creates new form FrmConfirmarReserva
-     * @param computadora
+     * 
+     * @param computadoraDTO
+     * @param estudianteDTO
+     * @param idUsuario
+     * @param minutos
+     * @param frmReservas
+     * @param reservaNegocio 
      */
-    public FrmConfirmarReserva(ComputadoraDTO computadoraDTO, String idUsuario, String minutos,FrmReservas frmReservas,IReservaNegocio reservaNegocio) {
+    public FrmConfirmarReserva(ComputadoraDTO computadoraDTO,EstudianteDTO estudianteDTO,HorarioDTO horarioDTO, String idUsuario, String minutos,FrmReservas frmReservas,IReservaNegocio reservaNegocio) {
         this.computadoraDTO = computadoraDTO;
+        this.estudianteDTO = estudianteDTO;
+        this.horarioDTO = horarioDTO;
         this.frmReservas = frmReservas;
         this.reservaNegocio = reservaNegocio;
         this.idUsuario = idUsuario;
@@ -49,19 +53,26 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         initComponents();
         this.computadorasPanel.setLayout(new BoxLayout(this.computadorasPanel, BoxLayout.X_AXIS));
+        this.computadorasPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        this.computadorasPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         
         this.cargarComputadora();
     }
     
     public void cargarComputadora(){
-        this.computadorasPanel.removeAll();
-        this.computadorasPanel.repaint();
         
-        ComputadoraPanel panel = new ComputadoraPanel(computadoraDTO,idUsuario,minutos,false,frmReservas,reservaNegocio);
-        this.computadorasPanel.add(panel);
+        Icon icono = new ImageIcon(new ImageIcon(getClass().getResource("/images/PcIcon.png")).getImage().getScaledInstance(150, 150, 0));
+        imagenLabel.setIcon(icono);
+        this.numeroComputadoraLabel.setText(computadoraDTO.getNumeroMaquina().toString());
+        Color color = ColorUtil.parseColor(computadoraDTO.getCarrera().getColor());
+        this.colorPanel.setBackground(color);
+        this.colorPanel.setPreferredSize(new Dimension(150, 150));
+        this.colorPanel.setMaximumSize(new Dimension(150, 150));
+        this.colorPanel.setMinimumSize(new Dimension(150, 150));     
         
         this.estudianteLabel.setText("Estudiante: "+idUsuario);
         this.tiempoLabel.setText("Tiempo: "+minutos+" minutos");
+        System.out.println("Minutos:"+minutos);
         this.numeroEquipoLabel.setText("Equipo numero: "+computadoraDTO.getNumeroMaquina().toString());
         this.SoftwareLabel.setText("Software del equipo: "+computadoraDTO.getCarrera().getNombreCarrera());
         this.revalidate();
@@ -76,9 +87,9 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
         ReservaDTOGuardar dto = new ReservaDTOGuardar();
         dto.setFechaReserva(Calendar.getInstance());
         dto.setHoraInicio(Calendar.getInstance());
-        dto.setComputadora(computadoraDTO.getIdComputadora());
-        dto.setEstudiante(idUsuario);
-        dto.setHorario(1L); 
+        dto.setComputadoraDTO(computadoraDTO);
+        dto.setEstudianteDTO(estudianteDTO);
+        dto.setHorario(horarioDTO);
         try {
             ReservaDTO resultado = reservaNegocio.guardar(dto);
             JOptionPane.showMessageDialog(this, "Reserva guardada con éxito para equipo " + resultado.getComputadora().getNumeroMaquina());
@@ -102,6 +113,9 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         computadorasPanel = new javax.swing.JPanel();
+        numeroComputadoraLabel = new javax.swing.JLabel();
+        colorPanel = new javax.swing.JPanel();
+        imagenLabel = new javax.swing.JLabel();
         numeroEquipoLabel = new javax.swing.JLabel();
         tiempoLabel = new javax.swing.JLabel();
         SoftwareLabel = new javax.swing.JLabel();
@@ -121,15 +135,50 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
 
         computadorasPanel.setBackground(new java.awt.Color(102, 102, 102));
 
+        numeroComputadoraLabel.setForeground(new java.awt.Color(255, 255, 255));
+        numeroComputadoraLabel.setText("0");
+
+        imagenLabel.setMaximumSize(new java.awt.Dimension(500, 500));
+        imagenLabel.setMinimumSize(new java.awt.Dimension(500, 500));
+
+        javax.swing.GroupLayout colorPanelLayout = new javax.swing.GroupLayout(colorPanel);
+        colorPanel.setLayout(colorPanelLayout);
+        colorPanelLayout.setHorizontalGroup(
+            colorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(colorPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        colorPanelLayout.setVerticalGroup(
+            colorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(colorPanelLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(imagenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout computadorasPanelLayout = new javax.swing.GroupLayout(computadorasPanel);
         computadorasPanel.setLayout(computadorasPanelLayout);
         computadorasPanelLayout.setHorizontalGroup(
             computadorasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 160, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, computadorasPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(colorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, computadorasPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(numeroComputadoraLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(78, 78, 78))
         );
         computadorasPanelLayout.setVerticalGroup(
             computadorasPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 230, Short.MAX_VALUE)
+            .addGroup(computadorasPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(numeroComputadoraLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(colorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(12, 12, 12))
         );
 
         numeroEquipoLabel.setBackground(new java.awt.Color(255, 255, 255));
@@ -295,12 +344,15 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
     private javax.swing.JLabel SoftwareLabel;
     private javax.swing.JButton cancelarBTN;
     private javax.swing.JButton carrerasBTN;
+    private javax.swing.JPanel colorPanel;
     private javax.swing.JPanel computadorasPanel;
     private javax.swing.JButton confirmarBTN;
     private javax.swing.JLabel estudianteLabel;
+    private javax.swing.JLabel imagenLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel numeroComputadoraLabel;
     private javax.swing.JLabel numeroEquipoLabel;
     private javax.swing.JLabel tiempoLabel;
     // End of variables declaration//GEN-END:variables

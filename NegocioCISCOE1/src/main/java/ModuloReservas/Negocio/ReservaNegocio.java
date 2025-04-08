@@ -6,13 +6,9 @@ package ModuloReservas.Negocio;
 
 import DTOs.ReservaDTO;
 import DTOs.ReservaDTOGuardar;
-import Entidades.Computadora;
-import Entidades.Estudiante;
-import Entidades.Horario;
 import Entidades.Reserva;
 import Excepcion.NegocioException;
 import Excepcion.PersistenciaException;
-import ModuloAdministracion.Interfaz.IEstudianteNegocio;
 import ModuloReservas.Interfaz.IReservaDAO;
 import ModuloReservas.Interfaz.IReservaNegocio;
 import java.util.List;
@@ -24,10 +20,8 @@ import java.util.stream.Collectors;
  */
 public class ReservaNegocio implements IReservaNegocio{
     private final IReservaDAO reservaDAO;
-    private IEstudianteNegocio estudianteNegocio;
-    public ReservaNegocio(IReservaDAO reservaDAO, IEstudianteNegocio estudianteNegocio){
+    public ReservaNegocio(IReservaDAO reservaDAO){
         this.reservaDAO = reservaDAO;
-        this.estudianteNegocio = estudianteNegocio;
     }
     
 
@@ -47,15 +41,13 @@ public class ReservaNegocio implements IReservaNegocio{
     }
 
     private boolean reglasNegocioGuardar(ReservaDTOGuardar reserva) throws NegocioException {
-        if(reserva.getComputadora()==null){
+        if(reserva.getComputadoraDTO()==null){
             throw new NegocioException("Error, es obligatorio proporcionar una computadora");
         }
-        if(reserva.getEstudiante()==null){
+        if(reserva.getEstudianteDTO()==null){
             throw new NegocioException("Error, es obligatorio proporcionar un estudiante");
         }
-        if(reserva.getHorario()==null){
-            throw new NegocioException("Error, es obligatorio proporcionar un horario");
-        }
+        
         return true;
     }
 
@@ -63,24 +55,7 @@ public class ReservaNegocio implements IReservaNegocio{
     public ReservaDTO guardar(ReservaDTOGuardar dto) throws NegocioException {
         try {reglasNegocioGuardar(dto);
 
-            Computadora computadora = new Computadora();
-            computadora.setIdComputadora(dto.getComputadora());
-
-            Estudiante estudiante = new Estudiante();
-            Long idEstudiante = estudianteNegocio.obtenerPorIdInstitucional(dto.getEstudiante()).getIdEstudiante();
-            estudiante.setIdEstudiante(idEstudiante);
-
-            Horario horario = new Horario();
-            horario.setIdHorario(dto.getHorario());
-
-            Reserva reserva = new Reserva();
-            reserva.setFechaReserva(dto.getFechaReserva());
-            reserva.setHoraInicio(dto.getHoraInicio());
-            reserva.setComputadora(computadora);
-            reserva.setEstudiante(estudiante);
-            reserva.setHorario(horario);
-
-            Reserva reservaGuardada = reservaDAO.guardar(reserva);
+            Reserva reservaGuardada = reservaDAO.guardar(dto);
             return reservaDAO.obtenerReservaDTO(reservaGuardada.getIdReserva());
 
         } catch (PersistenciaException ex) {
