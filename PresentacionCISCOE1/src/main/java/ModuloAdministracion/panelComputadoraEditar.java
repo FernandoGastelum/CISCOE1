@@ -4,6 +4,8 @@
  */
 package ModuloAdministracion;
 
+import DTOs.CarreraDTO;
+import DTOs.LaboratorioDTO;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 
 /**
