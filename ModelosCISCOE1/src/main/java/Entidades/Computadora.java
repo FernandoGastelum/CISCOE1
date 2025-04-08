@@ -29,11 +29,11 @@ public class Computadora implements Serializable {
     @Column(name = "estatus", nullable = false)
     private Boolean estatus;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "id_laboratorio", nullable = false)
     private Laboratorio laboratorio;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "id_carrera", nullable = false)
     private Carrera carrera;
 

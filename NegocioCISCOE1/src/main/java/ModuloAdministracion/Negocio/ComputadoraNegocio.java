@@ -91,13 +91,13 @@ public class ComputadoraNegocio implements IComputadoraNegocio {
     }
 
     private boolean reglasNegocioGuardar(ComputadoraDTOGuardar computadora) throws NegocioException {
-        if (computadora.getCarrera() == null) {
+        if (computadora.getCarreraDTO()== null) {
             throw new NegocioException("La carrera no puede estar vacia");
         }
         if (computadora.getDireccionIp() == null) {
             throw new NegocioException("La direccion ip no puede estar vacia");
         }
-        if (computadora.getLaboratorio() == null) {
+        if (computadora.getLaboratorioDTO()== null) {
             throw new NegocioException("El laboratorio no puede estar vacio");
         }
         if (computadora.getNumeroMaquina() == null) {

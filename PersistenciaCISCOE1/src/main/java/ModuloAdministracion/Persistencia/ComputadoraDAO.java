@@ -6,10 +6,14 @@ package ModuloAdministracion.Persistencia;
 
 import DTOs.ComputadoraDTO;
 import DTOs.ComputadoraDTOGuardar;
+import Entidades.Carrera;
 import Entidades.Computadora;
+import Entidades.Laboratorio;
 import Excepcion.PersistenciaException;
+import ModuloAdministracion.Interfaz.ICarreraDAO;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IEntityManager;
+import ModuloAdministracion.Interfaz.ILaboratorioDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -33,10 +37,20 @@ public class ComputadoraDAO implements IComputadoraDAO{
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
         
-        Computadora computadoraEntidad = new Computadora(computadora.getNumeroMaquina(), computadora.getDireccionIp(), computadora.getLaboratorio(), computadora.getCarrera());
+        Computadora computadoraEntidad = this.convertirEntidad(computadora);
         
         entity.persist(computadoraEntidad);
         entity.getTransaction().commit();
+        return computadoraEntidad;
+    }
+    
+    public Computadora convertirEntidad(ComputadoraDTOGuardar computadora) throws PersistenciaException{
+        ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(em);
+        ICarreraDAO carreraDAO = new CarreraDAO(em);
+        
+        Laboratorio laboratorioEntidad = laboratorioDAO.obtenerPorID(computadora.getLaboratorioDTO().getIdLaboratorio());
+        Carrera carreraEntidad = carreraDAO.obtenerPorID(computadora.getCarreraDTO().getIdCarrera());
+        Computadora computadoraEntidad = new Computadora(computadora.getNumeroMaquina(), computadora.getDireccionIp(), laboratorioEntidad, carreraEntidad);
         return computadoraEntidad;
     }
 

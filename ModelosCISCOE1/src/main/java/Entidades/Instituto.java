@@ -27,7 +27,7 @@ public class Instituto implements Serializable {
     @Column(name = "nombre_abreviado", nullable = false, length = 30)
     private String nombreAbreviado;
     
-    @OneToMany(mappedBy = "instituto", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "instituto")
     private List<Laboratorio> laboratorios;
 
     public Instituto() {

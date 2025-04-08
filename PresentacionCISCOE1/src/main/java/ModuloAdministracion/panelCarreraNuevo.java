@@ -4,6 +4,7 @@
  */
 package ModuloAdministracion;
 
+import DTOs.CarreraDTOGuardar;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
 
 /**
@@ -19,6 +20,11 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
     public panelCarreraNuevo(ICarreraNegocio carreraNegocio) {
         this.carreraNegocio = carreraNegocio;
         initComponents();
+    }
+    public void guardarCarrera(){
+        CarreraDTOGuardar carreraDTO = new CarreraDTOGuardar();
+        carreraDTO.setNombreCarrera(txtNombre.getText());
+        carreraDTO.setTiempoMaximoDiario(Integer.valueOf(txtMinutosDiarios.getText()));
     }
 
     /**
@@ -74,6 +80,11 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setText("+ Agregar Carrera");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -85,7 +96,7 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Nombré");
+        jLabel7.setText("Nombre");
 
         txtNombre.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
@@ -99,6 +110,11 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
         btnColor.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnColor.setForeground(new java.awt.Color(255, 255, 255));
         btnColor.setText("Seleccionar Color");
+        btnColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnColorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -152,6 +168,14 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
                 .addGap(71, 71, 71))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnColorActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

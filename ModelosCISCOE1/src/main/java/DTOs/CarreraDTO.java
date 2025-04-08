@@ -62,7 +62,7 @@ public class CarreraDTO {
 
     @Override
     public String toString() {
-        return "CarreraDTO{" + "idCarrera=" + idCarrera + ", nombreCarrera=" + nombreCarrera + ", tiempoMaximoDiario=" + tiempoMaximoDiario + ", color=" + color + '}';
+        return this.nombreCarrera;
     }
     
     

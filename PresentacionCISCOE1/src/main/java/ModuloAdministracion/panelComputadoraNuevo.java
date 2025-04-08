@@ -4,7 +4,18 @@
  */
 package ModuloAdministracion;
 
+import DTOs.CarreraDTO;
+import DTOs.ComputadoraDTO;
+import DTOs.ComputadoraDTOGuardar;
+import DTOs.LaboratorioDTO;
+import Excepcion.NegocioException;
+import ModuloAdministracion.Interfaz.ICarreraNegocio;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
+import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,13 +24,63 @@ import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 public class panelComputadoraNuevo extends javax.swing.JPanel {
 
     private final IComputadoraNegocio computadoraNegocio;
+    private final ICarreraNegocio carreraNegocio;
+    private final ILaboratorioNegocio laboratorioNegocio;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelComputadoraNuevo(IComputadoraNegocio computadoraNegocio) {
+    public panelComputadoraNuevo(IComputadoraNegocio computadoraNegocio,ICarreraNegocio carreraNegocio,ILaboratorioNegocio laboratorioNegocio) {
         this.computadoraNegocio = computadoraNegocio;
+        this.carreraNegocio = carreraNegocio;
+        this.laboratorioNegocio = laboratorioNegocio;
         initComponents();
+        this.cargarCarreras();
+        this.cargarLaboratorios();
+    }
+    private void cargarCarreras(){
+        try {
+            List<CarreraDTO> listaCarreras = carreraNegocio.obtener();
+            if(listaCarreras!=null){
+                for (CarreraDTO listaCarrera : listaCarreras) {
+                    this.carreraComboBox.addItem(listaCarrera);
+                }
+            }
+            else{
+                throw new NegocioException("No hay carreras registradas");
+            }
+        } catch (NegocioException ex) {
+            System.out.println("Error al cargar las combo boxes "+ex.getMessage());
+        }
+    }
+    private void cargarLaboratorios(){
+        try {
+            List<LaboratorioDTO> listaLaboratorios = laboratorioNegocio.obtener();
+            if(listaLaboratorios!=null){
+                for (LaboratorioDTO listaLaboratorio : listaLaboratorios) {
+                    this.laboratorioComboBox.addItem(listaLaboratorio);
+                }
+            }
+            else{
+                throw new NegocioException("No hay laboratorios registrados");
+            }
+        } catch (NegocioException ex) {
+            System.out.println("Error al cargar las combo boxes "+ex.getMessage());
+        }
+    }
+    private void guardarComputadora(){
+        ComputadoraDTOGuardar computadoraDTO = new ComputadoraDTOGuardar();
+        computadoraDTO.setDireccionIp(txtIP.getText());
+        computadoraDTO.setNumeroMaquina(Integer.valueOf(txtNumeroMaquina.getText()));
+        computadoraDTO.setEstatus(true);
+        computadoraDTO.setCarreraDTO((CarreraDTO) carreraComboBox.getSelectedItem());
+        computadoraDTO.setLaboratorioDTO((LaboratorioDTO) laboratorioComboBox.getSelectedItem());
+        try {
+            ComputadoraDTO resultado = computadoraNegocio.guardar(computadoraDTO);
+            JOptionPane.showMessageDialog(this, "Computadora guardada con éxito con el numero: " + resultado.getNumeroMaquina());
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar la computadora: " + e.getMessage());
+        }
     }
 
     /**
@@ -40,6 +101,10 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
         txtNumeroMaquina = new javax.swing.JTextField();
         txtIP = new javax.swing.JTextField();
         btnCancelar = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        laboratorioComboBox = new javax.swing.JComboBox<>();
+        carreraComboBox = new javax.swing.JComboBox<>();
 
         setBackground(new java.awt.Color(35, 35, 35));
 
@@ -55,7 +120,7 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
         jPanelPantalla.setLayout(jPanelPantallaLayout);
         jPanelPantallaLayout.setHorizontalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1920, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1910, Short.MAX_VALUE)
         );
         jPanelPantallaLayout.setVerticalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -73,6 +138,11 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setText("+ Agregar Computadora");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -90,11 +160,29 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnCancelar.setText("Cancelar");
 
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Carrera");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Laboratorio");
+
+        laboratorioComboBox.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        carreraComboBox.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanelPantalla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(78, 78, 78)
+                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(80, 80, 80))
             .addGroup(layout.createSequentialGroup()
                 .addGap(126, 126, 126)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,16 +192,17 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
                         .addGap(55, 55, 55)
                         .addComponent(txtNumeroMaquina, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel5)))
                         .addGap(158, 158, 158)
-                        .addComponent(txtIP, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(953, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(78, 78, 78)
-                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(80, 80, 80))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(laboratorioComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtIP, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                            .addComponent(carreraComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(943, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,23 +218,42 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 408, Short.MAX_VALUE)
+                .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar)
-                    .addComponent(btnCancelar))
-                .addGap(71, 71, 71))
+                    .addComponent(jLabel4)
+                    .addComponent(carreraComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(66, 66, 66)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAgregar)
+                            .addComponent(btnCancelar))
+                        .addGap(71, 71, 71))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(laboratorioComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        this.guardarComputadora();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JComboBox<CarreraDTO> carreraComboBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanelPantalla;
+    private javax.swing.JComboBox<LaboratorioDTO> laboratorioComboBox;
     private javax.swing.JTextField txtIP;
     private javax.swing.JTextField txtNumeroMaquina;
     // End of variables declaration//GEN-END:variables

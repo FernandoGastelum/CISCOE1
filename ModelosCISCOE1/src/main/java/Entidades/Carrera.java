@@ -34,7 +34,7 @@ public class Carrera implements Serializable {
     @OneToMany(mappedBy = "carrera")
     private List<Computadora> computadoras;
     
-    @OneToMany(mappedBy = "carrera", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "carrera")
     private List<Estudiante> estudiantes;
     
     public Carrera() {

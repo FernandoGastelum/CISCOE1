@@ -85,9 +85,8 @@ public class LaboratorioDTO {
 
     @Override
     public String toString() {
-        return "LaboratorioDTO{" + "idLaboratorio=" + idLaboratorio + ", nombre=" + nombre + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", contrasenaMaestra=" + contrasenaMaestra + ", instituto=" + instituto + '}';
+        return this.nombre;
     }
-    
     
     
 }

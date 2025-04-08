@@ -4,9 +4,6 @@
  */
 package DTOs;
 
-import Entidades.Carrera;
-import Entidades.Laboratorio;
-
 /**
  *
  * @author Knocmare
@@ -16,8 +13,8 @@ public class ComputadoraDTOGuardar {
     private Integer numeroMaquina;
     private String direccionIp;
     private Boolean estatus;
-    private Laboratorio laboratorio;
-    private Carrera carrera;
+    private LaboratorioDTO laboratorioDTO;
+    private CarreraDTO carreraDTO;
 
     /**
      * Constructor por ausencia
@@ -25,12 +22,12 @@ public class ComputadoraDTOGuardar {
     public ComputadoraDTOGuardar() {
     }
 
-    public ComputadoraDTOGuardar(Integer numeroMaquina, String direccionIp, Laboratorio laboratorio, Carrera carrera) {
+    public ComputadoraDTOGuardar(Integer numeroMaquina, String direccionIp, LaboratorioDTO laboratorioDTO, CarreraDTO carreraDTO) {
         this.numeroMaquina = numeroMaquina;
         this.direccionIp = direccionIp;
         this.estatus = true;
-        this.laboratorio = laboratorio;
-        this.carrera = carrera;
+        this.laboratorioDTO = laboratorioDTO;
+        this.carreraDTO = carreraDTO;
     }
 
     public Integer getNumeroMaquina() {
@@ -57,25 +54,25 @@ public class ComputadoraDTOGuardar {
         this.estatus = estatus;
     }
 
-    public Laboratorio getLaboratorio() {
-        return laboratorio;
+    public LaboratorioDTO getLaboratorioDTO() {
+        return laboratorioDTO;
     }
 
-    public void setLaboratorio(Laboratorio laboratorio) {
-        this.laboratorio = laboratorio;
+    public void setLaboratorioDTO(LaboratorioDTO laboratorioDTO) {
+        this.laboratorioDTO = laboratorioDTO;
     }
 
-    public Carrera getCarrera() {
-        return carrera;
+    public CarreraDTO getCarreraDTO() {
+        return carreraDTO;
     }
 
-    public void setCarrera(Carrera carrera) {
-        this.carrera = carrera;
+    public void setCarreraDTO(CarreraDTO carreraDTO) {
+        this.carreraDTO = carreraDTO;
     }
 
     @Override
     public String toString() {
-        return "ComputadoraDTOGuardar{" + "numeroMaquina=" + numeroMaquina + ", direccionIp=" + direccionIp + ", estatus=" + estatus + ", laboratorio=" + laboratorio + ", carrera=" + carrera + '}';
+        return "ComputadoraDTOGuardar{" + "numeroMaquina=" + numeroMaquina + ", direccionIp=" + direccionIp + ", estatus=" + estatus + ", laboratorioDTO=" + laboratorioDTO + ", carreraDTO=" + carreraDTO + '}';
     }
     
     

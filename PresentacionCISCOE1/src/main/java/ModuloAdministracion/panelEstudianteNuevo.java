@@ -35,16 +35,16 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
     }
 
     private void guardarAlumno() throws NegocioException {
-        try {
-            int randomNumber = 100000 + x.nextInt(900000);
-            String ID = String.valueOf(randomNumber);
-            EstudianteDTOGuardar estudianteNuevo = new EstudianteDTOGuardar(ID,
-                    txtNombre.getText(), txtApellidoPaterno.getText(),
-                    txtApellidoMaterno.getText(), txtContrasena.getText(), cboCarrera.getSelectedItem());
-            estudianteNegocio.guardar(estudianteNuevo);
-        } catch (NegocioException ex) {
-            throw new NegocioException("Error " + ex.getMessage());
-        }
+//        try {
+//            int randomNumber = 100000 + x.nextInt(900000);
+//            String ID = String.valueOf(randomNumber);
+//            EstudianteDTOGuardar estudianteNuevo = new EstudianteDTOGuardar(ID,
+//                    txtNombre.getText(), txtApellidoPaterno.getText(),
+//                    txtApellidoMaterno.getText(), txtContrasena.getText(), cboCarrera.getSelectedItem());
+//            estudianteNegocio.guardar(estudianteNuevo);
+//        } catch (NegocioException ex) {
+//            throw new NegocioException("Error " + ex.getMessage());
+//        }
     }
     
     

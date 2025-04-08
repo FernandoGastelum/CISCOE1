@@ -311,7 +311,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionComputadorasListadoActionPerformed
 
     private void OpcionAgregarComputadoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarComputadoraActionPerformed
-        panelComputadoraNuevo panelComputadora = new panelComputadoraNuevo(computadoraNegocio);
+        panelComputadoraNuevo panelComputadora = new panelComputadoraNuevo(computadoraNegocio,carreraNegocio, laboratorioNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelComputadora, BorderLayout.CENTER);
