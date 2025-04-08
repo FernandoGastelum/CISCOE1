@@ -156,13 +156,9 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        tablaLaboratorios.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         tablaLaboratorios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "Nombré", "Hora Apertura", "Hora Cierre", "Editar", "Eliminar"

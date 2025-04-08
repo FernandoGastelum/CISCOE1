@@ -160,13 +160,9 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        tablaEstudiantes.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         tablaEstudiantes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "Nombré", "Estatus", "Editar", "Eliminar"

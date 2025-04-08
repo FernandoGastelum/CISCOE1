@@ -156,13 +156,9 @@ public class panelComputadorasListado extends javax.swing.JPanel {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        tablaComputadoras.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         tablaComputadoras.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "Número Máquina", "IP", "Estatus", "Editar", "Eliminar"

@@ -73,7 +73,7 @@ public class InstitutoDAO implements IInstitutoDAO{
         cq.select(cb.construct(InstitutoDTO.class,
                 instituto.get("idInstituto"),
                 instituto.get("nombreOficial"),
-                instituto.get("computadoras")))
+                instituto.get("nombreAbreviado")))
           .where(cb.equal(instituto.get("idInstituto"), id));
 
         TypedQuery<InstitutoDTO> query = entity.createQuery(cq);
