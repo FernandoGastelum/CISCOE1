@@ -70,7 +70,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
     
-    private boolean validarUsuario(String id){
+    private boolean validarUsuario(Long id){
         try {
             List<LaboratorioDTO> listaLaboratorios = laboratorioNegocio.obtener();
             for (LaboratorioDTO laboratorio : listaLaboratorios) {
@@ -224,7 +224,8 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        if(validarUsuario(txtUsuario.getText()) && validarContrasena(txtContrasena.getText())){
+        long valorLong = Long.parseLong(txtUsuario.getText());
+        if(validarUsuario(valorLong) && validarContrasena(txtContrasena.getText())){
             this.dispose();
             frmMenuAdministrativo menuAdministrativo = new frmMenuAdministrativo(
                     laboratorioNegocio, institutoNegocio, estudianteNegocio, computadoraNegocio, carreraNegocio, bloqueoNegocio);

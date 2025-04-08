@@ -6,9 +6,11 @@ package ModuloAdministracion;
 
 import DTOs.EstudianteTablaDTO;
 import Excepcion.NegocioException;
+import ModuloAdministracion.Interfaz.ICarreraNegocio;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
 import Utilidades.JButtonCellEditor;
 import Utilidades.JButtonRenderer;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -22,13 +24,15 @@ import javax.swing.table.TableColumnModel;
 public class panelEstudiantesListado extends javax.swing.JPanel {
     
     private IEstudianteNegocio estudianteNegocio;
+    private ICarreraNegocio carreraNegocio;
     
     /**
      * Creates new form panelListadoEstudiantes
      * @param estudianteNegocio
      */
-    public panelEstudiantesListado(IEstudianteNegocio estudianteNegocio) {
+    public panelEstudiantesListado(IEstudianteNegocio estudianteNegocio, ICarreraNegocio carreraNegocio) {
         this.estudianteNegocio = estudianteNegocio;
+        this.carreraNegocio = carreraNegocio;
         initComponents();
         this.metodosIniciales();
     }
@@ -186,6 +190,11 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setText("+ Agregar Estudiante");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -214,6 +223,15 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
                 .addGap(0, 59, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        panelEstudianteNuevo panelEstudiante = new panelEstudianteNuevo(estudianteNegocio, carreraNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelEstudiante, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

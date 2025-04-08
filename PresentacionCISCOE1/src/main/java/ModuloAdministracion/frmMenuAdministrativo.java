@@ -266,7 +266,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void OpcionEstudiantesListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionEstudiantesListadoActionPerformed
-        panelEstudiantesListado panelEstudiante = new panelEstudiantesListado(estudianteNegocio);
+        panelEstudiantesListado panelEstudiante = new panelEstudiantesListado(estudianteNegocio, carreraNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelEstudiante, BorderLayout.CENTER);
@@ -275,7 +275,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionEstudiantesListadoActionPerformed
 
     private void OpcionAgregarEstudianteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarEstudianteActionPerformed
-        panelEstudianteNuevo panelEstudiante = new panelEstudianteNuevo(estudianteNegocio);
+        panelEstudianteNuevo panelEstudiante = new panelEstudianteNuevo(estudianteNegocio, carreraNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelEstudiante, BorderLayout.CENTER);
