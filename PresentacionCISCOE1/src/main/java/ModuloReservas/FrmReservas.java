@@ -67,13 +67,11 @@ public class FrmReservas extends javax.swing.JFrame {
             List<ComputadoraDTO> listaComputadoras = computadoraNegocio.obtener();
             if(listaComputadoras != null){
                 for (ComputadoraDTO listaComputadora : listaComputadoras) {
-                    System.out.println("Id Laboratorio: "+listaComputadora.getLaboratorio().getIdLaboratorio());
                     ComputadoraPanel panel = new ComputadoraPanel(
                             listaComputadora,
                             this.cargarEstudianteLogeado(),
                             this.cargarHorario(listaComputadora.getLaboratorio().getIdLaboratorio()),
                             idUsuario,
-                            this.minutosTextField.getText(),
                             true,
                             this,
                             reservaNegocio);
@@ -85,6 +83,9 @@ public class FrmReservas extends javax.swing.JFrame {
         }
         this.revalidate();
         this.repaint();
+    }
+    public String getMinutos(){
+        return this.minutosTextField.getText();
     }
     public EstudianteDTO cargarEstudianteLogeado() throws NegocioException{
         EstudianteDTO estudianteDTO = estudianteNegocio.obtenerPorIdInstitucional(idUsuario);
@@ -340,7 +341,7 @@ public class FrmReservas extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel minutosDisponiblesLabel;
-    private javax.swing.JTextField minutosTextField;
+    public javax.swing.JTextField minutosTextField;
     private javax.swing.JButton salirBTN;
     // End of variables declaration//GEN-END:variables
 }

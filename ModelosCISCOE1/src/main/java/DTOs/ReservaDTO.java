@@ -19,6 +19,7 @@ public class ReservaDTO {
     private Calendar fechaReserva;
     private Calendar horaInicio;
     private Calendar horaFin;
+    private int minutos;
     private Computadora computadora;
     private Estudiante estudiante;
     private Horario horario;
@@ -29,10 +30,11 @@ public class ReservaDTO {
     public ReservaDTO() {
     }
 
-    public ReservaDTO(Long idReserva, Calendar fechaReserva, Calendar horaInicio, Calendar horaFin, Computadora computadora, Estudiante estudiante, Horario horario) {
+    public ReservaDTO(Long idReserva, Calendar fechaReserva, Calendar horaInicio, Calendar horaFin, int minutos,Computadora computadora, Estudiante estudiante, Horario horario) {
         this.idReserva = idReserva;
         this.fechaReserva = fechaReserva;
         this.horaInicio = horaInicio;
+        this.minutos = minutos;
         this.horaFin = horaFin;
         this.computadora = computadora;
         this.estudiante = estudiante;
@@ -45,6 +47,14 @@ public class ReservaDTO {
 
     public void setIdReserva(Long idReserva) {
         this.idReserva = idReserva;
+    }
+
+    public int getMinutos() {
+        return minutos;
+    }
+
+    public void setMinutos(int minutos) {
+        this.minutos = minutos;
     }
 
     public Calendar getFechaReserva() {
@@ -97,8 +107,10 @@ public class ReservaDTO {
 
     @Override
     public String toString() {
-        return "ReservaDTO{" + "idReserva=" + idReserva + ", fechaReserva=" + fechaReserva + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", computadora=" + computadora + ", estudiante=" + estudiante + ", horario=" + horario + '}';
+        return "ReservaDTO{" + "idReserva=" + idReserva + ", fechaReserva=" + fechaReserva + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", minutos=" + minutos + ", computadora=" + computadora + ", estudiante=" + estudiante + ", horario=" + horario + '}';
     }
+
+    
     
     
     

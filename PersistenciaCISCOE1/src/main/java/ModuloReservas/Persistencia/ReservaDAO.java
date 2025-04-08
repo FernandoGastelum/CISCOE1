@@ -59,7 +59,7 @@ public class ReservaDAO implements IReservaDAO{
             Estudiante estudiante = estudianteDAO.obtenerPorID(reservaDTO.getEstudianteDTO().getIdEstudiante());
             IHorarioDAO horarioDAO = new HorarioDAO(em);
             Horario horario = horarioDAO.obtenerPorID(reservaDTO.getHorario().getIdHorario());
-            Reserva reserva = new Reserva(reservaDTO.getFechaReserva(), reservaDTO.getHoraInicio(), computadora, estudiante, horario);
+            Reserva reserva = new Reserva(reservaDTO.getFechaReserva(), reservaDTO.getHoraInicio(), reservaDTO.getMinutos(),computadora, estudiante, horario);
             return reserva;
         } catch (PersistenciaException ex) {
             throw new PersistenciaException("Error "+ex.getMessage());
@@ -101,6 +101,7 @@ public class ReservaDAO implements IReservaDAO{
                 reserva.get("fechaReserva"),
                 reserva.get("horaInicio"),
                 reserva.get("horaFin"),
+                reserva.get("minutos"),
                 reserva.get("computadora"),
                 reserva.get("estudiante"),
                 reserva.get("horario")))

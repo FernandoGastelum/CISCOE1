@@ -94,6 +94,7 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
         dto.setComputadoraDTO(computadoraDTO);
         dto.setEstudianteDTO(estudianteDTO);
         dto.setHorario(horarioDTO);
+        dto.setMinutos(Integer.parseInt(minutos));
         try {
             List<ReservaDTO> listaReservas = reservaNegocio.obtener();
             for (ReservaDTO listaReserva : listaReservas) {

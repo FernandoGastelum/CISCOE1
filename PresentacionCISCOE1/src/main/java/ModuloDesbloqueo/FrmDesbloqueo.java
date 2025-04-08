@@ -23,6 +23,7 @@ import ModuloReservas.Interfaz.IReservaNegocio;
 import ModuloReservas.Negocio.ReservaNegocio;
 import ModuloReservas.Persistencia.ReservaDAO;
 import Utilidades.ColorUtil;
+import Utilidades.ContraseniaUtil;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.List;
@@ -42,13 +43,17 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
     private IEstudianteNegocio estudianteNegocio;
     private IReservaNegocio reservaNegocio;
     private IComputadoraNegocio computadoraNegocio;
+    private EstudianteDTO estudianteDTO;
+    private ComputadoraDTO computadoraDTO;
+    private ReservaDTO reservaDTO;
     /**
      * Creates new form FrmDesbloqueo
      */
-    public FrmDesbloqueo(IEstudianteNegocio estudianteNegocio,IReservaNegocio reservaNegocio,IComputadoraNegocio computadoraNegocio) {
+    public FrmDesbloqueo(IEstudianteNegocio estudianteNegocio,IReservaNegocio reservaNegocio,IComputadoraNegocio computadoraNegocio) throws NegocioException {
         this.estudianteNegocio = estudianteNegocio;
         this.reservaNegocio = reservaNegocio;
         this.computadoraNegocio = computadoraNegocio;
+        this.estudianteDTO = this.cargarAlumno();
         initComponents();
         this.cargarFondo();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -60,13 +65,13 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
     }
     private void cargarIconoComputadora(){
         try {
-            EstudianteDTO estudianteDTO = this.cargarAlumno();
             List<ReservaDTO> listaReservasDTO = reservaNegocio.obtener();
             for (ReservaDTO reservaDTO : listaReservasDTO) {
                 if(reservaDTO.getEstudiante().getIdInstitucional().equals(estudianteDTO.getIdInstitucional())){
                     if(reservaDTO.getHoraFin()==null){
                         
-                        ComputadoraDTO computadoraDTO = computadoraNegocio.obtenerPorID(reservaDTO.getComputadora().getIdComputadora());
+                        computadoraDTO = computadoraNegocio.obtenerPorID(reservaDTO.getComputadora().getIdComputadora());
+                        this.reservaDTO = reservaDTO;
                         this.cargarComputadora(computadoraDTO);
                         this.cargarDatosEstudiante(estudianteDTO);
                     }
@@ -132,7 +137,7 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
         lblNombreEstudiante = new javax.swing.JLabel();
         lblIdEstudiante = new javax.swing.JLabel();
         lblContrasena = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        contraseniaPasswordField = new javax.swing.JPasswordField();
         desbloquearBTN = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         numeroComputadoraLabel = new javax.swing.JLabel();
@@ -199,8 +204,8 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
         lblContrasena.setText("Contraseña");
         getContentPane().add(lblContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(304, 556, -1, -1));
 
-        jPasswordField1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        getContentPane().add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(304, 606, 331, -1));
+        contraseniaPasswordField.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        getContentPane().add(contraseniaPasswordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(304, 606, 331, -1));
 
         desbloquearBTN.setBackground(new java.awt.Color(51, 51, 51));
         desbloquearBTN.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -268,6 +273,17 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void desbloquearBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desbloquearBTNActionPerformed
+        ContraseniaUtil util = new ContraseniaUtil();
+    
+        String contraseniaIngresada = new String(contraseniaPasswordField.getPassword());
+
+        if (util.verificar(contraseniaIngresada, estudianteDTO.getContrasena())) {
+            FrmDesbloqueoIniciado frmDesbloqueoIniciado = new FrmDesbloqueoIniciado(reservaNegocio, computadoraDTO,reservaDTO);
+            this.dispose();
+            frmDesbloqueoIniciado.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Contraseña incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         
     }//GEN-LAST:event_desbloquearBTNActionPerformed
 
@@ -312,13 +328,18 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 
-                new FrmDesbloqueo(estudianteNegocio, reservaNegocio, computadoraNegocio).setVisible(true);
+                try {
+                    new FrmDesbloqueo(estudianteNegocio, reservaNegocio, computadoraNegocio).setVisible(true);
+                } catch (NegocioException ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel colorPanel;
+    private javax.swing.JPasswordField contraseniaPasswordField;
     private javax.swing.JButton desbloquearBTN;
     private javax.swing.JLabel imagenLabel;
     private javax.swing.JLabel jLabel1;
@@ -326,7 +347,6 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JLabel lblBackground;
     private javax.swing.JLabel lblContrasena;
     private javax.swing.JLabel lblIdEstudiante;

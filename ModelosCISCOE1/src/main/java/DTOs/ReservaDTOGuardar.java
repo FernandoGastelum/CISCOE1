@@ -14,6 +14,7 @@ public class ReservaDTOGuardar {
     private Calendar fechaReserva;
     private Calendar horaInicio;
     private Calendar horaFin;
+    private int minutos;
     private ComputadoraDTO computadoraDTO;
     private EstudianteDTO estudianteDTO;
     private HorarioDTO horario;
@@ -24,9 +25,10 @@ public class ReservaDTOGuardar {
     public ReservaDTOGuardar() {
     }
 
-    public ReservaDTOGuardar(Calendar fechaReserva, Calendar horaInicio, ComputadoraDTO computadoraDTO, EstudianteDTO estudianteDTO, HorarioDTO horario) {
+    public ReservaDTOGuardar(Calendar fechaReserva, Calendar horaInicio,int minutos, ComputadoraDTO computadoraDTO, EstudianteDTO estudianteDTO, HorarioDTO horario) {
         this.fechaReserva = fechaReserva;
         this.horaInicio = horaInicio;
+        this.minutos = minutos;
         this.computadoraDTO = computadoraDTO;
         this.estudianteDTO = estudianteDTO;
         this.horario = horario;
@@ -42,6 +44,14 @@ public class ReservaDTOGuardar {
 
     public Calendar getHoraInicio() {
         return horaInicio;
+    }
+
+    public int getMinutos() {
+        return minutos;
+    }
+
+    public void setMinutos(int minutos) {
+        this.minutos = minutos;
     }
 
     public void setHoraInicio(Calendar horaInicio) {

@@ -54,13 +54,14 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
             String contraseniaEncriptada = ContraseniaUtil.encriptar(contrasenia);
             estudianteDTO.setContrasena(contraseniaEncriptada);
             estudianteDTO.setContrasena(contraseniaEncriptada);
+            try {
+                EstudianteDTO resultado = estudianteNegocio.guardar(estudianteDTO);
+                JOptionPane.showMessageDialog(this, "Estudiante guardado con éxito con el id institucional: " + resultado.getIdInstitucional());
+            } catch (NegocioException e) {
+                JOptionPane.showMessageDialog(this, "Error al guardar el estudiante: " + e.getMessage());
+            }
         }
-        try {
-            EstudianteDTO resultado = estudianteNegocio.guardar(estudianteDTO);
-            JOptionPane.showMessageDialog(this, "Estudiante guardado con éxito con el id institucional: " + resultado.getIdInstitucional());
-        } catch (NegocioException e) {
-            JOptionPane.showMessageDialog(this, "Error al guardar el estudiante: " + e.getMessage());
-        }
+        
     }
     private boolean verificarContrasenias(JPasswordField contrasenia, JPasswordField confirmarContrasenia) {
         String pass1 = new String(contrasenia.getPassword());
