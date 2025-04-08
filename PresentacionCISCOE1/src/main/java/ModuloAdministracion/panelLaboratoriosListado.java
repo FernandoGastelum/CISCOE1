@@ -4,13 +4,23 @@
  */
 package ModuloAdministracion;
 
+import DTOs.LaboratorioTablaDTO;
+import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
+import Utilidades.JButtonCellEditor;
+import Utilidades.JButtonRenderer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
  * @author Knocmare
  */
 public class panelLaboratoriosListado extends javax.swing.JPanel {
+
     private final ILaboratorioNegocio laboratorioNegocio;
 
     /**
@@ -19,6 +29,91 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
     public panelLaboratoriosListado(ILaboratorioNegocio laboratorioNegocio) {
         this.laboratorioNegocio = laboratorioNegocio;
         initComponents();
+        this.metodosIniciales();
+    }
+
+    private void metodosIniciales() {
+        this.configuracionInicialTabla();
+        this.buscarTabla();
+    }
+
+    private void configuracionInicialTabla() {
+        ActionListener onEditarClickListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Metodo para editar
+                editar();
+            }
+        };
+        int indiceColumnaEditar = 4;
+        TableColumnModel modeloColumnas = this.tablaLaboratorios.getColumnModel();
+        modeloColumnas.getColumn(indiceColumnaEditar)
+                .setCellRenderer(new JButtonRenderer("Editar"));
+        modeloColumnas.getColumn(indiceColumnaEditar)
+                .setCellEditor(new JButtonCellEditor("Editar", onEditarClickListener));
+
+        ActionListener onEliminarClickListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Metodo para eliminar
+                eliminar();
+            }
+        };
+        int indiceColumnaEliminar = 5;
+        modeloColumnas = this.tablaLaboratorios.getColumnModel();
+        modeloColumnas.getColumn(indiceColumnaEliminar)
+                .setCellRenderer(new JButtonRenderer("Eliminar"));
+        modeloColumnas.getColumn(indiceColumnaEliminar)
+                .setCellEditor(new JButtonCellEditor("Eliminar", onEliminarClickListener));
+    }
+
+    private void editar() {
+        int id = this.getIdSeleccionadoTabla();
+        System.out.println("El id que se va a editar es " + id);
+    }
+
+    private void eliminar() {
+        int id = this.getIdSeleccionadoTabla();
+        System.out.println("El id que se va a eliminar es " + id);
+    }
+
+    private int getIdSeleccionadoTabla() {
+        int indiceFilaSeleccionada = this.tablaLaboratorios.getSelectedRow();
+        if (indiceFilaSeleccionada != -1) {
+            DefaultTableModel modelo = (DefaultTableModel) this.tablaLaboratorios.getModel();
+            int indiceColumnaId = 0;
+            int idSeleccionado = (int) modelo.getValueAt(indiceFilaSeleccionada,
+                    indiceColumnaId);
+            return idSeleccionado;
+        } else {
+            return 0;
+        }
+    }
+
+    private void buscarTabla() {
+        try {
+            List<LaboratorioTablaDTO> laboratoriosTablaLista = this.laboratorioNegocio.obtenerTabla();
+            this.agregarRegistrosTabla(laboratoriosTablaLista);
+        } catch (NegocioException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void agregarRegistrosTabla(List<LaboratorioTablaDTO> laboratoriossLista) {
+        if (laboratoriossLista == null) {
+            return;
+        }
+
+        DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaLaboratorios.getModel();
+        laboratoriossLista.forEach(row -> {
+            Object[] fila = new Object[4];
+            fila[0] = row.getIdLaboratorio();
+            fila[1] = row.getNombre();
+            fila[2] = row.getHoraApertura();
+            fila[3] = row.getHoraCierre();
+
+            modeloTabla.addRow(fila);
+        });
     }
 
     /**
@@ -33,7 +128,7 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
         jPanelPantalla = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaBloqueos = new javax.swing.JTable();
+        tablaLaboratorios = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
 
@@ -61,8 +156,8 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        tablaBloqueos.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
-        tablaBloqueos.setModel(new javax.swing.table.DefaultTableModel(
+        tablaLaboratorios.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+        tablaLaboratorios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -81,7 +176,7 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tablaBloqueos);
+        jScrollPane1.setViewportView(tablaLaboratorios);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 64)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -91,6 +186,11 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setText("+ Agregar Laboratorio");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -120,6 +220,10 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
@@ -127,6 +231,6 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanelPantalla;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tablaBloqueos;
+    private javax.swing.JTable tablaLaboratorios;
     // End of variables declaration//GEN-END:variables
 }

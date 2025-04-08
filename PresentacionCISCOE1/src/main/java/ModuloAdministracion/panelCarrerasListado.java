@@ -4,7 +4,16 @@
  */
 package ModuloAdministracion;
 
+import DTOs.CarreraTablaDTO;
+import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
+import Utilidades.JButtonCellEditor;
+import Utilidades.JButtonRenderer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -20,6 +29,90 @@ public class panelCarrerasListado extends javax.swing.JPanel {
     public panelCarrerasListado(ICarreraNegocio carreraNegocio) {
         this.carreraNegocio = carreraNegocio;
         initComponents();
+        this.metodosIniciales();
+    }
+
+    private void metodosIniciales() {
+        this.configuracionInicialTabla();
+        this.buscarTabla();
+    }
+
+    private void configuracionInicialTabla() {
+        ActionListener onEditarClickListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Metodo para editar
+                editar();
+            }
+        };
+        int indiceColumnaEditar = 3;
+        TableColumnModel modeloColumnas = this.tablaCarreras.getColumnModel();
+        modeloColumnas.getColumn(indiceColumnaEditar)
+                .setCellRenderer(new JButtonRenderer("Editar"));
+        modeloColumnas.getColumn(indiceColumnaEditar)
+                .setCellEditor(new JButtonCellEditor("Editar", onEditarClickListener));
+
+        ActionListener onEliminarClickListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Metodo para eliminar
+                eliminar();
+            }
+        };
+        int indiceColumnaEliminar = 4;
+        modeloColumnas = this.tablaCarreras.getColumnModel();
+        modeloColumnas.getColumn(indiceColumnaEliminar)
+                .setCellRenderer(new JButtonRenderer("Eliminar"));
+        modeloColumnas.getColumn(indiceColumnaEliminar)
+                .setCellEditor(new JButtonCellEditor("Eliminar", onEliminarClickListener));
+    }
+
+    private void editar() {
+        int id = this.getIdSeleccionadoTabla();
+        System.out.println("El id que se va a editar es " + id);
+    }
+
+    private void eliminar() {
+        int id = this.getIdSeleccionadoTabla();
+        System.out.println("El id que se va a eliminar es " + id);
+    }
+
+    private int getIdSeleccionadoTabla() {
+        int indiceFilaSeleccionada = this.tablaCarreras.getSelectedRow();
+        if (indiceFilaSeleccionada != -1) {
+            DefaultTableModel modelo = (DefaultTableModel) this.tablaCarreras.getModel();
+            int indiceColumnaId = 0;
+            int idSeleccionado = (int) modelo.getValueAt(indiceFilaSeleccionada,
+                    indiceColumnaId);
+            return idSeleccionado;
+        } else {
+            return 0;
+        }
+    }
+
+    private void buscarTabla() {
+        try {
+            List<CarreraTablaDTO> carrerasTablaLista = this.carreraNegocio.obtenerTabla();
+            this.agregarRegistrosTabla(carrerasTablaLista);
+        } catch (NegocioException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void agregarRegistrosTabla(List<CarreraTablaDTO> carrerasLista) {
+        if (carrerasLista == null) {
+            return;
+        }
+
+        DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaCarreras.getModel();
+        carrerasLista.forEach(row -> {
+            Object[] fila = new Object[3];
+            fila[0] = row.getIdCarrera();
+            fila[1] = row.getNombreCarrera();
+            fila[2] = row.getTiempoMaximoDiario();
+
+            modeloTabla.addRow(fila);
+        });
     }
 
     /**

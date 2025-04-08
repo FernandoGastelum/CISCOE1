@@ -4,13 +4,23 @@
  */
 package ModuloAdministracion;
 
+import DTOs.ComputadoraTablaDTO;
+import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
+import Utilidades.JButtonCellEditor;
+import Utilidades.JButtonRenderer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
  * @author Knocmare
  */
 public class panelComputadorasListado extends javax.swing.JPanel {
+
     private final IComputadoraNegocio computadoraNegocio;
 
     /**
@@ -19,6 +29,91 @@ public class panelComputadorasListado extends javax.swing.JPanel {
     public panelComputadorasListado(IComputadoraNegocio computadoraNegocio) {
         this.computadoraNegocio = computadoraNegocio;
         initComponents();
+        this.metodosIniciales();
+    }
+
+    private void metodosIniciales() {
+        this.configuracionInicialTabla();
+        this.buscarTabla();
+    }
+
+    private void configuracionInicialTabla() {
+        ActionListener onEditarClickListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Metodo para editar
+                editar();
+            }
+        };
+        int indiceColumnaEditar = 4;
+        TableColumnModel modeloColumnas = this.tablaComputadoras.getColumnModel();
+        modeloColumnas.getColumn(indiceColumnaEditar)
+                .setCellRenderer(new JButtonRenderer("Editar"));
+        modeloColumnas.getColumn(indiceColumnaEditar)
+                .setCellEditor(new JButtonCellEditor("Editar", onEditarClickListener));
+
+        ActionListener onEliminarClickListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Metodo para eliminar
+                eliminar();
+            }
+        };
+        int indiceColumnaEliminar = 5;
+        modeloColumnas = this.tablaComputadoras.getColumnModel();
+        modeloColumnas.getColumn(indiceColumnaEliminar)
+                .setCellRenderer(new JButtonRenderer("Eliminar"));
+        modeloColumnas.getColumn(indiceColumnaEliminar)
+                .setCellEditor(new JButtonCellEditor("Eliminar", onEliminarClickListener));
+    }
+
+    private void editar() {
+        int id = this.getIdSeleccionadoTabla();
+        System.out.println("El id que se va a editar es " + id);
+    }
+
+    private void eliminar() {
+        int id = this.getIdSeleccionadoTabla();
+        System.out.println("El id que se va a eliminar es " + id);
+    }
+
+    private int getIdSeleccionadoTabla() {
+        int indiceFilaSeleccionada = this.tablaComputadoras.getSelectedRow();
+        if (indiceFilaSeleccionada != -1) {
+            DefaultTableModel modelo = (DefaultTableModel) this.tablaComputadoras.getModel();
+            int indiceColumnaId = 0;
+            int idSeleccionado = (int) modelo.getValueAt(indiceFilaSeleccionada,
+                    indiceColumnaId);
+            return idSeleccionado;
+        } else {
+            return 0;
+        }
+    }
+
+    private void buscarTabla() {
+        try {
+            List<ComputadoraTablaDTO> computadorasTablaLista = this.computadoraNegocio.obtenerTabla();
+            this.agregarRegistrosTabla(computadorasTablaLista);
+        } catch (NegocioException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void agregarRegistrosTabla(List<ComputadoraTablaDTO> computadorasLista) {
+        if (computadorasLista == null) {
+            return;
+        }
+
+        DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaComputadoras.getModel();
+        computadorasLista.forEach(row -> {
+            Object[] fila = new Object[4];
+            fila[0] = row.getIdComputadora();
+            fila[1] = row.getNumeroMaquina();
+            fila[2] = row.getDireccionIp();
+            fila[3] = row.getEstatus();
+
+            modeloTabla.addRow(fila);
+        });
     }
 
     /**

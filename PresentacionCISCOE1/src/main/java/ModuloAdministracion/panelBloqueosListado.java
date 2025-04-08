@@ -4,7 +4,16 @@
  */
 package ModuloAdministracion;
 
+import DTOs.BloqueoTablaDTO;
+import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IBloqueoNegocio;
+import Utilidades.JButtonCellEditor;
+import Utilidades.JButtonRenderer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -19,6 +28,92 @@ public class panelBloqueosListado extends javax.swing.JPanel {
     public panelBloqueosListado(IBloqueoNegocio bloqueoNegocio) {
         this.bloqueoNegocio = bloqueoNegocio;
         initComponents();
+        this.metodosIniciales();
+    }
+
+    private void metodosIniciales() {
+        this.configuracionInicialTabla();
+        this.buscarTabla();
+    }
+
+    private void configuracionInicialTabla() {
+        ActionListener onEditarClickListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Metodo para editar
+                editar();
+            }
+        };
+        int indiceColumnaEditar = 5;
+        TableColumnModel modeloColumnas = this.tablaBloqueos.getColumnModel();
+        modeloColumnas.getColumn(indiceColumnaEditar)
+                .setCellRenderer(new JButtonRenderer("Editar"));
+        modeloColumnas.getColumn(indiceColumnaEditar)
+                .setCellEditor(new JButtonCellEditor("Editar", onEditarClickListener));
+
+        ActionListener onEliminarClickListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Metodo para eliminar
+                eliminar();
+            }
+        };
+        int indiceColumnaEliminar = 6;
+        modeloColumnas = this.tablaBloqueos.getColumnModel();
+        modeloColumnas.getColumn(indiceColumnaEliminar)
+                .setCellRenderer(new JButtonRenderer("Eliminar"));
+        modeloColumnas.getColumn(indiceColumnaEliminar)
+                .setCellEditor(new JButtonCellEditor("Eliminar", onEliminarClickListener));
+    }
+
+    private void editar() {
+        int id = this.getIdSeleccionadoTabla();
+        System.out.println("El id que se va a editar es " + id);
+    }
+
+    private void eliminar() {
+        int id = this.getIdSeleccionadoTabla();
+        System.out.println("El id que se va a eliminar es " + id);
+    }
+
+    private int getIdSeleccionadoTabla() {
+        int indiceFilaSeleccionada = this.tablaBloqueos.getSelectedRow();
+        if (indiceFilaSeleccionada != -1) {
+            DefaultTableModel modelo = (DefaultTableModel) this.tablaBloqueos.getModel();
+            int indiceColumnaId = 0;
+            int idSeleccionado = (int) modelo.getValueAt(indiceFilaSeleccionada,
+                    indiceColumnaId);
+            return idSeleccionado;
+        } else {
+            return 0;
+        }
+    }
+
+    private void buscarTabla() {
+        try {
+            List<BloqueoTablaDTO> bloqueosTablaLista = this.bloqueoNegocio.obtenerTabla();
+            this.agregarRegistrosTabla(bloqueosTablaLista);
+        } catch (NegocioException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void agregarRegistrosTabla(List<BloqueoTablaDTO> bloqueosLista) {
+        if (bloqueosLista == null) {
+            return;
+        }
+
+        DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaBloqueos.getModel();
+        bloqueosLista.forEach(row -> {
+            Object[] fila = new Object[5];
+            fila[0] = row.getIdBloqueo();
+            fila[1] = row.getFechaBloqueo();
+            fila[2] = row.getMotivo();
+            fila[3] = row.getIdInstitucional();
+            fila[4] = row.getFechaLiberacion();
+
+            modeloTabla.addRow(fila);
+        });
     }
 
     /**

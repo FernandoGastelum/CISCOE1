@@ -4,7 +4,16 @@
  */
 package ModuloAdministracion;
 
+import DTOs.InstitutoTablaDTO;
+import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IInstitutoNegocio;
+import Utilidades.JButtonCellEditor;
+import Utilidades.JButtonRenderer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -20,6 +29,90 @@ public class panelInstitutosListado extends javax.swing.JPanel {
     public panelInstitutosListado(IInstitutoNegocio institutoNegocio) {
         this.institutoNegocio = institutoNegocio;
         initComponents();
+        this.metodosIniciales();
+    }
+
+    private void metodosIniciales() {
+        this.configuracionInicialTabla();
+        this.buscarTabla();
+    }
+
+    private void configuracionInicialTabla() {
+        ActionListener onEditarClickListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Metodo para editar
+                editar();
+            }
+        };
+        int indiceColumnaEditar = 3;
+        TableColumnModel modeloColumnas = this.tablaInstitutos.getColumnModel();
+        modeloColumnas.getColumn(indiceColumnaEditar)
+                .setCellRenderer(new JButtonRenderer("Editar"));
+        modeloColumnas.getColumn(indiceColumnaEditar)
+                .setCellEditor(new JButtonCellEditor("Editar", onEditarClickListener));
+
+        ActionListener onEliminarClickListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Metodo para eliminar
+                eliminar();
+            }
+        };
+        int indiceColumnaEliminar = 4;
+        modeloColumnas = this.tablaInstitutos.getColumnModel();
+        modeloColumnas.getColumn(indiceColumnaEliminar)
+                .setCellRenderer(new JButtonRenderer("Eliminar"));
+        modeloColumnas.getColumn(indiceColumnaEliminar)
+                .setCellEditor(new JButtonCellEditor("Eliminar", onEliminarClickListener));
+    }
+
+    private void editar() {
+        int id = this.getIdSeleccionadoTabla();
+        System.out.println("El id que se va a editar es " + id);
+    }
+
+    private void eliminar() {
+        int id = this.getIdSeleccionadoTabla();
+        System.out.println("El id que se va a eliminar es " + id);
+    }
+
+    private int getIdSeleccionadoTabla() {
+        int indiceFilaSeleccionada = this.tablaInstitutos.getSelectedRow();
+        if (indiceFilaSeleccionada != -1) {
+            DefaultTableModel modelo = (DefaultTableModel) this.tablaInstitutos.getModel();
+            int indiceColumnaId = 0;
+            int idSeleccionado = (int) modelo.getValueAt(indiceFilaSeleccionada,
+                    indiceColumnaId);
+            return idSeleccionado;
+        } else {
+            return 0;
+        }
+    }
+
+    private void buscarTabla() {
+        try {
+            List<InstitutoTablaDTO> institutosTablaLista = this.institutoNegocio.obtenerTabla();
+            this.agregarRegistrosTabla(institutosTablaLista);
+        } catch (NegocioException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void agregarRegistrosTabla(List<InstitutoTablaDTO> institutosLista) {
+        if (institutosLista == null) {
+            return;
+        }
+
+        DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaInstitutos.getModel();
+        institutosLista.forEach(row -> {
+            Object[] fila = new Object[3];
+            fila[0] = row.getIdInstituto();
+            fila[1] = row.getNombreOficial();
+            fila[2] = row.getNombreAbreviado();
+
+            modeloTabla.addRow(fila);
+        });
     }
 
     /**
@@ -34,7 +127,7 @@ public class panelInstitutosListado extends javax.swing.JPanel {
         jPanelPantalla = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaBloqueos = new javax.swing.JTable();
+        tablaInstitutos = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
 
@@ -62,8 +155,8 @@ public class panelInstitutosListado extends javax.swing.JPanel {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        tablaBloqueos.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
-        tablaBloqueos.setModel(new javax.swing.table.DefaultTableModel(
+        tablaInstitutos.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+        tablaInstitutos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -82,7 +175,7 @@ public class panelInstitutosListado extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tablaBloqueos);
+        jScrollPane1.setViewportView(tablaInstitutos);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 64)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -128,6 +221,6 @@ public class panelInstitutosListado extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanelPantalla;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tablaBloqueos;
+    private javax.swing.JTable tablaInstitutos;
     // End of variables declaration//GEN-END:variables
 }
