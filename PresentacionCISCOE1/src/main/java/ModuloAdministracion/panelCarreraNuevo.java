@@ -4,8 +4,16 @@
  */
 package ModuloAdministracion;
 
+import DTOs.CarreraDTO;
 import DTOs.CarreraDTOGuardar;
+import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
+import java.awt.Color;
+import java.awt.Component;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JColorChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,7 +21,8 @@ import ModuloAdministracion.Interfaz.ICarreraNegocio;
  */
 public class panelCarreraNuevo extends javax.swing.JPanel {
     private final ICarreraNegocio carreraNegocio;
-
+    private Color colorSeleccionado;
+    private String colorHex;
     /**
      * Creates new form panelListadoEstudiantes
      */
@@ -25,6 +34,35 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
         CarreraDTOGuardar carreraDTO = new CarreraDTOGuardar();
         carreraDTO.setNombreCarrera(txtNombre.getText());
         carreraDTO.setTiempoMaximoDiario(Integer.valueOf(txtMinutosDiarios.getText()));
+        carreraDTO.setColor(this.getColorHex());
+        try {
+            CarreraDTO resultado = carreraNegocio.guardar(carreraDTO);
+            JOptionPane.showMessageDialog(this, "Carrera guardada con éxito con el nombre: " + resultado.getNombreCarrera());
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar la carrera: " + e.getMessage());
+        }
+    }
+    public void abrirSelectorColor(Component componentePadre) {
+        Color color = JColorChooser.showDialog(componentePadre, "Seleccionar color", Color.WHITE);
+        if (color != null) {
+            colorSeleccionado = color;
+            colorHex = convertirColorAHex(color);
+            System.out.println("Color seleccionado: " + colorSeleccionado);
+            System.out.println("Color en formato HEX: " + colorHex);
+        } else {
+            System.out.println("No se seleccionó ningún color.");
+        }
+    }
+    public Color getColorSeleccionado() {
+        return colorSeleccionado;
+    }
+
+    public String getColorHex() {
+        return colorHex;
+    }
+
+    private String convertirColorAHex(Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
     /**
@@ -170,11 +208,11 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorActionPerformed
-        // TODO add your handling code here:
+        this.abrirSelectorColor(null);
     }//GEN-LAST:event_btnColorActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        
+        this.guardarCarrera();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
 
