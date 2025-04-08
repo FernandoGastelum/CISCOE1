@@ -61,8 +61,9 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Error al guardar el estudiante: " + e.getMessage());
             }
         }
-        
+
     }
+
     private boolean verificarContrasenias(JPasswordField contrasenia, JPasswordField confirmarContrasenia) {
         String pass1 = new String(contrasenia.getPassword());
         String pass2 = new String(confirmarContrasenia.getPassword());
@@ -89,22 +90,21 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
 
         return true;
     }
-    private void cargarCarreras(){
+
+    private void cargarCarreras() {
         try {
             List<CarreraDTO> listaCarreras = carreraNegocio.obtener();
-            if(listaCarreras!=null){
+            if (listaCarreras != null) {
                 for (CarreraDTO listaCarrera : listaCarreras) {
                     this.cboCarrera.addItem(listaCarrera);
                 }
-            }
-            else{
+            } else {
                 throw new NegocioException("No hay carreras registradas");
             }
         } catch (NegocioException ex) {
-            System.out.println("Error al cargar las combo boxes "+ex.getMessage());
+            System.out.println("Error al cargar las combo boxes " + ex.getMessage());
         }
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -299,7 +299,7 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
         try {
             this.guardarAlumno();
         } catch (NegocioException ex) {
-            System.out.println("Error: "+ex.getMessage());
+            System.out.println("Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
 

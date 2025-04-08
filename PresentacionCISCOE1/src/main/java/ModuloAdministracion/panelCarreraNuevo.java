@@ -10,8 +10,6 @@ import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
 import java.awt.Color;
 import java.awt.Component;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 
@@ -20,9 +18,11 @@ import javax.swing.JOptionPane;
  * @author Knocmare
  */
 public class panelCarreraNuevo extends javax.swing.JPanel {
+
     private final ICarreraNegocio carreraNegocio;
     private Color colorSeleccionado;
     private String colorHex;
+
     /**
      * Creates new form panelListadoEstudiantes
      */
@@ -30,7 +30,8 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
         this.carreraNegocio = carreraNegocio;
         initComponents();
     }
-    public void guardarCarrera(){
+
+    private void guardarCarrera() {
         CarreraDTOGuardar carreraDTO = new CarreraDTOGuardar();
         carreraDTO.setNombreCarrera(txtNombre.getText());
         carreraDTO.setTiempoMaximoDiario(Integer.valueOf(txtMinutosDiarios.getText()));
@@ -42,7 +43,8 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Error al guardar la carrera: " + e.getMessage());
         }
     }
-    public void abrirSelectorColor(Component componentePadre) {
+
+    private void abrirSelectorColor(Component componentePadre) {
         Color color = JColorChooser.showDialog(componentePadre, "Seleccionar color", Color.WHITE);
         if (color != null) {
             colorSeleccionado = color;
@@ -53,6 +55,7 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
             System.out.println("No se seleccionó ningún color.");
         }
     }
+
     public Color getColorSeleccionado() {
         return colorSeleccionado;
     }

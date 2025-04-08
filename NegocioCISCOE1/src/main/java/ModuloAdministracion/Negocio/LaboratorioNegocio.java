@@ -47,7 +47,7 @@ public class LaboratorioNegocio implements ILaboratorioNegocio {
             throw new NegocioException("Error " + ex.getMessage());
         }
     }
-    
+
     @Override
     public List<LaboratorioTablaDTO> obtenerTabla() throws NegocioException {
         try {
@@ -96,7 +96,7 @@ public class LaboratorioNegocio implements ILaboratorioNegocio {
         if (laboratorio.getContrasenaMaestra() == null) {
             throw new NegocioException("La contraseña maestra no puede estar vacía");
         }
-        if (laboratorio.getInstituto() == null) {
+        if (laboratorio.getInstitutoDTO() == null) {
             throw new NegocioException("El instituto no puede estar vacío");
         }
         return true;

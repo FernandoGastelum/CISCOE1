@@ -329,7 +329,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionBloqueosListadoActionPerformed
 
     private void OpcionAgregarBloqueoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarBloqueoActionPerformed
-        panelBloqueoNuevo panelBloqueo = new panelBloqueoNuevo(bloqueoNegocio);
+        panelBloqueoNuevo panelBloqueo = new panelBloqueoNuevo(bloqueoNegocio, estudianteNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelBloqueo, BorderLayout.CENTER);
@@ -347,7 +347,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionLaboratoriosListadoActionPerformed
 
     private void OpcionAgregarLaboratorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarLaboratorioActionPerformed
-        panelLaboratorioNuevo panelLaboratorio = new panelLaboratorioNuevo(laboratorioNegocio);
+        panelLaboratorioNuevo panelLaboratorio = new panelLaboratorioNuevo(laboratorioNegocio, institutoNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelLaboratorio, BorderLayout.CENTER);

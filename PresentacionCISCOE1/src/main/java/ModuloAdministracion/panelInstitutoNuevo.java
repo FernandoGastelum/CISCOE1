@@ -4,14 +4,18 @@
  */
 package ModuloAdministracion;
 
+import DTOs.InstitutoDTO;
+import DTOs.InstitutoDTOGuardar;
+import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IInstitutoNegocio;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Knocmare
  */
 public class panelInstitutoNuevo extends javax.swing.JPanel {
-
+    
     private final IInstitutoNegocio institutoNegocio;
 
     /**
@@ -20,6 +24,20 @@ public class panelInstitutoNuevo extends javax.swing.JPanel {
     public panelInstitutoNuevo(IInstitutoNegocio institutoNegocio) {
         this.institutoNegocio = institutoNegocio;
         initComponents();
+    }
+    
+    private void guardarInstituto() {
+        InstitutoDTOGuardar institutoDTO = new InstitutoDTOGuardar();
+        
+        institutoDTO.setNombreOficial(txtNombreOficial.getText());
+        institutoDTO.setNombreAbreviado(txtAbreviatura.getText());
+        
+        try {
+            InstitutoDTO resultado = institutoNegocio.guardar(institutoDTO);
+            JOptionPane.showMessageDialog(this, "Instituto guardado con éxito con el nombre: " + resultado.getNombreOficial());
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar el instituto: " + e.getMessage());
+        }
     }
 
     /**
@@ -143,7 +161,7 @@ public class panelInstitutoNuevo extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        
+        this.guardarInstituto();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
 

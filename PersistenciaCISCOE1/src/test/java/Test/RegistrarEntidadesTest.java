@@ -6,9 +6,9 @@ package Test;
 
 import DTOs.HorarioDTOGuardar;
 import DTOs.InstitutoDTOGuardar;
+import DTOs.LaboratorioDTO;
 import Entidades.Horario;
 import Entidades.Instituto;
-import Entidades.Laboratorio;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Interfaz.IHorarioDAO;
@@ -19,11 +19,7 @@ import ModuloAdministracion.Persistencia.InstitutoDAO;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
@@ -31,12 +27,15 @@ import static org.junit.Assert.*;
  * @author gaspa
  */
 public class RegistrarEntidadesTest {
+
     public IEntityManager entityManager;
+
     @Before
     public void setUp() {
         entityManager = new EntityManagerDAO();
     }
-    public void registrarInstituto(){
+
+    public void registrarInstituto() {
         IInstitutoDAO institutoDAO = new InstitutoDAO(entityManager);
         InstitutoDTOGuardar institutoDTO = new InstitutoDTOGuardar("Instituto Tecnologico de Sonora", "ITSON");
         try {
@@ -46,11 +45,12 @@ public class RegistrarEntidadesTest {
             Logger.getLogger(RegistrarEntidadesTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void registrarHorario(){
+
+    public void registrarHorario() {
         IHorarioDAO horarioDAO = new HorarioDAO(entityManager);
-        Laboratorio laboratorioEntidad = new Laboratorio();
-        laboratorioEntidad.setIdLaboratorio(1L);
-        HorarioDTOGuardar horarioDTO = new HorarioDTOGuardar(this.gethoraInicio(), this.gethoraCierre(), Calendar.getInstance(), laboratorioEntidad);
+        LaboratorioDTO laboratorioDTO = new LaboratorioDTO();
+        laboratorioDTO.setIdLaboratorio(1L);
+        HorarioDTOGuardar horarioDTO = new HorarioDTOGuardar(this.gethoraInicio(), this.gethoraCierre(), Calendar.getInstance(), laboratorioDTO);
         try {
             Horario horarioEntidad = horarioDAO.guardar(horarioDTO);
             assertEquals(this.gethoraInicio(), horarioDAO.obtenerPorID(horarioEntidad.getIdHorario()).getHoraApertura());
@@ -58,7 +58,8 @@ public class RegistrarEntidadesTest {
             Logger.getLogger(RegistrarEntidadesTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public Calendar gethoraInicio(){
+
+    public Calendar gethoraInicio() {
         Calendar hora = Calendar.getInstance();
         hora.set(Calendar.HOUR_OF_DAY, 10);
         hora.set(Calendar.MINUTE, 0);
@@ -66,7 +67,8 @@ public class RegistrarEntidadesTest {
         hora.set(Calendar.MILLISECOND, 0);
         return hora;
     }
-    public Calendar gethoraCierre(){
+
+    public Calendar gethoraCierre() {
         Calendar hora = Calendar.getInstance();
         hora.set(Calendar.HOUR_OF_DAY, 22);
         hora.set(Calendar.MINUTE, 0);
@@ -74,8 +76,9 @@ public class RegistrarEntidadesTest {
         hora.set(Calendar.MILLISECOND, 0);
         return hora;
     }
-    public void registrarComputadora(){
-        
+
+    public void registrarComputadora() {
+
     }
-    
+
 }

@@ -19,12 +19,13 @@ import java.util.List;
  * @author Knocmare
  */
 public class HorarioNegocio implements IHorarioNegocio {
+
     private final IHorarioDAO horarioDAO;
 
     public HorarioNegocio(IHorarioDAO horarioDAO) {
         this.horarioDAO = horarioDAO;
     }
-    
+
     @Override
     public HorarioDTO guardar(HorarioDTOGuardar horario) throws NegocioException {
         try {
@@ -58,7 +59,7 @@ public class HorarioNegocio implements IHorarioNegocio {
             throw new NegocioException("Error " + ex.getMessage());
         }
     }
-    
+
     private boolean reglasNegocioGuardar(HorarioDTOGuardar horario) throws NegocioException {
         if (horario.getFecha() == null) {
             throw new NegocioException("La fecha no puede estar vacía");
@@ -69,7 +70,7 @@ public class HorarioNegocio implements IHorarioNegocio {
         if (horario.getHoraCierre() == null) {
             throw new NegocioException("La hora de cierre no puede estar vacía");
         }
-        if (horario.getLaboratorio() == null) {
+        if (horario.getLaboratorioDTO() == null) {
             throw new NegocioException("El laboratorio no puede estar vacío");
         }
         return true;

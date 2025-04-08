@@ -40,9 +40,10 @@ public class Bloqueo implements Serializable {
     public Bloqueo() {
     }
 
-    public Bloqueo(Calendar fechaBloqueo, String motivo) {
+    public Bloqueo(Calendar fechaBloqueo, String motivo, Estudiante estudiante) {
         this.fechaBloqueo = fechaBloqueo;
         this.motivo = motivo;
+        this.estudiante = estudiante;
     }
 
     // Getters y Setters

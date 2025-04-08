@@ -7,10 +7,11 @@ package ModuloAdministracion.Persistencia;
 import DTOs.BloqueoDTO;
 import DTOs.BloqueoDTOGuardar;
 import Entidades.Bloqueo;
-import Entidades.Carrera;
+import Entidades.Estudiante;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IBloqueoDAO;
 import ModuloAdministracion.Interfaz.IEntityManager;
+import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -34,10 +35,18 @@ public class BloqueoDAO implements IBloqueoDAO{
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
         
-        Bloqueo bloqueoEntidad = new Bloqueo(bloqueo.getFechaBloqueo(), bloqueo.getMotivo());
+        Bloqueo bloqueoEntidad = this.convertirEntidad(bloqueo);
         
         entity.persist(bloqueoEntidad);
         entity.getTransaction().commit();
+        return bloqueoEntidad;
+    }
+    
+    private Bloqueo convertirEntidad(BloqueoDTOGuardar bloqueo) throws PersistenciaException {
+        IEstudianteDAO estudianteDAO = new EstudianteDAO(em);
+
+        Estudiante estudianteEntidad = estudianteDAO.obtenerPorID(bloqueo.getEstudianteDTO().getIdEstudiante());
+        Bloqueo bloqueoEntidad = new Bloqueo(bloqueo.getFechaBloqueo(), bloqueo.getMotivo(), estudianteEntidad);
         return bloqueoEntidad;
     }
 

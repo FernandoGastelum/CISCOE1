@@ -16,7 +16,7 @@ public class HorarioDTOGuardar {
     private Calendar horaApertura;
     private Calendar horaCierre;
     private Calendar fecha;
-    private Laboratorio laboratorio;
+    private LaboratorioDTO laboratorioDTO;
 
     /**
      * Constructor por ausencia
@@ -24,11 +24,11 @@ public class HorarioDTOGuardar {
     public HorarioDTOGuardar() {
     }
 
-    public HorarioDTOGuardar(Calendar horaApertura, Calendar horaCierre, Calendar fecha, Laboratorio laboratorio) {
+    public HorarioDTOGuardar(Calendar horaApertura, Calendar horaCierre, Calendar fecha, LaboratorioDTO laboratorioDTO) {
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
         this.fecha = fecha;
-        this.laboratorio = laboratorio;
+        this.laboratorioDTO = laboratorioDTO;
     }
 
     public Calendar getHoraApertura() {
@@ -55,17 +55,17 @@ public class HorarioDTOGuardar {
         this.fecha = fecha;
     }
 
-    public Laboratorio getLaboratorio() {
-        return laboratorio;
+    public LaboratorioDTO getLaboratorioDTO() {
+        return laboratorioDTO;
     }
 
-    public void setLaboratorio(Laboratorio laboratorio) {
-        this.laboratorio = laboratorio;
+    public void setLaboratorioDTO(LaboratorioDTO laboratorioDTO) {
+        this.laboratorioDTO = laboratorioDTO;
     }
 
     @Override
     public String toString() {
-        return "HorarioDTOGuardar{" + "horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", fecha=" + fecha + ", laboratorio=" + laboratorio + '}';
+        return "HorarioDTOGuardar{" + "horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", fecha=" + fecha + ", laboratorioDTO=" + laboratorioDTO + '}';
     }
     
     

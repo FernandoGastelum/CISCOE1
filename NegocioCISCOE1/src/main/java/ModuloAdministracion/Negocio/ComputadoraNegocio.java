@@ -8,14 +8,12 @@ import DTOs.ComputadoraDTO;
 import DTOs.ComputadoraDTOGuardar;
 import DTOs.ComputadoraTablaDTO;
 import Entidades.Computadora;
-import Entidades.Reserva;
 import Excepcion.NegocioException;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *

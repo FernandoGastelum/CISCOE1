@@ -15,7 +15,6 @@ import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -44,9 +43,10 @@ public class EstudianteDAO implements IEstudianteDAO {
         entity.getTransaction().commit();
         return estudianteEntidad;
     }
-    public Estudiante convertirEntidad(EstudianteDTOGuardar estudiante) throws PersistenciaException{
+
+    private Estudiante convertirEntidad(EstudianteDTOGuardar estudiante) throws PersistenciaException {
         ICarreraDAO carreraDAO = new CarreraDAO(em);
-        
+
         Carrera carreraEntidad = carreraDAO.obtenerPorID(estudiante.getCarreraDTO().getIdCarrera());
         Estudiante estudianteEntidad = new Estudiante(estudiante.getIdInstitucional(), estudiante.getNombre(), estudiante.getApellidoPaterno(), estudiante.getApellidoMaterno(), estudiante.getContrasena(), carreraEntidad);
         return estudianteEntidad;
@@ -70,7 +70,7 @@ public class EstudianteDAO implements IEstudianteDAO {
                                                          SELECT e
                                                          FROM Estudiante e
                                                          """, Estudiante.class);
-        if(query.getResultList()==null){
+        if (query.getResultList() == null) {
             throw new PersistenciaException("No se encontraron resultados");
         }
         return query.getResultList();
@@ -91,10 +91,10 @@ public class EstudianteDAO implements IEstudianteDAO {
                 estudiante.get("estatusInscripcion"),
                 estudiante.get("contrasena"),
                 estudiante.get("carrera")))
-          .where(cb.equal(estudiante.get("idEstudiante"), id));
+                .where(cb.equal(estudiante.get("idEstudiante"), id));
 
         TypedQuery<EstudianteDTO> query = entity.createQuery(cq);
-        if(query.getSingleResult()==null){
+        if (query.getSingleResult() == null) {
             throw new PersistenciaException("No se encontraron resultados");
         }
         try {
@@ -111,7 +111,7 @@ public class EstudianteDAO implements IEstudianteDAO {
                                                              SELECT e 
                                                              FROM Estudiante e 
                                                              WHERE e.idInstitucional = :id
-                                                             """,Estudiante.class);
+                                                             """, Estudiante.class);
         query.setParameter("id", id);
         return query.getSingleResult();
     }

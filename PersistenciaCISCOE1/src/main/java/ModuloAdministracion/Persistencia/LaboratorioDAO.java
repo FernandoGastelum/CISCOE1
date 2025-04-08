@@ -6,9 +6,11 @@ package ModuloAdministracion.Persistencia;
 
 import DTOs.LaboratorioDTO;
 import DTOs.LaboratorioDTOGuardar;
+import Entidades.Instituto;
 import Entidades.Laboratorio;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IEntityManager;
+import ModuloAdministracion.Interfaz.IInstitutoDAO;
 import ModuloAdministracion.Interfaz.ILaboratorioDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -22,9 +24,11 @@ import javax.persistence.criteria.Root;
  *
  * @author gaspa
  */
-public class LaboratorioDAO implements ILaboratorioDAO{
+public class LaboratorioDAO implements ILaboratorioDAO {
+
     private IEntityManager em;
-    public LaboratorioDAO(IEntityManager em){
+
+    public LaboratorioDAO(IEntityManager em) {
         this.em = em;
     }
 
@@ -32,11 +36,21 @@ public class LaboratorioDAO implements ILaboratorioDAO{
     public Laboratorio guardar(LaboratorioDTOGuardar laboratorio) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
-        
-        Laboratorio laboratorioEntidad = new Laboratorio(laboratorio.getNombre(), laboratorio.getHoraApertura(), laboratorio.getHoraCierre(), laboratorio.getContrasenaMaestra(), laboratorio.getInstituto());
-        
+
+        Laboratorio laboratorioEntidad = this.convertirEntidad(laboratorio);
+
         entity.persist(laboratorioEntidad);
         entity.getTransaction().commit();
+        return laboratorioEntidad;
+    }
+
+    private Laboratorio convertirEntidad(LaboratorioDTOGuardar laboratorio) throws PersistenciaException {
+        IInstitutoDAO institutoDAO = new InstitutoDAO(em);
+
+        Instituto institutoEntidad = institutoDAO.obtenerPorID(laboratorio.getInstitutoDTO().getIdInstituto());
+        Laboratorio laboratorioEntidad = new Laboratorio(laboratorio.getNombre(),
+                laboratorio.getHoraApertura(), laboratorio.getHoraCierre(),
+                laboratorio.getContrasenaMaestra(), institutoEntidad);
         return laboratorioEntidad;
     }
 
@@ -44,13 +58,13 @@ public class LaboratorioDAO implements ILaboratorioDAO{
     public Laboratorio obtenerPorID(Long id) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         Laboratorio laboratorio = entity.find(Laboratorio.class, id);
-        if(laboratorio!=null){
+        if (laboratorio != null) {
             return laboratorio;
-        }else{
-            throw new PersistenciaException("No se encontro un laboratorio con el id "+id);
+        } else {
+            throw new PersistenciaException("No se encontro un laboratorio con el id " + id);
         }
     }
-    
+
     @Override
     public List<Laboratorio> obtener() throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
@@ -58,7 +72,7 @@ public class LaboratorioDAO implements ILaboratorioDAO{
                                                          SELECT l
                                                          FROM Laboratorio l
                                                          """, Laboratorio.class);
-        if(query.getResultList()==null){
+        if (query.getResultList() == null) {
             throw new PersistenciaException("No se encontraron resultados");
         }
         return query.getResultList();
@@ -77,7 +91,7 @@ public class LaboratorioDAO implements ILaboratorioDAO{
                 laboratorio.get("horaCierre"),
                 laboratorio.get("contrasenaMaestra"),
                 laboratorio.get("instituto")))
-          .where(cb.equal(laboratorio.get("idLaboratorio"), id));
+                .where(cb.equal(laboratorio.get("idLaboratorio"), id));
 
         TypedQuery<LaboratorioDTO> query = entity.createQuery(cq);
 

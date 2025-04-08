@@ -44,7 +44,7 @@ public class ComputadoraDAO implements IComputadoraDAO{
         return computadoraEntidad;
     }
     
-    public Computadora convertirEntidad(ComputadoraDTOGuardar computadora) throws PersistenciaException{
+    private Computadora convertirEntidad(ComputadoraDTOGuardar computadora) throws PersistenciaException{
         ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(em);
         ICarreraDAO carreraDAO = new CarreraDAO(em);
         

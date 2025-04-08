@@ -7,9 +7,11 @@ package ModuloAdministracion.Persistencia;
 import DTOs.HorarioDTO;
 import DTOs.HorarioDTOGuardar;
 import Entidades.Horario;
+import Entidades.Laboratorio;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Interfaz.IHorarioDAO;
+import ModuloAdministracion.Interfaz.ILaboratorioDAO;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -23,9 +25,11 @@ import javax.persistence.criteria.Root;
  *
  * @author gaspa
  */
-public class HorarioDAO implements IHorarioDAO{
+public class HorarioDAO implements IHorarioDAO {
+
     private IEntityManager em;
-    public HorarioDAO(IEntityManager em){
+
+    public HorarioDAO(IEntityManager em) {
         this.em = em;
     }
 
@@ -33,11 +37,19 @@ public class HorarioDAO implements IHorarioDAO{
     public Horario guardar(HorarioDTOGuardar horario) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
-        
-        Horario horarioEntidad = new Horario(horario.getHoraApertura(), horario.getHoraCierre(), horario.getFecha(), horario.getLaboratorio());
-        
+
+        Horario horarioEntidad = this.convertirEntidad(horario);
+
         entity.persist(horarioEntidad);
         entity.getTransaction().commit();
+        return horarioEntidad;
+    }
+
+    private Horario convertirEntidad(HorarioDTOGuardar horario) throws PersistenciaException {
+        ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(em);
+
+        Laboratorio laboratorioEntidad = laboratorioDAO.obtenerPorID(horario.getLaboratorioDTO().getIdLaboratorio());
+        Horario horarioEntidad = new Horario(horario.getHoraApertura(), horario.getHoraCierre(), horario.getFecha(), laboratorioEntidad);
         return horarioEntidad;
     }
 
@@ -45,10 +57,10 @@ public class HorarioDAO implements IHorarioDAO{
     public Horario obtenerPorID(Long id) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         Horario horario = entity.find(Horario.class, id);
-        if(horario!=null){
+        if (horario != null) {
             return horario;
-        }else{
-            throw new PersistenciaException("No se encontro un horario con el id "+id);
+        } else {
+            throw new PersistenciaException("No se encontro un horario con el id " + id);
         }
     }
 
@@ -59,7 +71,7 @@ public class HorarioDAO implements IHorarioDAO{
                                                          SELECT h
                                                          FROM Horario h
                                                          """, Horario.class);
-        if(query.getResultList()==null){
+        if (query.getResultList() == null) {
             throw new PersistenciaException("No se encontraron resultados");
         }
         return query.getResultList();
@@ -77,7 +89,7 @@ public class HorarioDAO implements IHorarioDAO{
                 horario.get("horaCierre"),
                 horario.get("fecha"),
                 horario.get("laboratorio")))
-          .where(cb.equal(horario.get("idHorario"), id));
+                .where(cb.equal(horario.get("idHorario"), id));
 
         TypedQuery<HorarioDTO> query = entity.createQuery(cq);
 
@@ -87,8 +99,9 @@ public class HorarioDAO implements IHorarioDAO{
             return null;
         }
     }
+
     @Override
-    public Horario obtenerUltimoHorarioActivoPorLaboratorio(Long idLaboratorio) throws PersistenciaException{
+    public Horario obtenerUltimoHorarioActivoPorLaboratorio(Long idLaboratorio) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         TypedQuery<Horario> query = entity.createQuery("""
                                                        SELECT h 
@@ -96,18 +109,18 @@ public class HorarioDAO implements IHorarioDAO{
                                                        WHERE h.laboratorio.idLaboratorio = :id 
                                                        AND h.fecha <= :hoy 
                                                        ORDER BY h.fecha DESC
-                                                             """,Horario.class);
+                                                             """, Horario.class);
         query.setParameter("id", idLaboratorio);
         query.setParameter("hoy", this.getFecha());
         List<Horario> resultados = query.getResultList();
         if (!resultados.isEmpty()) {
             return resultados.get(0);
-        }
-        else{
-            throw new PersistenciaException("No se encontraron horarios con el id de laboratorio: "+idLaboratorio);
+        } else {
+            throw new PersistenciaException("No se encontraron horarios con el id de laboratorio: " + idLaboratorio);
         }
     }
-    public Calendar getFecha(){
+
+    public Calendar getFecha() {
         Calendar hoy = Calendar.getInstance();
         // Limpiar hora, minutos, segundos para comparar solo fechas
         hoy.set(Calendar.HOUR_OF_DAY, 0);
@@ -116,5 +129,5 @@ public class HorarioDAO implements IHorarioDAO{
         hoy.set(Calendar.MILLISECOND, 0);
         return hoy;
     }
-    
+
 }

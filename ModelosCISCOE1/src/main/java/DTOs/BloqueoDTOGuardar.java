@@ -15,7 +15,7 @@ public class BloqueoDTOGuardar {
     
     private Calendar fechaBloqueo;
     private String motivo;
-    private Estudiante estudiante;
+    private EstudianteDTO estudianteDTO;
 
     /**
      * Constructor por ausencia
@@ -23,10 +23,10 @@ public class BloqueoDTOGuardar {
     public BloqueoDTOGuardar() {
     }
 
-    public BloqueoDTOGuardar(Calendar fechaBloqueo, String motivo, Estudiante estudiante) {
+    public BloqueoDTOGuardar(Calendar fechaBloqueo, String motivo, EstudianteDTO estudianteDTO) {
         this.fechaBloqueo = fechaBloqueo;
         this.motivo = motivo;
-        this.estudiante = estudiante;
+        this.estudianteDTO = estudianteDTO;
     }
 
     public Calendar getFechaBloqueo() {
@@ -45,17 +45,17 @@ public class BloqueoDTOGuardar {
         this.motivo = motivo;
     }
 
-    public Estudiante getEstudiante() {
-        return estudiante;
+    public EstudianteDTO getEstudianteDTO() {
+        return estudianteDTO;
     }
 
-    public void setEstudiante(Estudiante estudiante) {
-        this.estudiante = estudiante;
+    public void setEstudianteDTO(EstudianteDTO estudianteDTO) {
+        this.estudianteDTO = estudianteDTO;
     }
 
     @Override
     public String toString() {
-        return "BloqueoDTOGuardar{" + "fechaBloqueo=" + fechaBloqueo + ", motivo=" + motivo + ", estudiante=" + estudiante + '}';
+        return "BloqueoDTOGuardar{" + "fechaBloqueo=" + fechaBloqueo + ", motivo=" + motivo + ", estudianteDTO=" + estudianteDTO + '}';
     }
     
 }

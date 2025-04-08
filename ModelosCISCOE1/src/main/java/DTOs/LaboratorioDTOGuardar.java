@@ -17,7 +17,7 @@ public class LaboratorioDTOGuardar {
     private Calendar horaApertura;
     private Calendar horaCierre;
     private String contrasenaMaestra;
-    private Instituto instituto;
+    private InstitutoDTO institutoDTO;
 
     /**
      * Constructor por ausencia
@@ -25,12 +25,12 @@ public class LaboratorioDTOGuardar {
     public LaboratorioDTOGuardar() {
     }
 
-    public LaboratorioDTOGuardar(String nombre, Calendar horaApertura, Calendar horaCierre, String contrasenaMaestra, Instituto instituto) {
+    public LaboratorioDTOGuardar(String nombre, Calendar horaApertura, Calendar horaCierre, String contrasenaMaestra, InstitutoDTO institutoDTO) {
         this.nombre = nombre;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
         this.contrasenaMaestra = contrasenaMaestra;
-        this.instituto = instituto;
+        this.institutoDTO = institutoDTO;
     }
 
     public String getNombre() {
@@ -65,17 +65,17 @@ public class LaboratorioDTOGuardar {
         this.contrasenaMaestra = contrasenaMaestra;
     }
 
-    public Instituto getInstituto() {
-        return instituto;
+    public InstitutoDTO getInstitutoDTO() {
+        return institutoDTO;
     }
 
-    public void setInstituto(Instituto instituto) {
-        this.instituto = instituto;
+    public void setInstitutoDTO(InstitutoDTO institutoDTO) {
+        this.institutoDTO = institutoDTO;
     }
 
     @Override
     public String toString() {
-        return "GuardarLaboratorioDTO{" + "nombre=" + nombre + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", contrasenaMaestra=" + contrasenaMaestra + ", instituto=" + instituto + '}';
+        return "GuardarLaboratorioDTO{" + "nombre=" + nombre + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", contrasenaMaestra=" + contrasenaMaestra + ", institutoDTO=" + institutoDTO + '}';
     }
     
     
