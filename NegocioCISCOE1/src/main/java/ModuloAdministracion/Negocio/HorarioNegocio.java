@@ -77,10 +77,14 @@ public class HorarioNegocio implements IHorarioNegocio {
     }
 
     @Override
-    public HorarioDTO obtenerHorarioActivoPorLaboratorio(Long idLaboratorio) throws NegocioException {
+    public HorarioDTO obtenerHorarioDelDia(Long idLaboratorio) throws NegocioException {
         try {
-            Horario horarioEntidad = horarioDAO.obtenerUltimoHorarioActivoPorLaboratorio(idLaboratorio);
-            return horarioDAO.obtenerDTO(horarioEntidad.getIdHorario());
+            Horario horarioEntidad = horarioDAO.obtenerHorarioDelDia(idLaboratorio);
+            if(horarioEntidad!=null){
+                return horarioDAO.obtenerDTO(horarioEntidad.getIdHorario());
+            }
+            //Se devuelve un null para poder proceder a crear un horario nuevo
+            return null;
         } catch (PersistenciaException e) {
             throw new NegocioException("Error " + e.getMessage());
         }

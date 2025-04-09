@@ -53,6 +53,7 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
         this.idUsuario = idUsuario;
         this.minutos = minutos;
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        
         initComponents();
         this.computadorasPanel.setLayout(new BoxLayout(this.computadorasPanel, BoxLayout.X_AXIS));
         this.computadorasPanel.setAlignmentX(Component.LEFT_ALIGNMENT);

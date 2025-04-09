@@ -7,6 +7,7 @@ package ModuloReservas;
 import DTOs.ComputadoraDTO;
 import DTOs.EstudianteDTO;
 import DTOs.HorarioDTO;
+import DTOs.HorarioDTOGuardar;
 import DTOs.LaboratorioDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
@@ -20,11 +21,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -105,8 +108,19 @@ public class FrmReservas extends javax.swing.JFrame {
         return estudianteDTO;
     }
     public HorarioDTO cargarHorario(Long idLaboratorio) throws NegocioException{
-        HorarioDTO horarioDTO = horarioNegocio.obtenerHorarioActivoPorLaboratorio(idLaboratorio);
-        return horarioDTO;
+        HorarioDTO horarioDTO = horarioNegocio.obtenerHorarioDelDia(idLaboratorio);
+        if(horarioDTO == null){
+            HorarioDTOGuardar horarioDTOGuardar = new HorarioDTOGuardar(
+                    laboratorioDTO.getHoraApertura(),
+                    laboratorioDTO.getHoraCierre(),
+                    Calendar.getInstance(),
+                    laboratorioDTO);
+            return horarioNegocio.guardar(horarioDTOGuardar);
+        }
+        else{
+            return horarioDTO;
+        }
+        
     }
     public void deshabilitarVentana() {
         this.setEnabled(false);
@@ -128,6 +142,12 @@ public class FrmReservas extends javax.swing.JFrame {
 
     public void setVentanaReservaAbierta(boolean abierta) {
         this.ventanaReservaAbierta = abierta;
+    }
+    private void salir(){
+        int opcion = JOptionPane.showConfirmDialog(this, "¿Desea salir el proceso de seleccion?", "Cancelar", JOptionPane.YES_NO_OPTION);
+            if (opcion == JOptionPane.YES_OPTION) {
+                this.dispose(); 
+            }
     }
 
     /**
@@ -336,7 +356,7 @@ public class FrmReservas extends javax.swing.JFrame {
     }//GEN-LAST:event_carrerasBTNActionPerformed
 
     private void salirBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBTNActionPerformed
-        // TODO add your handling code here:
+        this.salir();
     }//GEN-LAST:event_salirBTNActionPerformed
 
     private void minutosTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minutosTextFieldActionPerformed

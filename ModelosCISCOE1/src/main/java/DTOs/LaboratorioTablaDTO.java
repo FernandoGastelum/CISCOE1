@@ -55,5 +55,11 @@ public class LaboratorioTablaDTO {
     public void setHoraCierre(Calendar horaCierre) {
         this.horaCierre = horaCierre;
     }
+
+    @Override
+    public String toString() {
+        return "LaboratorioTablaDTO{" + "idLaboratorio=" + idLaboratorio + ", nombre=" + nombre + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + '}';
+    }
+    
     
 }
