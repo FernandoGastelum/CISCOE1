@@ -85,7 +85,8 @@ public class BloqueoDAO implements IBloqueoDAO{
                 bloqueo.get("idBloqueo"),
                 bloqueo.get("fechaBloqueo"),
                 bloqueo.get("fechaLiberacion"),
-                bloqueo.get("motivo")))
+                bloqueo.get("motivo"),
+                bloqueo.get("estudiante")))
           .where(cb.equal(bloqueo.get("idBloqueo"), id));
 
         TypedQuery<BloqueoDTO> query = entity.createQuery(cq);
