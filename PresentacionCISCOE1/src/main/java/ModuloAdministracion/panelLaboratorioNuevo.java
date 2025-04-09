@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package ModuloAdministracion;
 
 import DTOs.InstitutoDTO;
@@ -11,7 +7,13 @@ import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IInstitutoNegocio;
 import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
 import Utilidades.ContraseniaUtil;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
@@ -26,6 +28,7 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
 
     /**
      * Creates new form panelListadoEstudiantes
+     *
      * @param laboratorioNegocio
      * @param institutoNegocio
      */
@@ -35,7 +38,7 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         initComponents();
         this.cargarInstituto();
     }
-    
+
     private void cargarInstituto() {
         try {
             List<InstitutoDTO> listaInstitutos = institutoNegocio.obtener();
@@ -51,20 +54,28 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         }
     }
 
-    private void guardarLaboratorio() throws NegocioException {
+    private void guardarLaboratorio() throws NegocioException, ParseException {
         LaboratorioDTOGuardar laboratorioDTO = new LaboratorioDTOGuardar();
         laboratorioDTO.setNombre(txtNombre.getText());
-//        laboratorioDTO.setHoraApertura(txtHoraApertura.getText());
-//        laboratorioDTO.setHoraCierre(txtHoraCierre.getText());
         laboratorioDTO.setInstitutoDTO((InstitutoDTO) cboInstituto.getSelectedItem());
-        
+
+        if (!txtHoraApertura.getText().matches("^\\d{2}:\\d{2}$") || !txtHoraCierre.getText().matches("^\\d{2}:\\d{2}$")) {
+            JOptionPane.showMessageDialog(this, "Por favor ingresa la hora en formato HH:mm (por ejemplo, 09:30, 17:26).", "Formato incorrecto", JOptionPane.WARNING_MESSAGE);
+        } else {
+            Calendar horaApertura = parseHora(txtHoraApertura.getText().trim());
+            Calendar horaCierre = parseHora(txtHoraCierre.getText().trim());
+
+            laboratorioDTO.setHoraApertura(horaApertura);
+            laboratorioDTO.setHoraCierre(horaCierre);
+        }
+
         if (verificarContrasenias(this.contraseniaFIeld, this.confirmarContraseniaField)) {
             String contrasenia = new String(this.contraseniaFIeld.getPassword());
             String contraseniaEncriptada = ContraseniaUtil.encriptar(contrasenia);
             laboratorioDTO.setContrasenaMaestra(contraseniaEncriptada);
             laboratorioDTO.setContrasenaMaestra(contraseniaEncriptada);
         }
-        
+
         try {
             LaboratorioDTO resultado = laboratorioNegocio.guardar(laboratorioDTO);
             JOptionPane.showMessageDialog(this, "Laboratorio guardada con éxito con el nombre: " + resultado.getNombre());
@@ -72,7 +83,7 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Error al guardar el laboratorio: " + e.getMessage());
         }
     }
-    
+
     private boolean verificarContrasenias(JPasswordField contrasenia, JPasswordField confirmarContrasenia) {
         String pass1 = new String(contrasenia.getPassword());
         String pass2 = new String(confirmarContrasenia.getPassword());
@@ -98,6 +109,14 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         }
 
         return true;
+    }
+
+    private Calendar parseHora(String horaTexto) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        Date date = sdf.parse(horaTexto);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
     }
 
     /**
@@ -303,7 +322,7 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         try {
             this.guardarLaboratorio();
-        } catch (NegocioException ex) {
+        } catch (NegocioException | ParseException ex) {
             System.out.println("Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
