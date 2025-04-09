@@ -12,7 +12,7 @@ import javax.persistence.*;
  * @author gaspa
  */
 @Entity
-@Table(name = "computadora")
+@Table(name = "computadoras")
 public class Computadora implements Serializable {
 
     @Id
@@ -28,6 +28,9 @@ public class Computadora implements Serializable {
 
     @Column(name = "estatus", nullable = false)
     private Boolean estatus;
+    
+    @Column(name = "tipo", nullable = false)
+    private String tipo;
 
     @ManyToOne
     @JoinColumn(name = "id_laboratorio", nullable = false)
@@ -41,15 +44,23 @@ public class Computadora implements Serializable {
     public Computadora() {
     }
 
-    public Computadora(Integer numeroMaquina, String direccionIp, Laboratorio laboratorio, Carrera carrera) {
+    public Computadora(Integer numeroMaquina, String direccionIp, Laboratorio laboratorio, Carrera carrera, String tipo) {
         this.numeroMaquina = numeroMaquina;
         this.direccionIp = direccionIp;
         this.estatus = true;
         this.laboratorio = laboratorio;
         this.carrera = carrera;
+        this.tipo = tipo;
     }
 
-    // Getters y Setters
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     public Long getIdComputadora() {
         return idComputadora;
     }
@@ -105,6 +116,7 @@ public class Computadora implements Serializable {
                 ", numeroMaquina=" + numeroMaquina +
                 ", direccionIp='" + direccionIp + '\'' +
                 ", estatus=" + estatus +
+                ", tipo=" + tipo +
                 ", laboratorio=" + laboratorio.getIdLaboratorio() +
                 ", carrera=" + carrera.getIdCarrera() +
                 '}';

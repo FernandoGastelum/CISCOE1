@@ -17,6 +17,7 @@ public class ComputadoraDTO {
     private Integer numeroMaquina;
     private String direccionIp;
     private Boolean estatus;
+    private String tipo;
     private Laboratorio laboratorio;
     private Carrera carrera;
 
@@ -26,13 +27,22 @@ public class ComputadoraDTO {
     public ComputadoraDTO() {
     }
 
-    public ComputadoraDTO(Long idComputadora, Integer numeroMaquina, String direccionIp, Boolean estatus, Laboratorio laboratorio, Carrera carrera) {
+    public ComputadoraDTO(Long idComputadora, Integer numeroMaquina, String direccionIp, Boolean estatus, Laboratorio laboratorio, Carrera carrera,String tipo) {
         this.idComputadora = idComputadora;
         this.numeroMaquina = numeroMaquina;
         this.direccionIp = direccionIp;
+        this.tipo = tipo;
         this.estatus = estatus;
         this.laboratorio = laboratorio;
         this.carrera = carrera;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public Long getIdComputadora() {
@@ -85,8 +95,7 @@ public class ComputadoraDTO {
 
     @Override
     public String toString() {
-        return "ComputadoraDTO{" + "idComputadora=" + idComputadora + ", numeroMaquina=" + numeroMaquina + ", direccionIp=" + direccionIp + ", estatus=" + estatus + ", laboratorio=" + laboratorio + ", carrera=" + carrera + '}';
+        return "ComputadoraDTO{" + "idComputadora=" + idComputadora + ", numeroMaquina=" + numeroMaquina + ", direccionIp=" + direccionIp + ", estatus=" + estatus + ", tipo=" + tipo + ", laboratorio=" + laboratorio + ", carrera=" + carrera + '}';
     }
-    
     
 }

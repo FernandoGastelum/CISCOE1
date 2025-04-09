@@ -4,7 +4,10 @@
  */
 package ModuloAdministracion;
 
+import DTOs.InstitutoDTO;
+import DTOs.InstitutoDTOGuardar;
 import DTOs.LaboratorioDTO;
+import DTOs.LaboratorioDTOGuardar;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IBloqueoDAO;
 import ModuloAdministracion.Interfaz.IBloqueoNegocio;
@@ -32,7 +35,10 @@ import ModuloAdministracion.Persistencia.EntityManagerDAO;
 import ModuloAdministracion.Persistencia.EstudianteDAO;
 import ModuloAdministracion.Persistencia.InstitutoDAO;
 import ModuloAdministracion.Persistencia.LaboratorioDAO;
+import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -97,6 +103,51 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         }
         return false;
     }
+    private void nuevoRegistroLabInst(){
+        try {
+            List<LaboratorioDTO> laboratorios = laboratorioNegocio.obtener();
+            List<InstitutoDTO> institutos = institutoNegocio.obtener();
+
+            if (laboratorios.isEmpty() && institutos.isEmpty()) {
+                this.registrarLab();
+            } else {
+                JOptionPane.showMessageDialog(this, "Ya existen registros de laboratorios e institutos");
+            }
+        } catch (NegocioException ex) {
+            Logger.getLogger(frmLoginAdministracion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private InstitutoDTO registrarInst() throws NegocioException{
+        InstitutoDTOGuardar instDTO = new InstitutoDTOGuardar("Instituto Tecnologico de Sonora", "ITSON");
+        try {
+            return institutoNegocio.guardar(instDTO);
+        } catch (NegocioException ex) {
+            throw new NegocioException(ex.getMessage());
+        }
+    }
+    private void registrarLab() throws NegocioException{
+        LaboratorioDTOGuardar labDTO = new LaboratorioDTOGuardar("CISCO", this.gethoraInicio(), this.gethoraCierre(), "Maestra12345@", this.registrarInst());
+        laboratorioNegocio.guardar(labDTO);
+        JOptionPane.showMessageDialog(this, "Registros completados con exito");
+    }
+    public Calendar gethoraInicio() {
+        Calendar hora = Calendar.getInstance();
+        hora.set(Calendar.HOUR_OF_DAY, 10);
+        hora.set(Calendar.MINUTE, 0);
+        hora.set(Calendar.SECOND, 0);
+        hora.set(Calendar.MILLISECOND, 0);
+        return hora;
+    }
+
+    public Calendar gethoraCierre() {
+        Calendar hora = Calendar.getInstance();
+        hora.set(Calendar.HOUR_OF_DAY, 22);
+        hora.set(Calendar.MINUTE, 0);
+        hora.set(Calendar.SECOND, 0);
+        hora.set(Calendar.MILLISECOND, 0);
+        return hora;
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -116,6 +167,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         txtUsuario = new javax.swing.JTextField();
         txtContrasena = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
+        nuevoLabBTN = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -173,6 +225,16 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
             }
         });
 
+        nuevoLabBTN.setBackground(new java.awt.Color(44, 44, 44));
+        nuevoLabBTN.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        nuevoLabBTN.setForeground(new java.awt.Color(255, 255, 255));
+        nuevoLabBTN.setText("Nuevo Laboratorio (Primer ingreso)");
+        nuevoLabBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuevoLabBTNActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelLoginLayout = new javax.swing.GroupLayout(jPanelLogin);
         jPanelLogin.setLayout(jPanelLoginLayout);
         jPanelLoginLayout.setHorizontalGroup(
@@ -180,13 +242,18 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
             .addComponent(jPanelPantalla, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanelLoginLayout.createSequentialGroup()
-                .addGap(715, 715, 715)
-                .addGroup(jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2)
-                    .addComponent(txtUsuario)
-                    .addComponent(jLabel3)
-                    .addComponent(txtContrasena)
-                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE))
+                .addGroup(jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelLoginLayout.createSequentialGroup()
+                        .addGap(715, 715, 715)
+                        .addGroup(jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel2)
+                            .addComponent(txtUsuario)
+                            .addComponent(jLabel3)
+                            .addComponent(txtContrasena)
+                            .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)))
+                    .addGroup(jPanelLoginLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(nuevoLabBTN)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelLoginLayout.setVerticalGroup(
@@ -205,7 +272,9 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
                 .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
                 .addComponent(btnLogin)
-                .addGap(0, 217, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
+                .addComponent(nuevoLabBTN)
+                .addGap(44, 44, 44))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -234,6 +303,10 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+txtUsuario.getText()+" no existe");
         }
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void nuevoLabBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoLabBTNActionPerformed
+        this.nuevoRegistroLabInst();
+    }//GEN-LAST:event_nuevoLabBTNActionPerformed
 
     /**
      * @param args the command line arguments
@@ -285,6 +358,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanelLogin;
     private javax.swing.JPanel jPanelPantalla;
+    private javax.swing.JButton nuevoLabBTN;
     private javax.swing.JTextField txtContrasena;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables

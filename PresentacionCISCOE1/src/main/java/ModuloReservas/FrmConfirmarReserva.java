@@ -89,7 +89,6 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
     private void guardarReserva(){
         Boolean reservaActiva = false;
         ReservaDTOGuardar dto = new ReservaDTOGuardar();
-        dto.setFechaReserva(Calendar.getInstance());
         dto.setHoraInicio(Calendar.getInstance());
         dto.setComputadoraDTO(computadoraDTO);
         dto.setEstudianteDTO(estudianteDTO);

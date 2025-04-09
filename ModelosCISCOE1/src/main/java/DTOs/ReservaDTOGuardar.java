@@ -11,7 +11,6 @@ import java.util.Calendar;
  */
 public class ReservaDTOGuardar {
     
-    private Calendar fechaReserva;
     private Calendar horaInicio;
     private Calendar horaFin;
     private int minutos;
@@ -25,21 +24,12 @@ public class ReservaDTOGuardar {
     public ReservaDTOGuardar() {
     }
 
-    public ReservaDTOGuardar(Calendar fechaReserva, Calendar horaInicio,int minutos, ComputadoraDTO computadoraDTO, EstudianteDTO estudianteDTO, HorarioDTO horario) {
-        this.fechaReserva = fechaReserva;
+    public ReservaDTOGuardar(Calendar horaInicio,int minutos, ComputadoraDTO computadoraDTO, EstudianteDTO estudianteDTO, HorarioDTO horario) {
         this.horaInicio = horaInicio;
         this.minutos = minutos;
         this.computadoraDTO = computadoraDTO;
         this.estudianteDTO = estudianteDTO;
         this.horario = horario;
-    }
-
-    public Calendar getFechaReserva() {
-        return fechaReserva;
-    }
-
-    public void setFechaReserva(Calendar fechaReserva) {
-        this.fechaReserva = fechaReserva;
     }
 
     public Calendar getHoraInicio() {
@@ -92,7 +82,7 @@ public class ReservaDTOGuardar {
 
     @Override
     public String toString() {
-        return "ReservaDTOGuardar{" + "fechaReserva=" + fechaReserva + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", computadoraDTO=" + computadoraDTO + ", estudianteDTO=" + estudianteDTO + ", horario=" + horario + '}';
+        return "ReservaDTOGuardar{" + "horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", computadoraDTO=" + computadoraDTO + ", estudianteDTO=" + estudianteDTO + ", horario=" + horario + '}';
     }
     
     

@@ -74,6 +74,7 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
         computadoraDTO.setDireccionIp(txtIP.getText());
         computadoraDTO.setNumeroMaquina(Integer.valueOf(txtNumeroMaquina.getText()));
         computadoraDTO.setEstatus(true);
+        computadoraDTO.setTipo((String) tipoComboBox.getSelectedItem());
         computadoraDTO.setCarreraDTO((CarreraDTO) cboCarrera.getSelectedItem());
         computadoraDTO.setLaboratorioDTO((LaboratorioDTO) cboLaboratorio.getSelectedItem());
         try {
@@ -106,6 +107,8 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         cboLaboratorio = new javax.swing.JComboBox<>();
         cboCarrera = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        tipoComboBox = new javax.swing.JComboBox<>();
 
         setBackground(new java.awt.Color(35, 35, 35));
 
@@ -121,7 +124,7 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
         jPanelPantalla.setLayout(jPanelPantallaLayout);
         jPanelPantallaLayout.setHorizontalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1910, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1920, Short.MAX_VALUE)
         );
         jPanelPantallaLayout.setVerticalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,6 +181,13 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
 
         cboCarrera.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Tipo");
+
+        tipoComboBox.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+        tipoComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccion", "Comun" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -202,13 +212,15 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
                             .addComponent(jLabel3)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel4)
-                                .addComponent(jLabel5)))
+                                .addComponent(jLabel5)
+                                .addComponent(jLabel6)))
                         .addGap(158, 158, 158)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cboLaboratorio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtIP, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                            .addComponent(cboCarrera, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(943, Short.MAX_VALUE))
+                            .addComponent(cboCarrera, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tipoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(953, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -228,18 +240,18 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(cboCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(66, 66, 66)
+                .addGap(57, 57, 57)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAgregar)
-                            .addComponent(btnCancelar))
-                        .addGap(71, 71, 71))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(cboLaboratorio, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(jLabel5)
+                    .addComponent(cboLaboratorio, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(71, 71, 71)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(tipoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAgregar)
+                    .addComponent(btnCancelar)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -262,8 +274,10 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanelPantalla;
+    private javax.swing.JComboBox<String> tipoComboBox;
     private javax.swing.JTextField txtIP;
     private javax.swing.JTextField txtNumeroMaquina;
     // End of variables declaration//GEN-END:variables

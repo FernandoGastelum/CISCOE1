@@ -13,7 +13,7 @@ import javax.persistence.*;
  * @author gaspa
  */
 @Entity
-@Table(name = "bloqueo")
+@Table(name = "bloqueos")
 public class Bloqueo implements Serializable {
 
     @Id

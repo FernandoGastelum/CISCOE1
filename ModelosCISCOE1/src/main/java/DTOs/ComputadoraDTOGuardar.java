@@ -15,6 +15,7 @@ public class ComputadoraDTOGuardar {
     private Boolean estatus;
     private LaboratorioDTO laboratorioDTO;
     private CarreraDTO carreraDTO;
+    private String tipo;
 
     /**
      * Constructor por ausencia
@@ -22,12 +23,21 @@ public class ComputadoraDTOGuardar {
     public ComputadoraDTOGuardar() {
     }
 
-    public ComputadoraDTOGuardar(Integer numeroMaquina, String direccionIp, LaboratorioDTO laboratorioDTO, CarreraDTO carreraDTO) {
+    public ComputadoraDTOGuardar(Integer numeroMaquina, String direccionIp, LaboratorioDTO laboratorioDTO, CarreraDTO carreraDTO, String tipo) {
         this.numeroMaquina = numeroMaquina;
         this.direccionIp = direccionIp;
         this.estatus = true;
+        this.tipo = tipo;
         this.laboratorioDTO = laboratorioDTO;
         this.carreraDTO = carreraDTO;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public Integer getNumeroMaquina() {
@@ -72,8 +82,7 @@ public class ComputadoraDTOGuardar {
 
     @Override
     public String toString() {
-        return "ComputadoraDTOGuardar{" + "numeroMaquina=" + numeroMaquina + ", direccionIp=" + direccionIp + ", estatus=" + estatus + ", laboratorioDTO=" + laboratorioDTO + ", carreraDTO=" + carreraDTO + '}';
+        return "ComputadoraDTOGuardar{" + "numeroMaquina=" + numeroMaquina + ", direccionIp=" + direccionIp + ", estatus=" + estatus + ", laboratorioDTO=" + laboratorioDTO + ", carreraDTO=" + carreraDTO + ", tipo=" + tipo + '}';
     }
-    
     
 }

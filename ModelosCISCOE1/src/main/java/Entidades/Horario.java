@@ -14,7 +14,7 @@ import javax.persistence.*;
  * @author gaspa
  */
 @Entity
-@Table(name = "horario")
+@Table(name = "horarios")
 public class Horario implements Serializable {
 
     @Id

@@ -7,6 +7,7 @@ package ModuloReservas;
 import DTOs.ComputadoraDTO;
 import DTOs.EstudianteDTO;
 import DTOs.HorarioDTO;
+import DTOs.LaboratorioDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
@@ -36,17 +37,24 @@ public class FrmReservas extends javax.swing.JFrame {
     private IEstudianteNegocio estudianteNegocio;
     private IHorarioNegocio horarioNegocio;
     private IReservaNegocio reservaNegocio;
+    private LaboratorioDTO laboratorioDTO;
     private String idUsuario;
     private boolean ventanaReservaAbierta = false;
     /**
-     * Creates new form FrmReservas
-     * @param computadoraDAO
+     * 
+     * @param computadoraNegocio
+     * @param estudianteNegocio
+     * @param horarioNegocio
+     * @param idUsuario
+     * @param reservaNegocio
+     * @param laboratorioDTO 
      */
-    public FrmReservas(IComputadoraNegocio computadoraNegocio,IEstudianteNegocio estudianteNegocio, IHorarioNegocio horarioNegocio,String idUsuario,IReservaNegocio reservaNegocio) {
+    public FrmReservas(IComputadoraNegocio computadoraNegocio,IEstudianteNegocio estudianteNegocio, IHorarioNegocio horarioNegocio,String idUsuario,IReservaNegocio reservaNegocio,LaboratorioDTO laboratorioDTO) {
         this.computadoraNegocio = computadoraNegocio;
         this.estudianteNegocio = estudianteNegocio;
         this.reservaNegocio = reservaNegocio;
         this.horarioNegocio = horarioNegocio;
+        this.laboratorioDTO = laboratorioDTO;
         this.idUsuario = idUsuario;
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -67,7 +75,11 @@ public class FrmReservas extends javax.swing.JFrame {
             List<ComputadoraDTO> listaComputadoras = computadoraNegocio.obtener();
             if(listaComputadoras != null){
                 for (ComputadoraDTO listaComputadora : listaComputadoras) {
-                    ComputadoraPanel panel = new ComputadoraPanel(
+                    if(listaComputadora.getLaboratorio().getIdLaboratorio()
+                            .equals(laboratorioDTO.getIdLaboratorio())
+                            &&listaComputadora.getTipo().equals("Comun")){
+                        
+                        ComputadoraPanel panel = new ComputadoraPanel(
                             listaComputadora,
                             this.cargarEstudianteLogeado(),
                             this.cargarHorario(listaComputadora.getLaboratorio().getIdLaboratorio()),
@@ -75,7 +87,8 @@ public class FrmReservas extends javax.swing.JFrame {
                             true,
                             this,
                             reservaNegocio);
-                    this.computadorasPanel.add(panel);
+                        this.computadorasPanel.add(panel);
+                    }
                 }
             }
         } catch (NegocioException ex) {

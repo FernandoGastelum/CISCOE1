@@ -50,7 +50,7 @@ public class ComputadoraDAO implements IComputadoraDAO{
         
         Laboratorio laboratorioEntidad = laboratorioDAO.obtenerPorID(computadora.getLaboratorioDTO().getIdLaboratorio());
         Carrera carreraEntidad = carreraDAO.obtenerPorID(computadora.getCarreraDTO().getIdCarrera());
-        Computadora computadoraEntidad = new Computadora(computadora.getNumeroMaquina(), computadora.getDireccionIp(), laboratorioEntidad, carreraEntidad);
+        Computadora computadoraEntidad = new Computadora(computadora.getNumeroMaquina(), computadora.getDireccionIp(), laboratorioEntidad, carreraEntidad,computadora.getTipo());
         return computadoraEntidad;
     }
 
@@ -90,7 +90,8 @@ public class ComputadoraDAO implements IComputadoraDAO{
                 computadora.get("direccionIp"),
                 computadora.get("estatus"),
                 computadora.get("laboratorio"),
-                computadora.get("carrera")))
+                computadora.get("carrera"),
+                computadora.get("tipo")))
           .where(cb.equal(computadora.get("idComputadora"), id));
 
         TypedQuery<ComputadoraDTO> query = entity.createQuery(cq);

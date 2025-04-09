@@ -4,7 +4,9 @@
  */
 package ModuloReservas;
 
+import DTOs.ComputadoraDTO;
 import DTOs.EstudianteDTO;
+import DTOs.LaboratorioDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
@@ -13,17 +15,23 @@ import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
 import ModuloAdministracion.Interfaz.IHorarioDAO;
 import ModuloAdministracion.Interfaz.IHorarioNegocio;
+import ModuloAdministracion.Interfaz.ILaboratorioDAO;
+import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
 import ModuloAdministracion.Negocio.ComputadoraNegocio;
 import ModuloAdministracion.Negocio.EstudianteNegocio;
 import ModuloAdministracion.Negocio.HorarioNegocio;
+import ModuloAdministracion.Negocio.LaboratorioNegocio;
 import ModuloAdministracion.Persistencia.ComputadoraDAO;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
 import ModuloAdministracion.Persistencia.EstudianteDAO;
 import ModuloAdministracion.Persistencia.HorarioDAO;
+import ModuloAdministracion.Persistencia.LaboratorioDAO;
 import ModuloReservas.Interfaz.IReservaDAO;
 import ModuloReservas.Interfaz.IReservaNegocio;
 import ModuloReservas.Negocio.ReservaNegocio;
 import ModuloReservas.Persistencia.ReservaDAO;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,22 +44,30 @@ import javax.swing.JOptionPane;
  */
 public class FrmLoginReservas extends javax.swing.JFrame {
     private final IEstudianteNegocio estudianteNegocio;
-    private IComputadoraNegocio computadoraNegocio;
-    private IReservaNegocio reservaNegocio;
-    private IHorarioNegocio horarioNegocio;
+    private final IComputadoraNegocio computadoraNegocio;
+    private final IReservaNegocio reservaNegocio;
+    private final IHorarioNegocio horarioNegocio;
+    private LaboratorioDTO laboratorioDTO;
+    private final ILaboratorioNegocio laboratorioNegocio;
     
     /**
-     * Creates new form FrmLoginReservas
+     * 
+     * @param estudianteNegocio
+     * @param computadoraNegocio
+     * @param reservaNegocio
+     * @param horarioNegocio 
      */
-    public FrmLoginReservas(IEstudianteNegocio estudianteNegocio, IComputadoraNegocio computadoraNegocio,IReservaNegocio reservaNegocio,IHorarioNegocio horarioNegocio) {
+    public FrmLoginReservas(IEstudianteNegocio estudianteNegocio, IComputadoraNegocio computadoraNegocio,IReservaNegocio reservaNegocio,IHorarioNegocio horarioNegocio,ILaboratorioNegocio laboratorioNegocio) {
         this.estudianteNegocio = estudianteNegocio;
         this.computadoraNegocio = computadoraNegocio;
         this.reservaNegocio = reservaNegocio;
         this.horarioNegocio = horarioNegocio;
+        this.laboratorioNegocio=laboratorioNegocio;
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.cargarLaboratorio();
     }
-    public boolean validarUsuario(String id){
+    private boolean validarUsuario(String id){
         try {
             List<EstudianteDTO> listaEstudiantes = estudianteNegocio.obtener();
             for (EstudianteDTO listaEstudiante : listaEstudiantes) {
@@ -64,6 +80,41 @@ public class FrmLoginReservas extends javax.swing.JFrame {
         }
         return false;
     }
+    private void cargarLaboratorio(){
+        try {
+            String ipLocal = this.obtenerIpLocal();
+            List<ComputadoraDTO> listaComputadoras = computadoraNegocio.obtener();
+            for (ComputadoraDTO listaComputadora : listaComputadoras) {
+                if(listaComputadora.getDireccionIp().equals(ipLocal)&&listaComputadora.getTipo().equals("Seleccion")){
+                    this.laboratorioDTO = this.obtenerLab(listaComputadora.getLaboratorio().getIdLaboratorio());
+                }
+            }
+        } catch (NegocioException | UnknownHostException ex) {
+            System.out.println("Error: "+ex.getMessage());
+        }
+    }
+    private LaboratorioDTO obtenerLab(Long id) throws NegocioException{
+        return laboratorioNegocio.obtenerPorID(id);
+    }
+    private String obtenerIpLocal() throws UnknownHostException{
+        try {
+            InetAddress direccion = InetAddress.getLocalHost();
+            System.out.println("Dirección IP: " + direccion.getHostAddress());
+            return direccion.getHostAddress();
+        } catch (UnknownHostException ex) {
+            throw new UnknownHostException("No se pudo obtener la IP");
+        }
+    }
+    private void Login(){
+        if(validarUsuario(usuarioTextField.getText())){
+            this.dispose();
+            FrmReservas frmReserva = new FrmReservas(computadoraNegocio,estudianteNegocio,horarioNegocio,usuarioTextField.getText(),reservaNegocio,laboratorioDTO);
+            frmReserva.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+usuarioTextField.getText()+" No existe o no esta inscrito");
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -192,13 +243,7 @@ public class FrmLoginReservas extends javax.swing.JFrame {
     }//GEN-LAST:event_usuarioTextFieldActionPerformed
 
     private void LoginBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBTNActionPerformed
-        if(validarUsuario(usuarioTextField.getText())){
-            this.dispose();
-            FrmReservas frmReserva = new FrmReservas(computadoraNegocio,estudianteNegocio,horarioNegocio,usuarioTextField.getText(),reservaNegocio);
-            frmReserva.setVisible(true);
-        }else{
-            JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+usuarioTextField.getText()+" No existe o no esta inscrito");
-        }
+        this.Login();
     }//GEN-LAST:event_LoginBTNActionPerformed
 
     /**
@@ -206,6 +251,16 @@ public class FrmLoginReservas extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         IEntityManager entityManager = new EntityManagerDAO();
+        IEstudianteDAO estudianteDAO = new EstudianteDAO(entityManager);
+                IComputadoraDAO computadoraDAO = new ComputadoraDAO(entityManager);
+                IReservaDAO reservaDAO = new ReservaDAO(entityManager);
+                IEstudianteNegocio estudianteNegocio = new EstudianteNegocio(estudianteDAO);
+                IComputadoraNegocio computadoraNegocio = new ComputadoraNegocio(computadoraDAO);
+                IHorarioDAO horarioDAO = new HorarioDAO(entityManager);
+                IHorarioNegocio horarioNegocio = new HorarioNegocio(horarioDAO);
+                IReservaNegocio reservaNegocio = new ReservaNegocio(reservaDAO);
+                ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(entityManager);
+                ILaboratorioNegocio laboratorioNegocio = new LaboratorioNegocio(laboratorioDAO);
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -231,16 +286,10 @@ public class FrmLoginReservas extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                IEstudianteDAO estudianteDAO = new EstudianteDAO(entityManager);
-                IComputadoraDAO computadoraDAO = new ComputadoraDAO(entityManager);
-                IReservaDAO reservaDAO = new ReservaDAO(entityManager);
-                IEstudianteNegocio estudianteNegocio = new EstudianteNegocio(estudianteDAO);
-                IComputadoraNegocio computadoraNegocio = new ComputadoraNegocio(computadoraDAO);
-                IHorarioDAO horarioDAO = new HorarioDAO(entityManager);
-                IHorarioNegocio horarioNegocio = new HorarioNegocio(horarioDAO);
-                IReservaNegocio reservaNegocio = new ReservaNegocio(reservaDAO);
-                new FrmLoginReservas(estudianteNegocio, computadoraNegocio,reservaNegocio,horarioNegocio).setVisible(true);
+                
+                new FrmLoginReservas(estudianteNegocio, computadoraNegocio,reservaNegocio,horarioNegocio,laboratorioNegocio).setVisible(true);
             }
         });
     }

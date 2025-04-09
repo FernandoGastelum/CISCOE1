@@ -13,17 +13,13 @@ import javax.persistence.*;
  * @author gaspa
  */
 @Entity
-@Table(name = "reserva")
+@Table(name = "reservas")
 public class Reserva implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_reserva")
     private Long idReserva;
-    
-    @Column(name = "fecha_reserva", nullable = false)
-    @Temporal (TemporalType.DATE)
-    private Calendar fechaReserva;
     
     @Column(name = "hora_inicio", nullable = false)
     @Temporal (TemporalType.TIME)
@@ -52,8 +48,7 @@ public class Reserva implements Serializable {
     public Reserva() {
     }
 
-    public Reserva(Calendar fechaReserva, Calendar horaInicio,int minutos, Computadora computadora, Estudiante estudiante, Horario horario) {
-        this.fechaReserva = fechaReserva;
+    public Reserva(Calendar horaInicio,int minutos, Computadora computadora, Estudiante estudiante, Horario horario) {
         this.horaInicio = horaInicio;
         this.minutos = minutos;
         this.computadora = computadora;
@@ -76,14 +71,6 @@ public class Reserva implements Serializable {
 
     public void setMinutos(int minutos) {
         this.minutos = minutos;
-    }
-
-    public Calendar getFechaReserva() {
-        return fechaReserva;
-    }
-
-    public void setFechaReserva(Calendar fechaReserva) {
-        this.fechaReserva = fechaReserva;
     }
 
     public Calendar getHoraInicio() {
@@ -130,7 +117,6 @@ public class Reserva implements Serializable {
     public String toString() {
         return "Reserva{" +
                 "idReserva=" + idReserva +
-                ", fechaReserva=" + fechaReserva +
                 ", horaInicio=" + horaInicio +
                 ", horaFin=" + horaFin +
                 ", minutos=" + minutos +
