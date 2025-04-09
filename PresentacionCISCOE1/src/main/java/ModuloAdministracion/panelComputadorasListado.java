@@ -52,7 +52,7 @@ public class panelComputadorasListado extends javax.swing.JPanel {
                 editar();
             }
         };
-        int indiceColumnaEditar = 4;
+        int indiceColumnaEditar = 5;
         TableColumnModel modeloColumnas = this.tablaComputadoras.getColumnModel();
         modeloColumnas.getColumn(indiceColumnaEditar)
                 .setCellRenderer(new JButtonRenderer("Editar"));
@@ -66,7 +66,7 @@ public class panelComputadorasListado extends javax.swing.JPanel {
                 eliminar();
             }
         };
-        int indiceColumnaEliminar = 5;
+        int indiceColumnaEliminar = 6;
         modeloColumnas = this.tablaComputadoras.getColumnModel();
         modeloColumnas.getColumn(indiceColumnaEliminar)
                 .setCellRenderer(new JButtonRenderer("Eliminar"));
@@ -113,11 +113,12 @@ public class panelComputadorasListado extends javax.swing.JPanel {
 
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaComputadoras.getModel();
         computadorasLista.forEach(row -> {
-            Object[] fila = new Object[4];
+            Object[] fila = new Object[5];
             fila[0] = row.getIdComputadora();
             fila[1] = row.getNumeroMaquina();
             fila[2] = row.getDireccionIp();
             fila[3] = row.getEstatus();
+            fila[4] = row.getTipo();
 
             modeloTabla.addRow(fila);
         });
@@ -168,11 +169,11 @@ public class panelComputadorasListado extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Número Máquina", "IP", "Estatus", "Editar", "Eliminar"
+                "ID", "Número Máquina", "IP", "Estatus", "Tipo", "Editar", "Eliminar"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true
+                false, false, false, false, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

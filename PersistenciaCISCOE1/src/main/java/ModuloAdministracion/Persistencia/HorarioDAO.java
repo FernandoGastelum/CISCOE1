@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -101,28 +102,30 @@ public class HorarioDAO implements IHorarioDAO {
     }
 
     @Override
-    public Horario obtenerUltimoHorarioActivoPorLaboratorio(Long idLaboratorio) throws PersistenciaException {
-        EntityManager entity = em.crearEntityManager();
-        TypedQuery<Horario> query = entity.createQuery("""
-                                                       SELECT h 
-                                                       FROM Horario h 
-                                                       WHERE h.laboratorio.idLaboratorio = :id 
-                                                       AND h.fecha <= :hoy 
-                                                       ORDER BY h.fecha DESC
-                                                             """, Horario.class);
-        query.setParameter("id", idLaboratorio);
-        query.setParameter("hoy", this.getFecha());
-        List<Horario> resultados = query.getResultList();
-        if (!resultados.isEmpty()) {
-            return resultados.get(0);
-        } else {
-            throw new PersistenciaException("No se encontraron horarios con el id de laboratorio: " + idLaboratorio);
-        }
+    public Horario obtenerHorarioDelDia(Long idLaboratorio) throws PersistenciaException {
+        
+            EntityManager entity = em.crearEntityManager();
+
+            TypedQuery<Horario> query = entity.createQuery(
+                "SELECT h FROM Horario h " +
+                "WHERE h.laboratorio.idLaboratorio = :idLab " +
+                "AND h.fecha = :fechaHoy",
+                Horario.class
+            );
+            query.setParameter("idLab", idLaboratorio);
+            query.setParameter("fechaHoy", Calendar.getInstance());
+
+            List<Horario> resultados = query.getResultList();
+
+            if (!resultados.isEmpty()) {
+                return resultados.get(0); 
+            } else {
+                return null;
+            }
     }
 
     public Calendar getFecha() {
         Calendar hoy = Calendar.getInstance();
-        // Limpiar hora, minutos, segundos para comparar solo fechas
         hoy.set(Calendar.HOUR_OF_DAY, 0);
         hoy.set(Calendar.MINUTE, 0);
         hoy.set(Calendar.SECOND, 0);

@@ -14,6 +14,8 @@ import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -73,7 +75,7 @@ public class ComputadoraNegocio implements IComputadoraNegocio {
         List<ComputadoraTablaDTO> computadorasDTO = new ArrayList<>();
         for (ComputadoraDTO computadora : computadoras) {
             String estatus = computadora.getEstatus() == true ? "Disponible" : "Mantenimiento";
-            ComputadoraTablaDTO dato = new ComputadoraTablaDTO(computadora.getIdComputadora(), computadora.getNumeroMaquina(), computadora.getDireccionIp(), estatus);
+            ComputadoraTablaDTO dato = new ComputadoraTablaDTO(computadora.getIdComputadora(), computadora.getNumeroMaquina(), computadora.getDireccionIp(), estatus,computadora.getTipo());
             computadorasDTO.add(dato);
         }
         return computadorasDTO;
@@ -89,6 +91,13 @@ public class ComputadoraNegocio implements IComputadoraNegocio {
     }
 
     private boolean reglasNegocioGuardar(ComputadoraDTOGuardar computadora) throws NegocioException {
+        try {
+            if(computadoraDAO.existeComputadoraRepetida(computadora.getNumeroMaquina(), computadora.getTipo(), computadora.getLaboratorioDTO().getIdLaboratorio())){
+                throw new NegocioException("Ya existe una computadora con ese número, tipo y laboratorio.");
+            }
+        } catch (PersistenciaException ex) {
+            System.out.println("Error: "+ex.getMessage());
+        }
         if (computadora.getCarreraDTO()== null) {
             throw new NegocioException("La carrera no puede estar vacia");
         }

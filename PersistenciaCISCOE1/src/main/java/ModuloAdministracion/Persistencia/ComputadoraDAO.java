@@ -17,6 +17,7 @@ import ModuloAdministracion.Interfaz.ILaboratorioDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -76,6 +77,27 @@ public class ComputadoraDAO implements IComputadoraDAO{
             throw new PersistenciaException("No se encontraron resultados");
         }
         return query.getResultList();
+    }
+    public boolean existeComputadoraRepetida(Integer numero, String tipo, Long idLaboratorio) throws PersistenciaException {
+        try {
+            EntityManager entity = em.crearEntityManager();
+            TypedQuery<Computadora> query = entity.createQuery("""
+                                                               SELECT c 
+                                                               FROM Computadora c 
+                                                               WHERE c.numeroMaquina = :numero 
+                                                               AND c.tipo = :tipo 
+                                                               AND c.laboratorio.idLaboratorio = :idLab
+                                                               """,Computadora.class
+            );
+            query.setParameter("numero", numero);
+            query.setParameter("tipo", tipo);
+            query.setParameter("idLab", idLaboratorio);
+
+            List<Computadora> resultado = query.getResultList();
+            return !resultado.isEmpty();
+        } catch (PersistenceException e) {
+            throw new PersistenciaException("Error al verificar la unicidad de la computadora"+e.getMessage());
+        }
     }
 
     @Override

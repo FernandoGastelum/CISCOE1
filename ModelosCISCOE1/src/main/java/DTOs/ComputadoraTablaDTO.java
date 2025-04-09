@@ -14,12 +14,22 @@ public class ComputadoraTablaDTO {
     private Integer numeroMaquina;
     private String direccionIp;
     private String estatus;
+    private String tipo;
 
-    public ComputadoraTablaDTO(Long idComputadora, Integer numeroMaquina, String direccionIp, String estatus) {
+    public ComputadoraTablaDTO(Long idComputadora, Integer numeroMaquina, String direccionIp, String estatus,String tipo) {
         this.idComputadora = idComputadora;
         this.numeroMaquina = numeroMaquina;
         this.direccionIp = direccionIp;
         this.estatus = estatus;
+        this.tipo = tipo;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public Long getIdComputadora() {

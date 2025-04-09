@@ -16,5 +16,5 @@ public interface IHorarioNegocio {
     
     HorarioDTO obtenerPorID(Long id) throws NegocioException;
     
-    HorarioDTO obtenerHorarioActivoPorLaboratorio(Long idLaboratorio) throws NegocioException;
+    HorarioDTO obtenerHorarioDelDia(Long idLaboratorio) throws NegocioException;
 }

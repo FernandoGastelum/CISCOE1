@@ -20,7 +20,7 @@ public class Computadora implements Serializable {
     @Column(name = "id_computadora")
     private Long idComputadora;
 
-    @Column(name = "numero_maquina", nullable = false, unique = true)
+    @Column(name = "numero_maquina", nullable = false)
     private Integer numeroMaquina;
 
     @Column(name = "direccion_ip", nullable = false, unique = true, length = 15)

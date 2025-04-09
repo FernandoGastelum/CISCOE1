@@ -23,4 +23,6 @@ public interface IComputadoraDAO {
     List<Computadora> obtener() throws PersistenciaException;
     
     ComputadoraDTO obtenerDTO(Long id)throws PersistenciaException;
+    
+    boolean existeComputadoraRepetida(Integer numero, String tipo, Long idLaboratorio) throws PersistenciaException;
 }
