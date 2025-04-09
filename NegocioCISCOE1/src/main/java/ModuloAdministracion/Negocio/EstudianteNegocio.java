@@ -5,6 +5,7 @@
 package ModuloAdministracion.Negocio;
 
 import DTOs.EstudianteDTO;
+import DTOs.EstudianteDTOEditar;
 import DTOs.EstudianteDTOGuardar;
 import DTOs.EstudianteTablaDTO;
 import Entidades.Estudiante;
@@ -75,11 +76,12 @@ public class EstudianteNegocio implements IEstudianteNegocio {
         for (EstudianteDTO estudiante : estudiantes) {
             String nombreCompleto = estudiante.getNombre() + " " + estudiante.getApellidoPaterno() + " " + estudiante.getApellidoMaterno();
             String estatus = estudiante.getEstatusInscripcion() == true ? "Inscrito" : "Desinscrito";
-            EstudianteTablaDTO dato = new EstudianteTablaDTO(estudiante.getIdInstitucional(), nombreCompleto, estatus);
+            EstudianteTablaDTO dato = new EstudianteTablaDTO(estudiante.getIdEstudiante(), estudiante.getIdInstitucional(), nombreCompleto, estatus);
             estudiantesDTO.add(dato);
         }
         return estudiantesDTO;
     }
+    
     @Override
     public EstudianteDTO obtenerPorIdInstitucional(String id) throws NegocioException{
         try {
@@ -100,8 +102,47 @@ public class EstudianteNegocio implements IEstudianteNegocio {
             throw new NegocioException("Error " + ex.getMessage());
         }
     }
+    
+    @Override
+    public EstudianteDTO editar(Long id, EstudianteDTOEditar estudiante) throws NegocioException {
+        try {
+            this.reglasNegocioEditar(estudiante);
+            Estudiante estudianteEditado = this.estudianteDAO.editar(id, estudiante);
+            return this.estudianteDAO.obtenerDTO(estudianteEditado.getIdEstudiante());
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
+    
+    @Override
+    public void eliminar(Long id) throws NegocioException {
+        try {
+            this.estudianteDAO.eliminar(id);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
 
     private boolean reglasNegocioGuardar(EstudianteDTOGuardar estudiante) throws NegocioException {
+        if (estudiante.getCarreraDTO()== null) {
+            throw new NegocioException("La carrera no puede estar vacia");
+        }
+        if (estudiante.getNombre() == null) {
+            throw new NegocioException("El nombre no puede estar vacio");
+        }
+        if (estudiante.getApellidoMaterno() == null) {
+            throw new NegocioException("El apellido materno no puede estar vacio");
+        }
+        if (estudiante.getApellidoPaterno() == null) {
+            throw new NegocioException("El apellido paterno no puede estar vacio");
+        }
+        if (estudiante.getContrasena() == null) {
+            throw new NegocioException("La contrasenia no puede estar vacia");
+        }
+        return true;
+    }
+    
+    private boolean reglasNegocioEditar(EstudianteDTOEditar estudiante) throws NegocioException {
         if (estudiante.getCarreraDTO()== null) {
             throw new NegocioException("La carrera no puede estar vacia");
         }

@@ -165,9 +165,9 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JTextField();
-        txtContrasena = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
         nuevoLabBTN = new javax.swing.JButton();
+        txtContrasena = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -213,8 +213,6 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
 
         txtUsuario.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
 
-        txtContrasena.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-
         btnLogin.setBackground(new java.awt.Color(44, 44, 44));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
@@ -235,6 +233,8 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
             }
         });
 
+        txtContrasena.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
         javax.swing.GroupLayout jPanelLoginLayout = new javax.swing.GroupLayout(jPanelLogin);
         jPanelLogin.setLayout(jPanelLoginLayout);
         jPanelLoginLayout.setHorizontalGroup(
@@ -244,16 +244,16 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
             .addGroup(jPanelLoginLayout.createSequentialGroup()
                 .addGroup(jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelLoginLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(nuevoLabBTN))
+                    .addGroup(jPanelLoginLayout.createSequentialGroup()
                         .addGap(715, 715, 715)
                         .addGroup(jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel2)
                             .addComponent(txtUsuario)
                             .addComponent(jLabel3)
-                            .addComponent(txtContrasena)
-                            .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)))
-                    .addGroup(jPanelLoginLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(nuevoLabBTN)))
+                            .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
+                            .addComponent(txtContrasena))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelLoginLayout.setVerticalGroup(
@@ -270,9 +270,9 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
+                .addGap(65, 65, 65)
                 .addComponent(btnLogin)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
                 .addComponent(nuevoLabBTN)
                 .addGap(44, 44, 44))
         );
@@ -359,7 +359,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelLogin;
     private javax.swing.JPanel jPanelPantalla;
     private javax.swing.JButton nuevoLabBTN;
-    private javax.swing.JTextField txtContrasena;
+    private javax.swing.JPasswordField txtContrasena;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }

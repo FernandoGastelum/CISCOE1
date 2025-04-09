@@ -4,6 +4,7 @@
  */
 package ModuloAdministracion;
 
+import DTOs.EstudianteDTO;
 import DTOs.EstudianteTablaDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
@@ -14,6 +15,9 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -22,12 +26,14 @@ import javax.swing.table.TableColumnModel;
  * @author Knocmare
  */
 public class panelEstudiantesListado extends javax.swing.JPanel {
-    
+
     private IEstudianteNegocio estudianteNegocio;
     private ICarreraNegocio carreraNegocio;
-    
+    private List<EstudianteTablaDTO> estudiantesLista;
+
     /**
      * Creates new form panelListadoEstudiantes
+     *
      * @param estudianteNegocio
      */
     public panelEstudiantesListado(IEstudianteNegocio estudianteNegocio, ICarreraNegocio carreraNegocio) {
@@ -44,8 +50,12 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
 
     private void configuracionInicialTabla() {
         ActionListener onEditarClickListener = (ActionEvent e) -> {
-            //Metodo para editar
-            editar();
+            try {
+                //Metodo para editar
+                editar();
+            } catch (NegocioException ex) {
+                Logger.getLogger(panelEstudiantesListado.class.getName()).log(Level.SEVERE, null, ex);
+            }
         };
         int indiceColumnaEditar = 3;
         TableColumnModel modeloColumnas = this.tablaEstudiantes.getColumnModel();
@@ -65,30 +75,42 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
         modeloColumnas.getColumn(indiceColumnaEliminar)
                 .setCellEditor(new JButtonCellEditor("Eliminar", onEliminarClickListener));
     }
-    
-    private void editar() {
-        int id = this.getIdSeleccionadoTabla();
-        System.out.println("El id que se va a editar es " + id);
+
+    private void editar() throws NegocioException {
+        Long id = this.getIdSeleccionadoTabla();
+        panelEstudianteEditar panelEstudiante = new panelEstudianteEditar(estudianteNegocio, carreraNegocio, id);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelEstudiante, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
     }
 
     private void eliminar() {
-        int id = this.getIdSeleccionadoTabla();
+        Long id = this.getIdSeleccionadoTabla();
         System.out.println("El id que se va a eliminar es " + id);
-    }
-    
-    private int getIdSeleccionadoTabla() {
-        int indiceFilaSeleccionada = this.tablaEstudiantes.getSelectedRow();
-        if (indiceFilaSeleccionada != -1) {
-            DefaultTableModel modelo = (DefaultTableModel) this.tablaEstudiantes.getModel();
-            int indiceColumnaId = 0;
-            int idSeleccionado = (int) modelo.getValueAt(indiceFilaSeleccionada,
-                    indiceColumnaId);
-            return idSeleccionado;
-        } else {
-            return 0;
+        
+        try {
+            estudianteNegocio.eliminar(id);
+            this.metodosIniciales();
+            JOptionPane.showMessageDialog(this, "Estudiante eliminado con éxito con el id institucional: " + id);
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al eliminar el estudiante: " + e.getMessage());
         }
     }
-    
+
+    private Long getIdSeleccionadoTabla() {
+        int indiceFilaSeleccionada = this.tablaEstudiantes.getSelectedRow();
+        if (indiceFilaSeleccionada != -1) {
+
+            EstudianteTablaDTO estudianteSeleccionado = estudiantesLista.get(indiceFilaSeleccionada);
+
+            return estudianteSeleccionado.getIdEstudiante();
+        } else {
+            return 0L;
+        }
+    }
+
     private void buscarTabla() {
         try {
             List<EstudianteTablaDTO> estudiantesTablaLista = this.estudianteNegocio.obtenerTabla();
@@ -103,6 +125,8 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
             return;
         }
 
+        this.estudiantesLista = estudiantesLista;
+
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaEstudiantes.getModel();
         estudiantesLista.forEach(row -> {
             Object[] fila = new Object[3];
@@ -113,7 +137,7 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
             modeloTabla.addRow(fila);
         });
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

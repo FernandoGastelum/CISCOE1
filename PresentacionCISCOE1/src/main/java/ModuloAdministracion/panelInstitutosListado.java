@@ -69,25 +69,25 @@ public class panelInstitutosListado extends javax.swing.JPanel {
     }
 
     private void editar() {
-        int id = this.getIdSeleccionadoTabla();
+        Long id = this.getIdSeleccionadoTabla();
         System.out.println("El id que se va a editar es " + id);
     }
 
     private void eliminar() {
-        int id = this.getIdSeleccionadoTabla();
+        Long id = this.getIdSeleccionadoTabla();
         System.out.println("El id que se va a eliminar es " + id);
     }
 
-    private int getIdSeleccionadoTabla() {
+    private Long getIdSeleccionadoTabla() {
         int indiceFilaSeleccionada = this.tablaInstitutos.getSelectedRow();
         if (indiceFilaSeleccionada != -1) {
             DefaultTableModel modelo = (DefaultTableModel) this.tablaInstitutos.getModel();
             int indiceColumnaId = 0;
-            int idSeleccionado = (int) modelo.getValueAt(indiceFilaSeleccionada,
+            Long idSeleccionado = (Long) modelo.getValueAt(indiceFilaSeleccionada,
                     indiceColumnaId);
             return idSeleccionado;
         } else {
-            return 0;
+            return 0L;
         }
     }
 

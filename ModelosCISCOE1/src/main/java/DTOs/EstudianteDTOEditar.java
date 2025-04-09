@@ -4,9 +4,6 @@
  */
 package DTOs;
 
-import Entidades.Bloqueo;
-import Entidades.Carrera;
-
 /**
  *
  * @author Ángel Ruíz
@@ -17,8 +14,8 @@ public class EstudianteDTOEditar {
     private String apellidoPaterno;
     private String apellidoMaterno;
     private String contrasena;
-    private Carrera carrera;
-    private Bloqueo bloqueo;
+    private Boolean estatusInscripcion;
+    private CarreraDTO carreraDTO;
 
     /**
      * Constructor por ausencia
@@ -26,13 +23,13 @@ public class EstudianteDTOEditar {
     public EstudianteDTOEditar() {
     }
 
-    public EstudianteDTOEditar(String nombre, String apellidoPaterno, String apellidoMaterno, String contrasena, Carrera carrera, Bloqueo bloqueo) {
+    public EstudianteDTOEditar(String nombre, String apellidoPaterno, String apellidoMaterno, String contrasena, Boolean estatusInscripcion, CarreraDTO carreraDTO) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.contrasena = contrasena;
-        this.carrera = carrera;
-        this.bloqueo = bloqueo;
+        this.estatusInscripcion = estatusInscripcion;
+        this.carreraDTO = carreraDTO;
     }
 
     public String getNombre() {
@@ -67,25 +64,26 @@ public class EstudianteDTOEditar {
         this.contrasena = contrasena;
     }
 
-    public Carrera getCarrera() {
-        return carrera;
+    public CarreraDTO getCarreraDTO() {
+        return carreraDTO;
     }
 
-    public void setCarrera(Carrera carrera) {
-        this.carrera = carrera;
+    public void setCarreraDTO(CarreraDTO carreraDTO) {
+        this.carreraDTO = carreraDTO;
     }
 
-    public Bloqueo getBloqueo() {
-        return bloqueo;
+    public Boolean getEstatusInscripcion() {
+        return estatusInscripcion;
     }
 
-    public void setBloqueo(Bloqueo bloqueo) {
-        this.bloqueo = bloqueo;
+    public void setEstatusInscripcion(Boolean estatusInscripcion) {
+        this.estatusInscripcion = estatusInscripcion;
     }
 
     @Override
     public String toString() {
-        return "EditarEstudianteDTO{" + "nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", contrasena=" + contrasena + ", carrera=" + carrera + ", bloqueo=" + bloqueo + '}';
+        return "EstudianteDTOEditar{" + "nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", contrasena=" + contrasena + ", estatusInscripcion=" + estatusInscripcion + ", carreraDTO=" + carreraDTO + '}';
     }
+    
     
 }

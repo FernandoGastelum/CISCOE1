@@ -5,6 +5,7 @@
 package ModuloAdministracion.Persistencia;
 
 import DTOs.EstudianteDTO;
+import DTOs.EstudianteDTOEditar;
 import DTOs.EstudianteDTOGuardar;
 import Entidades.Carrera;
 import Entidades.Estudiante;
@@ -61,6 +62,46 @@ public class EstudianteDAO implements IEstudianteDAO {
         } else {
             throw new PersistenciaException("No se encontro un estudiante con el id " + id);
         }
+    }
+    
+    @Override
+    public Estudiante editar(Long id, EstudianteDTOEditar estudianteDTO) throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+        
+        Estudiante estudianteEntidad = entity.find(Estudiante.class, id);
+        if (estudianteEntidad == null) {
+            throw new PersistenciaException("No se encontró un estudiante con el id " + id);
+        }
+        
+        ICarreraDAO carreraDAO = new CarreraDAO(em);
+        Carrera carreraEntidad = carreraDAO.obtenerPorID(estudianteDTO.getCarreraDTO().getIdCarrera());
+        
+        estudianteEntidad.setNombre(estudianteDTO.getNombre());
+        estudianteEntidad.setApellidoPaterno(estudianteDTO.getApellidoPaterno());
+        estudianteEntidad.setApellidoMaterno(estudianteDTO.getApellidoMaterno());
+        estudianteEntidad.setContrasena(estudianteDTO.getContrasena());
+        estudianteEntidad.setEstatusInscripcion(estudianteDTO.getEstatusInscripcion());
+        estudianteEntidad.setCarrera(carreraEntidad);
+        
+        entity.merge(estudianteEntidad);
+        entity.getTransaction().commit();
+        return estudianteEntidad;
+    }
+    
+    @Override
+    public void eliminar(Long id) throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+        
+        Estudiante estudianteEntidad = entity.find(Estudiante.class, id);
+        if (estudianteEntidad == null) {
+            throw new PersistenciaException("No se encontró un estudiante con el id " + id);
+        }
+        
+        // (¿Era borrar o marcarlo como que no esta inscrito?)
+        entity.remove(estudianteEntidad);
+        entity.getTransaction().commit();
     }
 
     @Override

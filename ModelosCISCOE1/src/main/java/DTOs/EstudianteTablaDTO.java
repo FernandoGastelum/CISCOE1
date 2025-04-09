@@ -10,14 +10,24 @@ package DTOs;
  */
 public class EstudianteTablaDTO {
     
+    private Long idEstudiante;
     private String idInstitucional;
     private String nombreCompleto;
     private String estatusInscripcion;
 
-    public EstudianteTablaDTO(String idInstitucional, String nombreCompleto, String estatusInscripcion) {
+    public EstudianteTablaDTO(Long idEstudiante, String idInstitucional, String nombreCompleto, String estatusInscripcion) {
+        this.idEstudiante = idEstudiante;
         this.idInstitucional = idInstitucional;
         this.nombreCompleto = nombreCompleto;
         this.estatusInscripcion = estatusInscripcion;
+    }
+
+    public Long getIdEstudiante() {
+        return idEstudiante;
+    }
+
+    public void setIdEstudiante(Long idEstudiante) {
+        this.idEstudiante = idEstudiante;
     }
 
     public String getIdInstitucional() {

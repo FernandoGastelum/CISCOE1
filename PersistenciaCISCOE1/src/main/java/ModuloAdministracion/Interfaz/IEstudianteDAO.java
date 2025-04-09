@@ -5,6 +5,7 @@
 package ModuloAdministracion.Interfaz;
 
 import DTOs.EstudianteDTO;
+import DTOs.EstudianteDTOEditar;
 import DTOs.EstudianteDTOGuardar;
 import Entidades.Estudiante;
 import Excepcion.PersistenciaException;
@@ -25,4 +26,8 @@ public interface IEstudianteDAO {
     EstudianteDTO obtenerDTO(Long id)throws PersistenciaException;
     
     Estudiante obtenerPorIdInstitucional(String id)throws PersistenciaException;
+    
+    Estudiante editar(Long id, EstudianteDTOEditar estudianteDTO) throws PersistenciaException;
+    
+    void eliminar(Long id) throws PersistenciaException;
 }

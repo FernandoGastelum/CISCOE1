@@ -13,6 +13,8 @@ import Utilidades.JButtonRenderer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -72,25 +74,25 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
     }
 
     private void editar() {
-        int id = this.getIdSeleccionadoTabla();
+        Long id = this.getIdSeleccionadoTabla();
         System.out.println("El id que se va a editar es " + id);
     }
 
     private void eliminar() {
-        int id = this.getIdSeleccionadoTabla();
+        Long id = this.getIdSeleccionadoTabla();
         System.out.println("El id que se va a eliminar es " + id);
     }
 
-    private int getIdSeleccionadoTabla() {
+    private Long getIdSeleccionadoTabla() {
         int indiceFilaSeleccionada = this.tablaLaboratorios.getSelectedRow();
         if (indiceFilaSeleccionada != -1) {
             DefaultTableModel modelo = (DefaultTableModel) this.tablaLaboratorios.getModel();
             int indiceColumnaId = 0;
-            int idSeleccionado = (int) modelo.getValueAt(indiceFilaSeleccionada,
+            Long idSeleccionado = (Long) modelo.getValueAt(indiceFilaSeleccionada,
                     indiceColumnaId);
             return idSeleccionado;
         } else {
-            return 0;
+            return 0L;
         }
     }
 
@@ -108,13 +110,15 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
             return;
         }
 
+        SimpleDateFormat horaFormato = new SimpleDateFormat("HH:mm");
+
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaLaboratorios.getModel();
         laboratoriossLista.forEach(row -> {
             Object[] fila = new Object[4];
             fila[0] = row.getIdLaboratorio();
             fila[1] = row.getNombre();
-            fila[2] = row.getHoraApertura();
-            fila[3] = row.getHoraCierre();
+            fila[2] = horaFormato.format(row.getHoraApertura().getTime());
+            fila[3] = horaFormato.format(row.getHoraCierre().getTime());
 
             modeloTabla.addRow(fila);
         });
