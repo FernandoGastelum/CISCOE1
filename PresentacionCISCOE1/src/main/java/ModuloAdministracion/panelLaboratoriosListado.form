@@ -107,8 +107,8 @@
                 <Column editable="false" title="Nombr&#xe9;" type="java.lang.Object"/>
                 <Column editable="false" title="Hora Apertura" type="java.lang.Object"/>
                 <Column editable="false" title="Hora Cierre" type="java.lang.Object"/>
-                <Column editable="false" title="Editar" type="java.lang.Object"/>
-                <Column editable="false" title="Eliminar" type="java.lang.Object"/>
+                <Column editable="true" title="Editar" type="java.lang.Object"/>
+                <Column editable="true" title="Eliminar" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

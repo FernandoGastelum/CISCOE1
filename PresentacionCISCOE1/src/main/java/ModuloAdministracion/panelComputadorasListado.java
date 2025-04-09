@@ -6,9 +6,12 @@ package ModuloAdministracion;
 
 import DTOs.ComputadoraTablaDTO;
 import Excepcion.NegocioException;
+import ModuloAdministracion.Interfaz.ICarreraNegocio;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
+import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
 import Utilidades.JButtonCellEditor;
 import Utilidades.JButtonRenderer;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -22,12 +25,16 @@ import javax.swing.table.TableColumnModel;
 public class panelComputadorasListado extends javax.swing.JPanel {
 
     private final IComputadoraNegocio computadoraNegocio;
+    private final ILaboratorioNegocio laboratorioNegocio;
+    private final ICarreraNegocio carreraNegocio;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelComputadorasListado(IComputadoraNegocio computadoraNegocio) {
+    public panelComputadorasListado(IComputadoraNegocio computadoraNegocio, ICarreraNegocio carreraNegocio, ILaboratorioNegocio laboratorioNegocio) {
         this.computadoraNegocio = computadoraNegocio;
+        this.laboratorioNegocio = laboratorioNegocio;
+        this.carreraNegocio = carreraNegocio;
         initComponents();
         this.metodosIniciales();
     }
@@ -165,7 +172,7 @@ public class panelComputadorasListado extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -182,6 +189,11 @@ public class panelComputadorasListado extends javax.swing.JPanel {
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setText("+ Agregar Computadora");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -210,6 +222,15 @@ public class panelComputadorasListado extends javax.swing.JPanel {
                 .addGap(0, 59, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        panelComputadoraNuevo panelComputadora = new panelComputadoraNuevo(computadoraNegocio,carreraNegocio, laboratorioNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelComputadora, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

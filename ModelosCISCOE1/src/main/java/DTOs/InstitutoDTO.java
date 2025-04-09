@@ -52,7 +52,7 @@ public class InstitutoDTO {
 
     @Override
     public String toString() {
-        return "InstitutoDTO{" + "idInstituto=" + idInstituto + ", nombreOficial=" + nombreOficial + ", nombreAbreviado=" + nombreAbreviado + '}';
+        return nombreOficial + ", " + nombreAbreviado;
     }
     
     

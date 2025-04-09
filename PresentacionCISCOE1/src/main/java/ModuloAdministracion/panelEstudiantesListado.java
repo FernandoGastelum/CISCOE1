@@ -43,12 +43,9 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
     }
 
     private void configuracionInicialTabla() {
-        ActionListener onEditarClickListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Metodo para editar
-                editar();
-            }
+        ActionListener onEditarClickListener = (ActionEvent e) -> {
+            //Metodo para editar
+            editar();
         };
         int indiceColumnaEditar = 3;
         TableColumnModel modeloColumnas = this.tablaEstudiantes.getColumnModel();
@@ -57,12 +54,9 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
         modeloColumnas.getColumn(indiceColumnaEditar)
                 .setCellEditor(new JButtonCellEditor("Editar", onEditarClickListener));
 
-        ActionListener onEliminarClickListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Metodo para eliminar
-                eliminar();
-            }
+        ActionListener onEliminarClickListener = (ActionEvent e) -> {
+            //Metodo para eliminar
+            eliminar();
         };
         int indiceColumnaEliminar = 4;
         modeloColumnas = this.tablaEstudiantes.getColumnModel();
@@ -169,7 +163,7 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

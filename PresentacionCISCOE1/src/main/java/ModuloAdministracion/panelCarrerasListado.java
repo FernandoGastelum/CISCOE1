@@ -9,6 +9,7 @@ import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
 import Utilidades.JButtonCellEditor;
 import Utilidades.JButtonRenderer;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -164,7 +165,7 @@ public class panelCarrerasListado extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -181,6 +182,11 @@ public class panelCarrerasListado extends javax.swing.JPanel {
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setText("+ Agregar Carrera");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -209,6 +215,15 @@ public class panelCarrerasListado extends javax.swing.JPanel {
                 .addGap(0, 59, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        panelCarreraNuevo panelCarrera = new panelCarreraNuevo(carreraNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelCarrera, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

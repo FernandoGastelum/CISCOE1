@@ -302,7 +302,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionAgregarCarreraActionPerformed
 
     private void OpcionComputadorasListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionComputadorasListadoActionPerformed
-        panelComputadorasListado panelComputadora = new panelComputadorasListado(computadoraNegocio);
+        panelComputadorasListado panelComputadora = new panelComputadorasListado(computadoraNegocio,carreraNegocio, laboratorioNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelComputadora, BorderLayout.CENTER);
@@ -320,7 +320,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionAgregarComputadoraActionPerformed
 
     private void OpcionBloqueosListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionBloqueosListadoActionPerformed
-        panelBloqueosListado panelBloqueo = new panelBloqueosListado(bloqueoNegocio);
+        panelBloqueosListado panelBloqueo = new panelBloqueosListado(bloqueoNegocio, estudianteNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelBloqueo, BorderLayout.CENTER);
@@ -338,7 +338,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionAgregarBloqueoActionPerformed
 
     private void OpcionLaboratoriosListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionLaboratoriosListadoActionPerformed
-        panelLaboratoriosListado panelLaboratorio = new panelLaboratoriosListado(laboratorioNegocio);
+        panelLaboratoriosListado panelLaboratorio = new panelLaboratoriosListado(laboratorioNegocio, institutoNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelLaboratorio, BorderLayout.CENTER);

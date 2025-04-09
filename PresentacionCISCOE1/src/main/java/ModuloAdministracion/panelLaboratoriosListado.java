@@ -6,9 +6,11 @@ package ModuloAdministracion;
 
 import DTOs.LaboratorioTablaDTO;
 import Excepcion.NegocioException;
+import ModuloAdministracion.Interfaz.IInstitutoNegocio;
 import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
 import Utilidades.JButtonCellEditor;
 import Utilidades.JButtonRenderer;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -22,12 +24,14 @@ import javax.swing.table.TableColumnModel;
 public class panelLaboratoriosListado extends javax.swing.JPanel {
 
     private final ILaboratorioNegocio laboratorioNegocio;
+    private final IInstitutoNegocio institutoNegocio;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelLaboratoriosListado(ILaboratorioNegocio laboratorioNegocio) {
+    public panelLaboratoriosListado(ILaboratorioNegocio laboratorioNegocio, IInstitutoNegocio institutoNegocio) {
         this.laboratorioNegocio = laboratorioNegocio;
+        this.institutoNegocio = institutoNegocio;
         initComponents();
         this.metodosIniciales();
     }
@@ -165,7 +169,7 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -217,7 +221,12 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        // TODO add your handling code here:
+        panelLaboratorioNuevo panelLaboratorio = new panelLaboratorioNuevo(laboratorioNegocio, institutoNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelLaboratorio, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
 

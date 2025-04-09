@@ -7,8 +7,10 @@ package ModuloAdministracion;
 import DTOs.BloqueoTablaDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IBloqueoNegocio;
+import ModuloAdministracion.Interfaz.IEstudianteNegocio;
 import Utilidades.JButtonCellEditor;
 import Utilidades.JButtonRenderer;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -21,12 +23,14 @@ import javax.swing.table.TableColumnModel;
  */
 public class panelBloqueosListado extends javax.swing.JPanel {
     private final IBloqueoNegocio bloqueoNegocio;
+    private final IEstudianteNegocio estudianteNegocio;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelBloqueosListado(IBloqueoNegocio bloqueoNegocio) {
+    public panelBloqueosListado(IBloqueoNegocio bloqueoNegocio, IEstudianteNegocio estudianteNegocio) {
         this.bloqueoNegocio = bloqueoNegocio;
+        this.estudianteNegocio = estudianteNegocio;
         initComponents();
         this.metodosIniciales();
     }
@@ -165,7 +169,7 @@ public class panelBloqueosListado extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -182,6 +186,11 @@ public class panelBloqueosListado extends javax.swing.JPanel {
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setText("+ Agregar Bloqueo");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -210,6 +219,15 @@ public class panelBloqueosListado extends javax.swing.JPanel {
                 .addGap(0, 59, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        panelBloqueoNuevo panelBloqueo = new panelBloqueoNuevo(bloqueoNegocio, estudianteNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelBloqueo, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

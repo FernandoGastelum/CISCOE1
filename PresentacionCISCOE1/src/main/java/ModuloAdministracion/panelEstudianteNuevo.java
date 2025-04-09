@@ -11,6 +11,7 @@ import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
 import Utilidades.ContraseniaUtil;
+import java.awt.BorderLayout;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -304,7 +305,12 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
+        panelEstudiantesListado panelEstudiante = new panelEstudiantesListado(estudianteNegocio, carreraNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelEstudiante, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
 
