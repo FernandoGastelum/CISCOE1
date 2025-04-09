@@ -5,6 +5,7 @@
 package ModuloReservas.Interfaz;
 
 import DTOs.ReservaDTO;
+import DTOs.ReservaDTOEditar;
 import DTOs.ReservaDTOGuardar;
 import Excepcion.NegocioException;
 import java.util.List;
@@ -19,4 +20,6 @@ public interface IReservaNegocio {
     List<ReservaDTO> obtener() throws NegocioException;
     
     ReservaDTO obtenerPorID(Long id) throws NegocioException;
+    
+    ReservaDTO actualizar(ReservaDTOEditar reserva) throws NegocioException;
 }

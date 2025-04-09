@@ -6,6 +6,7 @@ package ModuloReservas.Persistencia;
 
 import DTOs.ComputadoraDTO;
 import DTOs.ReservaDTO;
+import DTOs.ReservaDTOEditar;
 import DTOs.ReservaDTOGuardar;
 import Entidades.Carrera;
 import Entidades.Computadora;
@@ -88,6 +89,25 @@ public class ReservaDAO implements IReservaDAO{
         }else{
             throw new PersistenciaException("No se encontro una reserva con el id "+id);
         }
+    }
+    
+    @Override
+    public Reserva actualizar(ReservaDTOEditar reserva) throws PersistenciaException{
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+        
+        Reserva reservaActual = this.obtenerPorID(reserva.getId());
+        
+        reservaActual.setHoraFin(reserva.getHoraFin());
+        reservaActual.setComputadora(reserva.getComputadora());
+        reservaActual.setEstudiante(reserva.getEstudiante());
+        reservaActual.setHoraInicio(reserva.getHoraInicio());
+        reservaActual.setHorario(reserva.getHorario());
+        reservaActual.setMinutos(reserva.getMinutos());
+        
+        entity.merge(reservaActual);
+        entity.getTransaction().commit();
+        return reservaActual;
     }
 
     @Override

@@ -36,7 +36,7 @@ public class ComputadoraPanel extends javax.swing.JPanel { // Atributo para alma
      * Creates new form ComputadoraPanel
      * @param computadora
      */
-    public ComputadoraPanel(ComputadoraDTO computadoraDTO,EstudianteDTO estudianteDTO,HorarioDTO horarioDTO, String idUsuario, boolean lista, FrmReservas frmReserva, IReservaNegocio reservaNegocio) {
+    public ComputadoraPanel(ComputadoraDTO computadoraDTO,EstudianteDTO estudianteDTO,HorarioDTO horarioDTO, boolean lista, FrmReservas frmReserva, IReservaNegocio reservaNegocio) {
         
         initComponents();
         Icon icono = new ImageIcon(new ImageIcon(getClass().getResource("/images/PcIcon.png")).getImage().getScaledInstance(150, 150, 0));
@@ -57,7 +57,7 @@ public class ComputadoraPanel extends javax.swing.JPanel { // Atributo para alma
                         frmReserva.setVentanaReservaAbierta(true); 
 
                         FrmConfirmarReserva nuevaVentana = new FrmConfirmarReserva(
-                            computadoraDTO,estudianteDTO,horarioDTO, idUsuario, frmReserva.getMinutos(), frmReserva, reservaNegocio
+                            computadoraDTO,estudianteDTO,horarioDTO, frmReserva.getMinutos(), frmReserva, reservaNegocio
                         );
 
                         frmReserva.deshabilitarVentana();

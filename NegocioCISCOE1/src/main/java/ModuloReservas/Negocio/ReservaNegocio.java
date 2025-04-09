@@ -5,6 +5,7 @@
 package ModuloReservas.Negocio;
 
 import DTOs.ReservaDTO;
+import DTOs.ReservaDTOEditar;
 import DTOs.ReservaDTOGuardar;
 import Entidades.Reserva;
 import Excepcion.NegocioException;
@@ -60,6 +61,16 @@ public class ReservaNegocio implements IReservaNegocio{
 
         } catch (PersistenciaException ex) {
             throw new NegocioException("Error al guardar reserva: " + ex.getMessage());
+        }
+    }
+    @Override
+    public ReservaDTO actualizar(ReservaDTOEditar reserva) throws NegocioException{
+        try {
+            Reserva reservaActualizada = reservaDAO.actualizar(reserva);
+            return reservaDAO.obtenerReservaDTO(reservaActualizada.getIdReserva());
+            
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error al actualizar reserva: " + ex.getMessage());
         }
     }
 
