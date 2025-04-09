@@ -9,6 +9,7 @@ import DTOs.EstudianteDTO;
 import DTOs.HorarioDTO;
 import DTOs.HorarioDTOGuardar;
 import DTOs.LaboratorioDTO;
+import DTOs.ReservaDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
@@ -21,6 +22,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
@@ -41,6 +43,7 @@ public class FrmReservas extends javax.swing.JFrame {
     private IHorarioNegocio horarioNegocio;
     private IReservaNegocio reservaNegocio;
     private LaboratorioDTO laboratorioDTO;
+    private EstudianteDTO estudianteDTO;
     private String idUsuario;
     private boolean ventanaReservaAbierta = false;
     /**
@@ -70,9 +73,12 @@ public class FrmReservas extends javax.swing.JFrame {
         this.computadorasScrollPanel.setPreferredSize(new Dimension(1800, 600));
         
         this.cargarComputadoras();
+        this.cargarMinutosdDisponibles();
+        this.cargarNombreLaboratorio();
     }
     public void cargarComputadoras(){
         try {
+            estudianteDTO = this.cargarEstudianteLogeado();
             this.computadorasPanel.removeAll();
             this.computadorasPanel.repaint();
             List<ComputadoraDTO> listaComputadoras = computadoraNegocio.obtener();
@@ -84,9 +90,8 @@ public class FrmReservas extends javax.swing.JFrame {
                         
                         ComputadoraPanel panel = new ComputadoraPanel(
                             listaComputadora,
-                            this.cargarEstudianteLogeado(),
+                            this.estudianteDTO,
                             this.cargarHorario(listaComputadora.getLaboratorio().getIdLaboratorio()),
-                            idUsuario,
                             true,
                             this,
                             reservaNegocio);
@@ -149,6 +154,45 @@ public class FrmReservas extends javax.swing.JFrame {
                 this.dispose(); 
             }
     }
+    private int cargarMinutosdDisponibles() {
+        int minutosMaximos = estudianteDTO.getCarrera().getTiempoMaximoDiario(); 
+        int minutosUsados = 0;
+
+        try {
+            List<ReservaDTO> listaReservas = reservaNegocio.obtener();
+            Calendar hoy = Calendar.getInstance();
+
+            for (ReservaDTO listaReserva : listaReservas) {
+                if (listaReserva.getEstudiante().getIdEstudiante().equals(estudianteDTO.getIdEstudiante())) {
+
+                    Calendar fechaReserva = listaReserva.getHorario().getFecha(); 
+
+                    boolean mismoDia =
+                        hoy.get(Calendar.YEAR) == fechaReserva.get(Calendar.YEAR) &&
+                        hoy.get(Calendar.MONTH) == fechaReserva.get(Calendar.MONTH) &&
+                        hoy.get(Calendar.DAY_OF_MONTH) == fechaReserva.get(Calendar.DAY_OF_MONTH);
+
+                    if (mismoDia) {
+                        minutosUsados += listaReserva.getMinutos();
+                    }
+                }
+            }
+        } catch (NegocioException ex) {
+            System.out.println("error: " + ex.getMessage());
+        }
+
+        int minutosDisponibles = minutosMaximos - minutosUsados;
+        if (minutosDisponibles < 0) minutosDisponibles = 0;
+
+        this.minutosDisponiblesLabel.setText(String.valueOf(minutosDisponibles));
+        return minutosDisponibles;
+    }
+    public int getMinutosDisponibles(){
+        return this.cargarMinutosdDisponibles();
+    }
+    private void cargarNombreLaboratorio(){
+        this.lblNombreLab.setText(laboratorioDTO.getNombre());
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -170,6 +214,7 @@ public class FrmReservas extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         carrerasBTN = new javax.swing.JButton();
         salirBTN = new javax.swing.JButton();
+        lblNombreLab = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1980, 1080));
@@ -236,6 +281,8 @@ public class FrmReservas extends javax.swing.JFrame {
                 .addGap(148, 148, 148)
                 .addComponent(minutosTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addGap(18, 18, 18)
                 .addComponent(minutosDisponiblesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(82, 82, 82))
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -247,11 +294,6 @@ public class FrmReservas extends javax.swing.JFrame {
                     .addGap(40, 40, 40)
                     .addComponent(jLabel3)
                     .addContainerGap(1736, Short.MAX_VALUE)))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                    .addContainerGap(1475, Short.MAX_VALUE)
-                    .addComponent(jLabel4)
-                    .addGap(218, 218, 218)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,7 +301,9 @@ public class FrmReservas extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(minutosTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(minutosDisponiblesLabel))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(minutosDisponiblesLabel)
+                        .addComponent(jLabel4)))
                 .addGap(50, 50, 50)
                 .addComponent(computadorasScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -268,11 +312,6 @@ public class FrmReservas extends javax.swing.JFrame {
                     .addGap(31, 31, 31)
                     .addComponent(jLabel3)
                     .addContainerGap(671, Short.MAX_VALUE)))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(37, 37, 37)
-                    .addComponent(jLabel4)
-                    .addContainerGap(665, Short.MAX_VALUE)))
         );
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 80)); // NOI18N
@@ -299,33 +338,42 @@ public class FrmReservas extends javax.swing.JFrame {
             }
         });
 
+        lblNombreLab.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        lblNombreLab.setForeground(new java.awt.Color(255, 255, 255));
+        lblNombreLab.setText("Laboratorio");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(847, 847, 847)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addComponent(jLabel2))
+                            .addComponent(lblNombreLab))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 855, Short.MAX_VALUE)
                         .addComponent(carrerasBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(salirBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(17, Short.MAX_VALUE))
+                    .addComponent(salirBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(55, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(52, 52, 52))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(35, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(carrerasBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(43, 43, 43)))
+                        .addGap(43, 43, 43))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(1, 1, 1)
+                        .addComponent(lblNombreLab)
+                        .addGap(18, 18, 18)))
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 693, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(salirBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -373,6 +421,7 @@ public class FrmReservas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel lblNombreLab;
     private javax.swing.JLabel minutosDisponiblesLabel;
     public javax.swing.JTextField minutosTextField;
     private javax.swing.JButton salirBTN;

@@ -32,25 +32,22 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
     private final HorarioDTO horarioDTO;
     private final IReservaNegocio reservaNegocio;
     private final FrmReservas frmReservas;
-    private final String idUsuario;
     private final String minutos;
     
     /**
      * 
      * @param computadoraDTO
      * @param estudianteDTO
-     * @param idUsuario
      * @param minutos
      * @param frmReservas
      * @param reservaNegocio 
      */
-    public FrmConfirmarReserva(ComputadoraDTO computadoraDTO,EstudianteDTO estudianteDTO,HorarioDTO horarioDTO, String idUsuario, String minutos,FrmReservas frmReservas,IReservaNegocio reservaNegocio) {
+    public FrmConfirmarReserva(ComputadoraDTO computadoraDTO,EstudianteDTO estudianteDTO,HorarioDTO horarioDTO, String minutos,FrmReservas frmReservas,IReservaNegocio reservaNegocio) {
         this.computadoraDTO = computadoraDTO;
         this.estudianteDTO = estudianteDTO;
         this.horarioDTO = horarioDTO;
         this.frmReservas = frmReservas;
         this.reservaNegocio = reservaNegocio;
-        this.idUsuario = idUsuario;
         this.minutos = minutos;
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         
@@ -73,7 +70,7 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
         this.colorPanel.setMaximumSize(new Dimension(150, 150));
         this.colorPanel.setMinimumSize(new Dimension(150, 150));     
         
-        this.estudianteLabel.setText("Estudiante: "+idUsuario);
+        this.estudianteLabel.setText("Estudiante: "+estudianteDTO.getIdInstitucional());
         this.tiempoLabel.setText("Tiempo: "+minutos+" minutos");
         System.out.println("Minutos:"+minutos);
         this.numeroEquipoLabel.setText("Equipo numero: "+computadoraDTO.getNumeroMaquina().toString());
@@ -88,6 +85,10 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
         this.dispose();
     }
     private void guardarReserva(){
+        if(frmReservas.getMinutosDisponibles()<Integer.parseInt(minutos)){
+            JOptionPane.showMessageDialog(this, "El tiempo que tiene disponible no es suficiente.");
+            this.volver();
+        }
         Boolean reservaActiva = false;
         ReservaDTOGuardar dto = new ReservaDTOGuardar();
         dto.setHoraInicio(Calendar.getInstance());

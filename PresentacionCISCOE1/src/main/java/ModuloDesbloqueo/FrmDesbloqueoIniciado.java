@@ -7,6 +7,7 @@ package ModuloDesbloqueo;
 import DTOs.ComputadoraDTO;
 import DTOs.EstudianteDTO;
 import DTOs.ReservaDTO;
+import DTOs.ReservaDTOEditar;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
@@ -16,7 +17,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -61,31 +66,43 @@ public class FrmDesbloqueoIniciado extends javax.swing.JFrame {
         this.colorPanel.setMaximumSize(new Dimension(231, 290));
         this.colorPanel.setMinimumSize(new Dimension(231, 290));   
     }
-    private void cargarMinutos(){
-        this.tiempoLabel.setText("Tiempo Restante: "+String.valueOf(reservaDTO.getMinutos()));
-    Timer timer = new Timer(60000, new ActionListener() {
-        int minutosRestantes = reservaDTO.getMinutos(); 
-        
+    private void cargarMinutos() {
+        int tiempoTotalSegundos = reservaDTO.getMinutos() * 60; 
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (minutosRestantes > 0) {
-                
-                minutosRestantes--;
+        Timer timer = new Timer(1000, new ActionListener() {
+            int segundosRestantes = tiempoTotalSegundos;
 
-                
-                tiempoLabel.setText("Tiempo Restante: "+String.valueOf(minutosRestantes));
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (segundosRestantes > 0) {
+                    segundosRestantes--;
 
-                
-                if (minutosRestantes == 0) {
+                    int minutos = segundosRestantes / 60;
+                    int segundos = segundosRestantes % 60;
+
+                    tiempoLabel.setText(String.format("Tiempo Restante: %02d:%02d", minutos, segundos));
+                } else {
+                    ((Timer) e.getSource()).stop(); // Detener el timer
                     JOptionPane.showMessageDialog(null, "Tiempo agotado");
                 }
             }
+        });
+
+        timer.start();
+    }
+    public void liberarReserva(){
+        reservaDTO.setHoraFin(Calendar.getInstance());
+        ReservaDTOEditar reservaDTOEditar = new ReservaDTOEditar(reservaDTO);
+        try {
+            ReservaDTO resultado = reservaNegocio.actualizar(reservaDTOEditar);
+            SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
+            String soloHora = formatoHora.format(resultado.getHoraFin().getTime());
+            JOptionPane.showMessageDialog(this, "Reserva liberada con exito con hora de fin: " + soloHora);
+            this.dispose();
+        } catch (NegocioException ex) {
+            System.out.println("Error: "+ex.getMessage());
         }
-    });
-    
-    // Iniciar el temporizador
-    timer.start();
+        
     }
 
     /**
@@ -204,12 +221,21 @@ public class FrmDesbloqueoIniciado extends javax.swing.JFrame {
         desbloquearBTN.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         desbloquearBTN.setForeground(new java.awt.Color(255, 255, 255));
         desbloquearBTN.setText("Finalizar Sesion");
+        desbloquearBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                desbloquearBTNActionPerformed(evt);
+            }
+        });
         getContentPane().add(desbloquearBTN, new org.netbeans.lib.awtextra.AbsoluteConstraints(304, 715, 331, -1));
         getContentPane().add(lblBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 1920, 920));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void desbloquearBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desbloquearBTNActionPerformed
+        this.liberarReserva();
+    }//GEN-LAST:event_desbloquearBTNActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
