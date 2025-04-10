@@ -5,6 +5,7 @@
 package ModuloAdministracion.Persistencia;
 
 import DTOs.CarreraDTO;
+import DTOs.CarreraDTOEditar;
 import DTOs.CarreraDTOGuardar;
 import Entidades.Carrera;
 import Excepcion.PersistenciaException;
@@ -51,7 +52,40 @@ public class CarreraDAO implements ICarreraDAO{
             throw new PersistenciaException("No se encontro una carrera con el id "+id);
         }
     }
-
+    
+    @Override
+    public Carrera editar(Long id, CarreraDTOEditar carreraDTO) throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+        
+        Carrera carreraEntidad = entity.find(Carrera.class, id);
+        if (carreraEntidad == null) {
+            throw new PersistenciaException("No se encontró el laboratorio con el id " + id);
+        }
+        
+        carreraEntidad.setNombreCarrera(carreraDTO.getNombreCarrera());
+        carreraEntidad.setTiempoMaximoDiario(carreraDTO.getTiempoMaximoDiario());
+        carreraEntidad.setColor(carreraDTO.getColor());
+        
+        entity.merge(carreraEntidad);
+        entity.getTransaction().commit();
+        return carreraEntidad;
+    }
+    
+    @Override
+    public void eliminar(Long id) throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+        
+        Carrera carreraEntidad = entity.find(Carrera.class, id);
+        if (carreraEntidad == null) {
+            throw new PersistenciaException("No se encontró la carrera con el id " + id);
+        }
+        
+        entity.remove(carreraEntidad);
+        entity.getTransaction().commit();
+    }
+    
     @Override
     public List<Carrera> obtener() throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();

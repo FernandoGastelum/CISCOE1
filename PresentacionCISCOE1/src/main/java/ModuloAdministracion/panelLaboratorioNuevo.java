@@ -36,6 +36,7 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         this.institutoNegocio = institutoNegocio;
         initComponents();
         this.cargarInstituto();
+        this.cargarHoras();
         this.cboInstituto.setSelectedIndex(-1);
         cboApertura.setSelectedIndex(-1);
         cboCierre.setSelectedIndex(-1);
@@ -61,15 +62,16 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         laboratorioDTO.setNombre(txtNombre.getText());
         laboratorioDTO.setInstitutoDTO((InstitutoDTO) cboInstituto.getSelectedItem());
 
-//        if (!txtHoraApertura.getText().matches("^\\d{2}:\\d{2}$") || !txtHoraCierre.getText().matches("^\\d{2}:\\d{2}$")) {
-//            JOptionPane.showMessageDialog(this, "Por favor ingresa la hora en formato HH:mm (por ejemplo, 09:30, 17:26).", "Formato incorrecto", JOptionPane.WARNING_MESSAGE);
-//        } else {
-//            Calendar horaApertura = parseHora(txtHoraApertura.getText().trim());
-//            Calendar horaCierre = parseHora(txtHoraCierre.getText().trim());
-//
-//            laboratorioDTO.setHoraApertura(horaApertura);
-//            laboratorioDTO.setHoraCierre(horaCierre);
-//        }
+        if (!((String) cboApertura.getSelectedItem()).matches("^\\d{2}:\\d{2}$")
+                || !((String) cboCierre.getSelectedItem()).matches("^\\d{2}:\\d{2}$")) {
+            JOptionPane.showMessageDialog(this, "Las horas deben tener el formato HH:mm", "Formato incorrecto", JOptionPane.WARNING_MESSAGE);
+        } else {
+            Calendar horaApertura = parseHora((String) cboApertura.getSelectedItem());
+            Calendar horaCierre = parseHora((String) cboCierre.getSelectedItem());
+
+            laboratorioDTO.setHoraApertura(horaApertura);
+            laboratorioDTO.setHoraCierre(horaCierre);
+        }
 
         if (verificarContrasenias(this.contraseniaFIeld, this.confirmarContraseniaField)) {
             String contrasenia = new String(this.contraseniaFIeld.getPassword());
@@ -119,6 +121,29 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar;
+    }
+
+    private void cargarHoras() {
+        String[] horas = {
+            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00",
+            "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00",
+            "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00",
+            "20:30", "21:00", "21:30"
+        };
+
+        for (String hora : horas) {
+            cboApertura.addItem(hora);
+            cboCierre.addItem(hora);
+        }
+    }
+
+    private void regresar() {
+        panelLaboratoriosListado panelLaboratorio = new panelLaboratoriosListado(laboratorioNegocio, institutoNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelLaboratorio, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
     }
 
     /**
@@ -342,6 +367,7 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         try {
             this.guardarLaboratorio();
+            this.regresar();
         } catch (NegocioException | ParseException ex) {
             System.out.println("Error: " + ex.getMessage());
         }
@@ -357,12 +383,7 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        panelLaboratoriosListado panelLaboratorio = new panelLaboratoriosListado(laboratorioNegocio, institutoNegocio);
-        this.setLayout(new BorderLayout());
-        this.removeAll();
-        this.add(panelLaboratorio, BorderLayout.CENTER);
-        this.revalidate();
-        this.repaint();
+        this.regresar();
     }//GEN-LAST:event_btnRegresarActionPerformed
 
 

@@ -1,6 +1,7 @@
 package ModuloAdministracion.Interfaz;
 
 import DTOs.CarreraDTO;
+import DTOs.CarreraDTOEditar;
 import DTOs.CarreraDTOGuardar;
 import DTOs.CarreraTablaDTO;
 import Excepcion.NegocioException;
@@ -18,4 +19,8 @@ public interface ICarreraNegocio {
     List<CarreraTablaDTO> obtenerTabla() throws NegocioException;
     
     CarreraDTO obtenerPorID(Long id) throws NegocioException;
+    
+    CarreraDTO editar(Long id, CarreraDTOEditar carrera) throws NegocioException;
+    
+    void eliminar(Long id) throws NegocioException;
 }

@@ -37,22 +37,22 @@ public class panelEstudianteEditar extends javax.swing.JPanel {
         idEstudiante = ID;
         initComponents();
         this.cargarCarreras();
-        
+
         estudianteDTO = estudianteNegocio.obtenerPorID(ID);
-        
+
         lblID.setText(Long.toString(ID));
         txtNombre.setText(estudianteDTO.getNombre());
         txtApellidoPaterno.setText(estudianteDTO.getApellidoPaterno());
         txtApellidoMaterno.setText(estudianteDTO.getApellidoMaterno());
         cboCarrera.setSelectedItem(estudianteDTO.getCarrera());
-        
+
         if (estudianteDTO.getEstatusInscripcion()) {
             chkBoxInscrito.setSelected(true);
         } else {
             chkBoxInscrito.setSelected(false);
         }
     }
-    
+
     private void cargarCarreras() {
         try {
             List<CarreraDTO> listaCarreras = carreraNegocio.obtener();
@@ -67,14 +67,14 @@ public class panelEstudianteEditar extends javax.swing.JPanel {
             System.out.println("Error al cargar las combo boxes " + ex.getMessage());
         }
     }
-    
+
     private void editarEstudiante() throws NegocioException {
         EstudianteDTOEditar estudianteEditado = new EstudianteDTOEditar();
         estudianteEditado.setNombre(txtNombre.getText());
         estudianteEditado.setApellidoPaterno(txtApellidoPaterno.getText());
         estudianteEditado.setApellidoMaterno(txtApellidoMaterno.getText());
         estudianteEditado.setCarreraDTO((CarreraDTO) cboCarrera.getSelectedItem());
-        
+
         if (chkBoxInscrito.isSelected()) {
             estudianteEditado.setEstatusInscripcion(true);
         } else {
@@ -122,6 +122,15 @@ public class panelEstudianteEditar extends javax.swing.JPanel {
         return true;
     }
     
+    private void regresar() {
+        panelEstudiantesListado panelEstudiante = new panelEstudiantesListado(estudianteNegocio, carreraNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelEstudiante, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -357,6 +366,7 @@ public class panelEstudianteEditar extends javax.swing.JPanel {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             this.editarEstudiante();
+            this.regresar();
         } catch (NegocioException ex) {
             System.out.println("Error: " + ex.getMessage());
         }
@@ -368,7 +378,7 @@ public class panelEstudianteEditar extends javax.swing.JPanel {
         txtApellidoPaterno.setText(estudianteDTO.getApellidoPaterno());
         txtApellidoMaterno.setText(estudianteDTO.getApellidoMaterno());
         cboCarrera.setSelectedItem(estudianteDTO.getCarrera());
-        
+
         if (estudianteDTO.getEstatusInscripcion()) {
             chkBoxInscrito.setSelected(true);
         } else {
@@ -377,12 +387,7 @@ public class panelEstudianteEditar extends javax.swing.JPanel {
     }//GEN-LAST:event_btnRestaurarActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        panelEstudiantesListado panelEstudiante = new panelEstudiantesListado(estudianteNegocio, carreraNegocio);
-        this.setLayout(new BorderLayout());
-        this.removeAll();
-        this.add(panelEstudiante, BorderLayout.CENTER);
-        this.revalidate();
-        this.repaint();
+        this.regresar();
     }//GEN-LAST:event_btnRegresarActionPerformed
 
 

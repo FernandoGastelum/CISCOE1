@@ -4,23 +4,91 @@
  */
 package ModuloAdministracion;
 
+import DTOs.CarreraDTO;
+import DTOs.CarreraDTOEditar;
+import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JColorChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Knocmare
  */
 public class panelCarreraEditar extends javax.swing.JPanel {
+
     private final ICarreraNegocio carreraNegocio;
+    private Color colorSeleccionado;
+    private String colorHex;
+    private Long idCarrera;
+    private CarreraDTO carreraDTO;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelCarreraEditar(ICarreraNegocio carreraNegocio) {
+    public panelCarreraEditar(ICarreraNegocio carreraNegocio, Long ID) throws NegocioException {
         this.carreraNegocio = carreraNegocio;
+        idCarrera = ID;
         initComponents();
+        carreraDTO = carreraNegocio.obtenerPorID(ID);
+        restaurarDatos();
+    }
+    
+    private void editarCarrera() {
+        CarreraDTOEditar carreraEditada = new CarreraDTOEditar();
+        carreraEditada.setNombreCarrera(txtNombre.getText());
+        carreraEditada.setTiempoMaximoDiario(Integer.valueOf(txtMinutosDiarios.getText()));
+        carreraEditada.setColor(this.getColorHex());
+        try {
+            CarreraDTO resultado = carreraNegocio.editar(idCarrera, carreraEditada);
+            JOptionPane.showMessageDialog(this, "Carrera guardada con éxito con el nombre: " + resultado.getNombreCarrera());
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar la carrera: " + e.getMessage());
+        }
     }
 
+    private void abrirSelectorColor(Component componentePadre) {
+        Color color = JColorChooser.showDialog(componentePadre, "Seleccionar color", Color.WHITE);
+        if (color != null) {
+            colorSeleccionado = color;
+            colorHex = convertirColorAHex(color);
+            System.out.println("Color seleccionado: " + colorSeleccionado);
+            System.out.println("Color en formato HEX: " + colorHex);
+        } else {
+            System.out.println("No se seleccionó ningún color.");
+        }
+    }
+    
+    public Color getColorSeleccionado() {
+        return colorSeleccionado;
+    }
+
+    public String getColorHex() {
+        return colorHex;
+    }
+
+    private String convertirColorAHex(Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+    }
+    
+    private void restaurarDatos() {
+        this.lblID.setText(Long.toString(idCarrera));
+        this.txtNombre.setText(carreraDTO.getNombreCarrera());
+        this.txtMinutosDiarios.setText(Integer.toString(carreraDTO.getTiempoMaximoDiario()));
+    }
+    
+    private void regresar() {
+        panelCarrerasListado panelCarrera = new panelCarrerasListado(carreraNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelCarrera, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,10 +107,11 @@ public class panelCarreraEditar extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         txtMinutosDiarios = new javax.swing.JTextField();
-        btnCancelar = new javax.swing.JButton();
+        btnRestaurar = new javax.swing.JButton();
         btnColor = new javax.swing.JButton();
         lblID = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        btnRegresar = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(35, 35, 35));
 
@@ -76,6 +145,11 @@ public class panelCarreraEditar extends javax.swing.JPanel {
         btnGuardar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
         btnGuardar.setText("Guardar Cambios");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -93,14 +167,25 @@ public class panelCarreraEditar extends javax.swing.JPanel {
 
         txtMinutosDiarios.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
-        btnCancelar.setBackground(new java.awt.Color(246, 255, 0));
-        btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        btnCancelar.setText("Cancelar");
+        btnRestaurar.setBackground(new java.awt.Color(255, 0, 0));
+        btnRestaurar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnRestaurar.setForeground(new java.awt.Color(255, 255, 255));
+        btnRestaurar.setText("Restaurar");
+        btnRestaurar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestaurarActionPerformed(evt);
+            }
+        });
 
         btnColor.setBackground(new java.awt.Color(27, 54, 143));
         btnColor.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnColor.setForeground(new java.awt.Color(255, 255, 255));
         btnColor.setText("Seleccionar Color");
+        btnColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnColorActionPerformed(evt);
+            }
+        });
 
         lblID.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         lblID.setForeground(new java.awt.Color(255, 255, 255));
@@ -109,41 +194,58 @@ public class panelCarreraEditar extends javax.swing.JPanel {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("ID: ");
 
+        btnRegresar.setBackground(new java.awt.Color(246, 255, 0));
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanelPantalla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(78, 78, 78)
-                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(80, 80, 80))
             .addGroup(layout.createSequentialGroup()
                 .addGap(126, 126, 126)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel7)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel6))
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                            .addComponent(txtMinutosDiarios, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                            .addComponent(btnColor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel7)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel6))
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                    .addComponent(txtMinutosDiarios, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                    .addComponent(btnColor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(78, 78, 78)
+                .addComponent(btnRestaurar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnRegresar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE))
+                .addGap(80, 80, 80))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanelPantalla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
-                .addComponent(jLabel2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(btnRegresar))
                 .addGap(49, 49, 49)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -163,16 +265,34 @@ public class panelCarreraEditar extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
-                    .addComponent(btnCancelar))
+                    .addComponent(btnRestaurar))
                 .addGap(71, 71, 71))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnColorActionPerformed
+        this.abrirSelectorColor(null);
+    }//GEN-LAST:event_btnColorActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        this.editarCarrera();
+        this.regresar();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnRestaurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestaurarActionPerformed
+        this.restaurarDatos();
+    }//GEN-LAST:event_btnRestaurarActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        this.regresar();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnColor;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JButton btnRestaurar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
