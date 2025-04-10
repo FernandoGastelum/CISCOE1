@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit4TestClass.java to edit this template
- */
 package Test;
 
 import DTOs.CarreraDTO;
@@ -73,11 +69,11 @@ public class EstudianteDAOTest {
     }
     
     /**
-     * Prueba del metodo guardar(), de la clase de EstudianteDAO.
+     * Prueba erronea del metodo guardar(), de la clase de EstudianteDAO.
      */
     @Test(expected = PersistenciaException.class)
     public void testGuardarError() throws Exception {
-        System.out.println("Prueba del metodo guardar(), de la clase de EstudianteDAO");
+        System.out.println("Prueba erronea del metodo guardar(), de la clase de EstudianteDAO");
         
         IEntityManager em = new EntityManagerDAO();
         EstudianteDAO instance = new EstudianteDAO(em);
@@ -124,6 +120,8 @@ public class EstudianteDAOTest {
      */
     @Test
     public void testEditar() throws Exception {
+        System.out.println("Prueba del metodo editar(), de la clase de EstudianteDAO.");
+        
         EstudianteDAO instance = new EstudianteDAO(new EntityManagerDAO());
 
         Carrera carrera = new Carrera("Nombre", 000, "Color");
@@ -230,20 +228,20 @@ public class EstudianteDAOTest {
     /**
      * Prueba de excepcion del metodo obtener(), de la clase de EstudianteDAO.
      */
-//    @Test
-//    public void testObtenerError() throws Exception {
-//        System.out.println("Prueba de excepcion del metodo obtener(), de la clase de EstudianteDAO.");
-//        
-//        EstudianteDAO instance = new EstudianteDAO(new EntityManagerDAO());
-//
-//        EntityManager em = new EntityManagerDAO().crearEntityManager();
-//        em.getTransaction().begin();
-//        em.createQuery("DELETE FROM Estudiante").executeUpdate();
-//        em.getTransaction().commit();
-//
-//        assertThrows(PersistenciaException.class, () -> {
-//            instance.obtener();
-//        });
-//    }
+    @Test
+    public void testObtenerError() throws Exception {
+        System.out.println("Prueba de excepcion del metodo obtener(), de la clase de EstudianteDAO.");
+        
+        EstudianteDAO instance = new EstudianteDAO(new EntityManagerDAO());
+
+        EntityManager em = new EntityManagerDAO().crearEntityManager();
+        em.getTransaction().begin();
+        em.createQuery("DELETE FROM Estudiante").executeUpdate();
+        em.getTransaction().commit();
+
+        assertThrows(PersistenciaException.class, () -> {
+            instance.obtener();
+        });
+    }
     
 }
