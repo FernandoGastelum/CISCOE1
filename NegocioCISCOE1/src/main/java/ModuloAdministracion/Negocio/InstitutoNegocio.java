@@ -5,6 +5,7 @@
 package ModuloAdministracion.Negocio;
 
 import DTOs.InstitutoDTO;
+import DTOs.InstitutoDTOEditar;
 import DTOs.InstitutoDTOGuardar;
 import DTOs.InstitutoTablaDTO;
 import Entidades.Instituto;
@@ -95,6 +96,25 @@ public class InstitutoNegocio implements IInstitutoNegocio {
             throw new NegocioException("El nombre abreviado no puede estar vacío");
         }
         return true;
+    }
+
+    @Override
+    public InstitutoDTO editar(InstitutoDTOEditar instituto) throws NegocioException {
+        try {
+            Instituto institutoEntidad = institutoDAO.editar(instituto);
+            return institutoDAO.obtenerDTO(institutoEntidad.getIdInstituto());
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Ocurrio un error "+ e.getMessage());
+        }
+    }
+
+    @Override
+    public void eliminar(Long id) throws NegocioException {
+        try {
+            institutoDAO.eliminar(id);
+        } catch (PersistenciaException e) {
+            System.out.println("Error: "+e.getMessage());
+        }
     }
 
 }

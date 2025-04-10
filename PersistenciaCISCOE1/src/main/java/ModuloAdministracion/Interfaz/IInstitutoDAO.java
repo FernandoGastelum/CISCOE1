@@ -5,6 +5,7 @@
 package ModuloAdministracion.Interfaz;
 
 import DTOs.InstitutoDTO;
+import DTOs.InstitutoDTOEditar;
 import DTOs.InstitutoDTOGuardar;
 import Entidades.Instituto;
 import Excepcion.PersistenciaException;
@@ -23,4 +24,8 @@ public interface IInstitutoDAO {
     List<Instituto> obtener() throws PersistenciaException;
     
     InstitutoDTO obtenerDTO(Long id) throws PersistenciaException;
+    
+    Instituto editar(InstitutoDTOEditar instituto) throws PersistenciaException;
+    
+    void eliminar(Long id) throws PersistenciaException;
 }

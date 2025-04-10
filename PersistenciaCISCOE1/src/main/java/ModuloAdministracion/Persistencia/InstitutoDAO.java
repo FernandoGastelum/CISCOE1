@@ -5,6 +5,7 @@
 package ModuloAdministracion.Persistencia;
 
 import DTOs.InstitutoDTO;
+import DTOs.InstitutoDTOEditar;
 import DTOs.InstitutoDTOGuardar;
 import Entidades.Instituto;
 import Excepcion.PersistenciaException;
@@ -82,6 +83,53 @@ public class InstitutoDAO implements IInstitutoDAO{
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
+        }
+    }
+
+    @Override
+    public Instituto editar(InstitutoDTOEditar instituto) throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        try {
+            entity.getTransaction().begin();
+
+            Instituto institutoExistente = this.obtenerPorID(instituto.getId());
+
+            if (institutoExistente == null) {
+                throw new PersistenciaException("El instituto con ID " + instituto.getId() + " no existe.");
+            }
+            institutoExistente.setNombreAbreviado(instituto.getNombreAbreviado());
+            institutoExistente.setNombreOficial(instituto.getNombreOficial());
+
+            entity.merge(institutoExistente);
+
+            entity.getTransaction().commit();
+
+            return institutoExistente;
+        } catch (PersistenciaException e) {
+            entity.getTransaction().rollback();
+            throw new PersistenciaException("Error al editar el instituto: " + e.getMessage());
+        } finally {
+            entity.close();
+        }
+    }
+
+    @Override
+    public void eliminar(Long id) throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        try {
+            entity.getTransaction().begin();
+            Instituto instituto = entity.find(Instituto.class, id);
+            if (instituto != null) {
+                entity.remove(instituto);
+            } else {
+                throw new PersistenciaException("instituto no encontrado con ID: " + id);
+            }
+            entity.getTransaction().commit();
+        } catch (PersistenciaException e) {
+            entity.getTransaction().rollback();
+            throw new PersistenciaException("Error al eliminar el instituto: " + e.getMessage());
+        } finally {
+            entity.close();
         }
     }
 }

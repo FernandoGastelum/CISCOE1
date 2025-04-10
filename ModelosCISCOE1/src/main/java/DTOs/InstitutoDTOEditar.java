@@ -10,6 +10,7 @@ package DTOs;
  */
 public class InstitutoDTOEditar {
     
+    private Long id;
     private String nombreOficial;
     private String nombreAbreviado;
 
@@ -19,9 +20,18 @@ public class InstitutoDTOEditar {
     public InstitutoDTOEditar() {
     }
 
-    public InstitutoDTOEditar(String nombreOficial, String nombreAbreviado) {
+    public InstitutoDTOEditar(String nombreOficial, String nombreAbreviado, Long id) {
         this.nombreOficial = nombreOficial;
         this.nombreAbreviado = nombreAbreviado;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombreOficial() {
