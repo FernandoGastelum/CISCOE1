@@ -31,11 +31,18 @@ public class InstitutoDAO implements IInstitutoDAO{
 
     @Override
     public Instituto guardar(InstitutoDTOGuardar instituto) throws PersistenciaException {
+        if (instituto == null) {
+            throw new PersistenciaException("El instituto no puede ser null");
+        }
+
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
-        
-        Instituto institutoEntidad = new Instituto(instituto.getNombreOficial(), instituto.getNombreAbreviado());
-        
+
+        Instituto institutoEntidad = new Instituto(
+            instituto.getNombreOficial(),
+            instituto.getNombreAbreviado()
+        );
+
         entity.persist(institutoEntidad);
         entity.getTransaction().commit();
         return institutoEntidad;
@@ -59,10 +66,11 @@ public class InstitutoDAO implements IInstitutoDAO{
                                                          SELECT i
                                                          FROM Instituto i
                                                          """, Instituto.class);
-        if(query.getResultList()==null){
+        List<Instituto> resultados = query.getResultList();
+        if(resultados.isEmpty()){
             throw new PersistenciaException("No se encontraron resultados");
         }
-        return query.getResultList();
+        return resultados;
     }
 
     @Override

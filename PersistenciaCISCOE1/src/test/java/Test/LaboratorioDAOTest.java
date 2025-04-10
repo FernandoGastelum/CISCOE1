@@ -14,21 +14,44 @@ import Entidades.Laboratorio;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
+import ModuloAdministracion.Persistencia.InstitutoDAO;
 import ModuloAdministracion.Persistencia.LaboratorioDAO;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 
 
 public class LaboratorioDAOTest {
     
-    public LaboratorioDAOTest() {
+    private InstitutoDAO institutoDAO;
+    private IEntityManager em;
+    
+    @Before
+    public void setUp() {
+        // Inicializas tu EntityManager y DAO antes de cada test
+        em = new EntityManagerDAO();
+        institutoDAO = new InstitutoDAO(em);
+    }
+    @After
+    public void tearDown() throws PersistenciaException {
+        // Llamamos a limpiar los registros
+        limpiarRegistros();
+    }
+    private void limpiarRegistros() throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+
+        entity.createQuery("DELETE FROM Laboratorio").executeUpdate();
+
+        entity.getTransaction().commit();
     }
     
     /**
@@ -76,7 +99,7 @@ public class LaboratorioDAOTest {
         LaboratorioDAO dao = new LaboratorioDAO(em);
 
         InstitutoDTO institutoDTO = new InstitutoDTO();
-        institutoDTO.setIdInstituto(9999L); // ID inválido
+        institutoDTO.setIdInstituto(9999L); 
 
         Calendar apertura = Calendar.getInstance();
         apertura.set(Calendar.HOUR_OF_DAY, 8);
@@ -105,12 +128,12 @@ public class LaboratorioDAOTest {
     @Test
     public void testObtenerPorID() throws Exception {
         LaboratorioDAO instance = new LaboratorioDAO(new EntityManagerDAO());
-        Instituto instituto = new Instituto();
+        Instituto instituto = new Instituto("Test", "Test");
         instituto.setIdInstituto(1L);
-        Laboratorio laboratorio = new Laboratorio("Test", Calendar.getInstance(), Calendar.getInstance(), "12345", instituto);
-
         EntityManager em = new EntityManagerDAO().crearEntityManager();
         em.getTransaction().begin();
+        em.persist(instituto);
+        Laboratorio laboratorio = new Laboratorio("Test", Calendar.getInstance(), Calendar.getInstance(), "12345", instituto);
         em.persist(laboratorio);
         em.getTransaction().commit();
 
@@ -162,10 +185,11 @@ public class LaboratorioDAOTest {
     @Test
     public void testEliminarExito() throws Exception {
         LaboratorioDAO instance = new LaboratorioDAO(new EntityManagerDAO());
-        Instituto instituto = new Instituto();
+        Instituto instituto = new Instituto("Test", "Test");
         instituto.setIdInstituto(1L);
         EntityManager em = new EntityManagerDAO().crearEntityManager();
         em.getTransaction().begin();
+        em.persist(instituto);
         Laboratorio lab = new Laboratorio("Test", Calendar.getInstance(), Calendar.getInstance(), "123", instituto);
         em.persist(lab);
         em.getTransaction().commit();
@@ -191,14 +215,13 @@ public class LaboratorioDAOTest {
     @Test
     public void testObtenerExito() throws Exception {
         LaboratorioDAO instance = new LaboratorioDAO(new EntityManagerDAO());
-        Instituto instituto = new Instituto();
-        instituto.setIdInstituto(1L);
+        Instituto instituto = new Instituto("Test", "Test");
         EntityManager em = new EntityManagerDAO().crearEntityManager();
         em.getTransaction().begin();
+        em.persist(instituto);
         Laboratorio lab = new Laboratorio("Test", Calendar.getInstance(), Calendar.getInstance(), "123", instituto);
         em.persist(lab);
         em.getTransaction().commit();
-
         List<Laboratorio> resultado = instance.obtener();
         assertTrue(resultado.size() > 0);
     }
@@ -207,7 +230,6 @@ public class LaboratorioDAOTest {
     public void testObtenerFallo() throws Exception {
         LaboratorioDAO instance = new LaboratorioDAO(new EntityManagerDAO());
 
-        // Elimina todos si ya existen para forzar error
         EntityManager em = new EntityManagerDAO().crearEntityManager();
         em.getTransaction().begin();
         em.createQuery("DELETE FROM Laboratorio").executeUpdate();
