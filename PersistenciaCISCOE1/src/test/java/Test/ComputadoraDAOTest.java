@@ -57,7 +57,6 @@ public class ComputadoraDAOTest {
     private IEntityManager em;
     private LaboratorioDTO laboratorioDTO;
     private InstitutoDTO institutoDTO;
-    private CarreraDTO carreraDTO;
     Laboratorio laboratorioEntidad;
     Instituto institutoEntidad;
     Carrera carreraEntidad;
@@ -72,9 +71,6 @@ public class ComputadoraDAOTest {
         laboratorioDAO = new LaboratorioDAO(em);
         carreraDAO = new CarreraDAO(em);
         institutoDAO = new InstitutoDAO(em);
-        
-        
-        
     }
     private InstitutoDTO guardarInstituto() throws PersistenciaException{
         institutoDTOGuardar = new InstitutoDTOGuardar("inttituto", "ins");
@@ -89,7 +85,7 @@ public class ComputadoraDAOTest {
     private CarreraDTO guardarCarrera()throws PersistenciaException{
         carreraDTOGuardar = new CarreraDTOGuardar("Carrera", 300, "Red");
         carreraEntidad = carreraDAO.guardar(carreraDTOGuardar);
-        return carreraDTO = carreraDAO.obtenerDTO(carreraEntidad.getIdCarrera());
+        return carreraDAO.obtenerDTO(carreraEntidad.getIdCarrera());
     }
     @After
     public void tearDown() throws PersistenciaException {

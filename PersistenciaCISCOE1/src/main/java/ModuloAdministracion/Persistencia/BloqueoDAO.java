@@ -33,6 +33,9 @@ public class BloqueoDAO implements IBloqueoDAO{
 
     @Override
     public Bloqueo guardar(BloqueoDTOGuardar bloqueo) throws PersistenciaException {
+        if (bloqueo == null) {
+            throw new PersistenciaException("El bloqueo no puede ser null");
+        }
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
         
@@ -69,7 +72,8 @@ public class BloqueoDAO implements IBloqueoDAO{
                                                          SELECT b
                                                          FROM Bloqueo b
                                                          """, Bloqueo.class);
-        if(query.getResultList()==null){
+        List<Bloqueo> resultado = query.getResultList();
+        if(resultado.isEmpty()){
             throw new PersistenciaException("No se encontraron resultados");
         }
         return query.getResultList();
