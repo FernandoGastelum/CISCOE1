@@ -5,6 +5,7 @@
 package ModuloAdministracion.Interfaz;
 
 import DTOs.ComputadoraDTO;
+import DTOs.ComputadoraDTOEditar;
 import DTOs.ComputadoraDTOGuardar;
 import Entidades.Computadora;
 import Excepcion.PersistenciaException;
@@ -24,5 +25,9 @@ public interface IComputadoraDAO {
     
     ComputadoraDTO obtenerDTO(Long id)throws PersistenciaException;
     
-    boolean existeComputadoraRepetida(Integer numero, String tipo, Long idLaboratorio) throws PersistenciaException;
+    boolean existeComputadoraRepetida(Integer numero, String tipo, Long idLaboratorio) throws PersistenciaException; 
+    
+    Computadora actualizar(ComputadoraDTOEditar computadora) throws PersistenciaException;
+    
+    void eliminar(Long id)throws PersistenciaException;
 }

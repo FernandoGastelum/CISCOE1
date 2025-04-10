@@ -5,6 +5,7 @@
 package ModuloAdministracion.Negocio;
 
 import DTOs.ComputadoraDTO;
+import DTOs.ComputadoraDTOEditar;
 import DTOs.ComputadoraDTOGuardar;
 import DTOs.ComputadoraTablaDTO;
 import Entidades.Computadora;
@@ -111,6 +112,26 @@ public class ComputadoraNegocio implements IComputadoraNegocio {
             throw new NegocioException("El numero de maquina no puede estar vacio");
         }
         return true;
+    }
+
+    @Override
+    public ComputadoraDTO actualizar(ComputadoraDTOEditar computadora) throws NegocioException {
+        try {
+            Computadora computadoraEntidad = computadoraDAO.actualizar(computadora);
+            return computadoraDAO.obtenerDTO(computadoraEntidad.getIdComputadora());
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error "+e.getMessage());
+        }
+    }
+
+    @Override
+    public void eliminar(Long id) throws NegocioException {
+        try {
+            computadoraDAO.eliminar(id);
+            
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error "+e.getMessage());
+        }
     }
 
 }

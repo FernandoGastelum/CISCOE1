@@ -12,6 +12,8 @@ import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
+import ModuloReservas.Interfaz.IReservaNegocio;
+import java.awt.BorderLayout;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,14 +28,16 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
     private final IComputadoraNegocio computadoraNegocio;
     private final ICarreraNegocio carreraNegocio;
     private final ILaboratorioNegocio laboratorioNegocio;
+    private final IReservaNegocio reservaNegocio;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelComputadoraNuevo(IComputadoraNegocio computadoraNegocio, ICarreraNegocio carreraNegocio, ILaboratorioNegocio laboratorioNegocio) {
+    public panelComputadoraNuevo(IComputadoraNegocio computadoraNegocio, ICarreraNegocio carreraNegocio, ILaboratorioNegocio laboratorioNegocio, IReservaNegocio reservaNegocio) {
         this.computadoraNegocio = computadoraNegocio;
         this.carreraNegocio = carreraNegocio;
         this.laboratorioNegocio = laboratorioNegocio;
+        this.reservaNegocio = reservaNegocio;
         initComponents();
         this.cargarCarreras();
         this.cargarLaboratorios();
@@ -84,6 +88,21 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Error al guardar la computadora: " + e.getMessage());
         }
     }
+    private void restaurarCampos(){
+        this.txtIP.setText("");
+        this.txtNumeroMaquina.setText("");
+        this.cboCarrera.setSelectedItem(-1);
+        this.cboLaboratorio.setSelectedItem(-1);
+        this.tipoComboBox.setSelectedItem(-1);
+    }
+    private void regresar(){
+        panelComputadorasListado panel = new panelComputadorasListado(computadoraNegocio, carreraNegocio, laboratorioNegocio,reservaNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panel, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -96,6 +115,7 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
 
         jPanelPantalla = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        btnRegresar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -120,17 +140,35 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Computadoras");
 
+        btnRegresar.setBackground(new java.awt.Color(246, 255, 0));
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelPantallaLayout = new javax.swing.GroupLayout(jPanelPantalla);
         jPanelPantalla.setLayout(jPanelPantallaLayout);
         jPanelPantallaLayout.setHorizontalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1920, Short.MAX_VALUE)
+            .addGroup(jPanelPantallaLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1523, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46))
         );
         jPanelPantallaLayout.setVerticalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPantallaLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel1)
+                .addGroup(jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelPantallaLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanelPantallaLayout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addComponent(btnRegresar)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -160,9 +198,10 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
 
         txtIP.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
-        btnCancelar.setBackground(new java.awt.Color(246, 255, 0));
+        btnCancelar.setBackground(new java.awt.Color(255, 0, 0));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        btnCancelar.setText("Cancelar");
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setText("Restaurar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelarActionPerformed(evt);
@@ -194,33 +233,34 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanelPantalla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(78, 78, 78)
-                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(78, 78, 78)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(126, 126, 126)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(55, 55, 55)
+                                .addComponent(txtNumeroMaquina, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel4)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel6)))
+                                .addGap(158, 158, 158)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cboLaboratorio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtIP, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                    .addComponent(cboCarrera, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tipoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(80, 80, 80))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(126, 126, 126)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(55, 55, 55)
-                        .addComponent(txtNumeroMaquina, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel5)
-                                .addComponent(jLabel6)))
-                        .addGap(158, 158, 158)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cboLaboratorio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtIP, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                            .addComponent(cboCarrera, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(tipoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(953, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,13 +300,18 @@ public class panelComputadoraNuevo extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
+        this.restaurarCampos();
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        this.regresar();
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JComboBox<CarreraDTO> cboCarrera;
     private javax.swing.JComboBox<LaboratorioDTO> cboLaboratorio;
     private javax.swing.JLabel jLabel1;

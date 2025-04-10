@@ -4,17 +4,23 @@
  */
 package ModuloAdministracion;
 
+import DTOs.ComputadoraDTO;
 import DTOs.ComputadoraTablaDTO;
+import DTOs.ReservaDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
+import ModuloReservas.Interfaz.IReservaNegocio;
 import Utilidades.JButtonCellEditor;
 import Utilidades.JButtonRenderer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -27,14 +33,16 @@ public class panelComputadorasListado extends javax.swing.JPanel {
     private final IComputadoraNegocio computadoraNegocio;
     private final ILaboratorioNegocio laboratorioNegocio;
     private final ICarreraNegocio carreraNegocio;
+    private final IReservaNegocio reservaNegocio;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelComputadorasListado(IComputadoraNegocio computadoraNegocio, ICarreraNegocio carreraNegocio, ILaboratorioNegocio laboratorioNegocio) {
+    public panelComputadorasListado(IComputadoraNegocio computadoraNegocio, ICarreraNegocio carreraNegocio, ILaboratorioNegocio laboratorioNegocio,IReservaNegocio reservaNegocio) {
         this.computadoraNegocio = computadoraNegocio;
         this.laboratorioNegocio = laboratorioNegocio;
         this.carreraNegocio = carreraNegocio;
+        this.reservaNegocio = reservaNegocio;
         initComponents();
         this.metodosIniciales();
     }
@@ -76,12 +84,49 @@ public class panelComputadorasListado extends javax.swing.JPanel {
 
     private void editar() {
         Long id = this.getIdSeleccionadoTabla();
-        System.out.println("El id que se va a editar es " + id);
+        panelComputadoraEditar panel = new panelComputadoraEditar(computadoraNegocio, laboratorioNegocio, carreraNegocio, id,reservaNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panel, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+        
     }
 
     private void eliminar() {
-        Long id = this.getIdSeleccionadoTabla();
-        System.out.println("El id que se va a eliminar es " + id);
+        Boolean computadoraLigada = false;
+        int confirmacion = JOptionPane.showConfirmDialog(
+            this,
+            "¿Estás seguro de que deseas eliminar esta computadora?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                Long id = this.getIdSeleccionadoTabla();
+                if (id != 0L) {
+                    List<ReservaDTO> listaReserva = reservaNegocio.obtener();
+                    ComputadoraDTO computadoraDTO = computadoraNegocio.obtenerPorID(id);
+                    for (ReservaDTO reservaDTO : listaReserva) {
+                        if(reservaDTO.getComputadora().getIdComputadora().equals(computadoraDTO.getIdComputadora())){
+                            computadoraLigada=true;
+                        }
+                    }
+                    if(computadoraLigada=false){
+                        computadoraNegocio.eliminar(id);
+                    JOptionPane.showMessageDialog(this, "Computadora eliminada con éxito.");
+                    this.metodosIniciales(); 
+                    }else{
+                        JOptionPane.showMessageDialog(this, "La computadora esta ligada a una reserva");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecciona una computadora válida.");
+                }
+            } catch (NegocioException ex) {
+                JOptionPane.showMessageDialog(this, "No se pudo borrar la computadora: " + ex.getMessage());
+            }
+        }
     }
 
     private Long getIdSeleccionadoTabla() {
@@ -100,6 +145,11 @@ public class panelComputadorasListado extends javax.swing.JPanel {
     private void buscarTabla() {
         try {
             List<ComputadoraTablaDTO> computadorasTablaLista = this.computadoraNegocio.obtenerTabla();
+
+            
+            DefaultTableModel modelo = (DefaultTableModel) this.tablaComputadoras.getModel();
+            modelo.setRowCount(0);
+
             this.agregarRegistrosTabla(computadorasTablaLista);
         } catch (NegocioException ex) {
             System.out.println(ex.getMessage());
@@ -122,6 +172,14 @@ public class panelComputadorasListado extends javax.swing.JPanel {
 
             modeloTabla.addRow(fila);
         });
+    }
+    private void agregar(){
+        panelComputadoraNuevo panelComputadora = new panelComputadoraNuevo(computadoraNegocio,carreraNegocio, laboratorioNegocio,reservaNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelComputadora, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
     }
 
     /**
@@ -225,12 +283,7 @@ public class panelComputadorasListado extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        panelComputadoraNuevo panelComputadora = new panelComputadoraNuevo(computadoraNegocio,carreraNegocio, laboratorioNegocio);
-        this.setLayout(new BorderLayout());
-        this.removeAll();
-        this.add(panelComputadora, BorderLayout.CENTER);
-        this.revalidate();
-        this.repaint();
+        this.agregar();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
 

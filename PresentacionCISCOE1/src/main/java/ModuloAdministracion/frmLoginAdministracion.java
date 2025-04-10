@@ -35,6 +35,10 @@ import ModuloAdministracion.Persistencia.EntityManagerDAO;
 import ModuloAdministracion.Persistencia.EstudianteDAO;
 import ModuloAdministracion.Persistencia.InstitutoDAO;
 import ModuloAdministracion.Persistencia.LaboratorioDAO;
+import ModuloReservas.Interfaz.IReservaDAO;
+import ModuloReservas.Interfaz.IReservaNegocio;
+import ModuloReservas.Negocio.ReservaNegocio;
+import ModuloReservas.Persistencia.ReservaDAO;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
@@ -53,6 +57,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
     private final IComputadoraNegocio computadoraNegocio;
     private final ICarreraNegocio carreraNegocio;
     private final IBloqueoNegocio bloqueoNegocio;
+    private final IReservaNegocio reservaNegocio;
     
     /**
      * Creates new form frmLoginAdministracion
@@ -65,13 +70,14 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
      */
     public frmLoginAdministracion(ILaboratorioDAO laboratorioDAO, IInstitutoDAO institutoDAO, 
             IEstudianteDAO estudianteDAO, IComputadoraDAO computadoraDAO, 
-            ICarreraDAO carreraDAO, IBloqueoDAO bloqueoDAO) {
+            ICarreraDAO carreraDAO, IBloqueoDAO bloqueoDAO,IReservaNegocio reservaNegocio) {
         this.laboratorioNegocio = new LaboratorioNegocio(laboratorioDAO);
         this.institutoNegocio = new InstitutoNegocio(institutoDAO);
         this.estudianteNegocio = new EstudianteNegocio(estudianteDAO);
         this.computadoraNegocio = new ComputadoraNegocio(computadoraDAO);
         this.carreraNegocio = new CarreraNegocio(carreraDAO);
         this.bloqueoNegocio = new BloqueoNegocio(bloqueoDAO);
+        this.reservaNegocio = reservaNegocio;
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
@@ -297,7 +303,8 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         if(validarUsuario(valorLong) && validarContrasena(txtContrasena.getText())){
             this.dispose();
             frmMenuAdministrativo menuAdministrativo = new frmMenuAdministrativo(
-                    laboratorioNegocio, institutoNegocio, estudianteNegocio, computadoraNegocio, carreraNegocio, bloqueoNegocio);
+                    laboratorioNegocio, institutoNegocio, estudianteNegocio, 
+                    computadoraNegocio, carreraNegocio, bloqueoNegocio,reservaNegocio);
             menuAdministrativo.setVisible(true);
         }else{
             JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+txtUsuario.getText()+" no existe");
@@ -313,6 +320,14 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         IEntityManager entityManager = new EntityManagerDAO();
+        ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(entityManager);
+                IInstitutoDAO institutoDAO = new InstitutoDAO(entityManager);
+                IEstudianteDAO estudianteDAO = new EstudianteDAO(entityManager);
+                IComputadoraDAO computadoraNegocio = new ComputadoraDAO(entityManager);
+                ICarreraDAO carreraNegocio = new CarreraDAO(entityManager);
+                IBloqueoDAO bloqueoNegocio = new BloqueoDAO(entityManager);
+                IReservaDAO reservaDAO = new ReservaDAO(entityManager);
+                IReservaNegocio reservaNegocio = new ReservaNegocio(reservaDAO);
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -339,13 +354,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(entityManager);
-                IInstitutoDAO institutoDAO = new InstitutoDAO(entityManager);
-                IEstudianteDAO estudianteDAO = new EstudianteDAO(entityManager);
-                IComputadoraDAO computadoraNegocio = new ComputadoraDAO(entityManager);
-                ICarreraDAO carreraNegocio = new CarreraDAO(entityManager);
-                IBloqueoDAO bloqueoNegocio = new BloqueoDAO(entityManager);
-                new frmLoginAdministracion(laboratorioDAO, institutoDAO, estudianteDAO, computadoraNegocio, carreraNegocio, bloqueoNegocio).setVisible(true);
+                new frmLoginAdministracion(laboratorioDAO, institutoDAO, estudianteDAO, computadoraNegocio, carreraNegocio, bloqueoNegocio,reservaNegocio).setVisible(true);
             }
         });
     }

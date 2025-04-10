@@ -4,20 +4,19 @@
  */
 package DTOs;
 
-import Entidades.Carrera;
-import Entidades.Laboratorio;
-
 /**
  *
  * @author Knocmare
  */
 public class ComputadoraDTOEditar {
     
+    private Long id;
     private Integer numeroMaquina;
     private String direccionIp;
     private Boolean estatus;
-    private Laboratorio laboratorio;
-    private Carrera carrera;
+    private LaboratorioDTO laboratorioDTO;
+    private CarreraDTO carreraDTO;
+    private String tipo;
 
     /**
      * Constructor por ausencia
@@ -25,12 +24,30 @@ public class ComputadoraDTOEditar {
     public ComputadoraDTOEditar() {
     }
 
-    public ComputadoraDTOEditar(Integer numeroMaquina, String direccionIp, Boolean estatus, Laboratorio laboratorio, Carrera carrera) {
+    public ComputadoraDTOEditar(Long id, Integer numeroMaquina, String direccionIp, Boolean estatus, LaboratorioDTO laboratorioDTO, CarreraDTO carreraDTO, String tipo) {
+        this.id = id;
         this.numeroMaquina = numeroMaquina;
         this.direccionIp = direccionIp;
         this.estatus = estatus;
-        this.laboratorio = laboratorio;
-        this.carrera = carrera;
+        this.laboratorioDTO = laboratorioDTO;
+        this.carreraDTO = carreraDTO;
+        this.tipo = tipo;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public Integer getNumeroMaquina() {
@@ -57,25 +74,25 @@ public class ComputadoraDTOEditar {
         this.estatus = estatus;
     }
 
-    public Laboratorio getLaboratorio() {
-        return laboratorio;
+    public LaboratorioDTO getLaboratorioDTO() {
+        return laboratorioDTO;
     }
 
-    public void setLaboratorio(Laboratorio laboratorio) {
-        this.laboratorio = laboratorio;
+    public void setLaboratorioDTO(LaboratorioDTO laboratorioDTO) {
+        this.laboratorioDTO = laboratorioDTO;
     }
 
-    public Carrera getCarrera() {
-        return carrera;
+    public CarreraDTO getCarreraDTO() {
+        return carreraDTO;
     }
 
-    public void setCarrera(Carrera carrera) {
-        this.carrera = carrera;
+    public void setCarreraDTO(CarreraDTO carreraDTO) {
+        this.carreraDTO = carreraDTO;
     }
 
     @Override
     public String toString() {
-        return "ComputadoraDTOEditar{" + "numeroMaquina=" + numeroMaquina + ", direccionIp=" + direccionIp + ", estatus=" + estatus + ", laboratorio=" + laboratorio + ", carrera=" + carrera + '}';
+        return "ComputadoraDTOEditar{" + "numeroMaquina=" + numeroMaquina + ", direccionIp=" + direccionIp + ", estatus=" + estatus + ", laboratorioDTO=" + laboratorioDTO + ", carreraDTO=" + carreraDTO + '}';
     }
     
     

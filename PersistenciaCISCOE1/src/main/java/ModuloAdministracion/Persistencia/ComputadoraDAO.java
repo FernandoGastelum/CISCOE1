@@ -5,6 +5,7 @@
 package ModuloAdministracion.Persistencia;
 
 import DTOs.ComputadoraDTO;
+import DTOs.ComputadoraDTOEditar;
 import DTOs.ComputadoraDTOGuardar;
 import Entidades.Carrera;
 import Entidades.Computadora;
@@ -54,6 +55,24 @@ public class ComputadoraDAO implements IComputadoraDAO{
         Computadora computadoraEntidad = new Computadora(computadora.getNumeroMaquina(), computadora.getDireccionIp(), laboratorioEntidad, carreraEntidad,computadora.getTipo());
         return computadoraEntidad;
     }
+    private Computadora convertirEntidad(ComputadoraDTOEditar computadora) throws PersistenciaException {
+        ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(em);
+        ICarreraDAO carreraDAO = new CarreraDAO(em);
+
+        Laboratorio laboratorioEntidad = laboratorioDAO.obtenerPorID(computadora.getLaboratorioDTO().getIdLaboratorio());
+        Carrera carreraEntidad = carreraDAO.obtenerPorID(computadora.getCarreraDTO().getIdCarrera());
+
+        Computadora computadoraEntidad = new Computadora(
+            computadora.getNumeroMaquina(),
+            computadora.getDireccionIp(),
+            laboratorioEntidad,
+            carreraEntidad,
+            computadora.getTipo()
+        );
+        computadoraEntidad.setIdComputadora(computadora.getId());
+
+        return computadoraEntidad;
+    }
 
     @Override
     public Computadora obtenerPorID(Long id) throws PersistenciaException {
@@ -78,6 +97,7 @@ public class ComputadoraDAO implements IComputadoraDAO{
         }
         return query.getResultList();
     }
+    @Override
     public boolean existeComputadoraRepetida(Integer numero, String tipo, Long idLaboratorio) throws PersistenciaException {
         try {
             EntityManager entity = em.crearEntityManager();
@@ -124,6 +144,53 @@ public class ComputadoraDAO implements IComputadoraDAO{
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
+        }
+    }
+
+    @Override
+    public Computadora actualizar(ComputadoraDTOEditar computadora) throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        try {
+            entity.getTransaction().begin();
+
+            Computadora computadoraExistente = this.obtenerPorID(computadora.getId());
+
+            if (computadoraExistente == null) {
+                throw new PersistenciaException("La computadora con ID " + computadora.getId() + " no existe.");
+            }
+
+            Computadora computadoraEntidad = this.convertirEntidad(computadora);
+
+            computadoraExistente = entity.merge(computadoraEntidad); 
+
+            entity.getTransaction().commit();
+
+            return computadoraExistente;
+        } catch (PersistenciaException e) {
+            entity.getTransaction().rollback();
+            throw new PersistenciaException("Error al editar la computadora: " + e.getMessage());
+        } finally {
+            entity.close();
+        }
+    }
+
+    @Override
+    public void eliminar(Long id) throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        try {
+            entity.getTransaction().begin();
+            Computadora computadora = entity.find(Computadora.class, id);
+            if (computadora != null) {
+                entity.remove(computadora);
+            } else {
+                throw new PersistenciaException("Computadora no encontrada con ID: " + id);
+            }
+            entity.getTransaction().commit();
+        } catch (PersistenciaException e) {
+            entity.getTransaction().rollback();
+            throw new PersistenciaException("Error al eliminar la computadora: " + e.getMessage());
+        } finally {
+            entity.close();
         }
     }
 }

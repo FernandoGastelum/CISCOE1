@@ -5,6 +5,7 @@
 package ModuloAdministracion.Interfaz;
 
 import DTOs.ComputadoraDTO;
+import DTOs.ComputadoraDTOEditar;
 import DTOs.ComputadoraDTOGuardar;
 import DTOs.ComputadoraTablaDTO;
 import Excepcion.NegocioException;
@@ -22,4 +23,8 @@ public interface IComputadoraNegocio {
     List<ComputadoraTablaDTO> obtenerTabla() throws NegocioException;
     
     ComputadoraDTO obtenerPorID(Long id) throws NegocioException;
+    
+    ComputadoraDTO actualizar(ComputadoraDTOEditar computadora) throws NegocioException;
+    
+    void eliminar(Long id) throws NegocioException;
 }
