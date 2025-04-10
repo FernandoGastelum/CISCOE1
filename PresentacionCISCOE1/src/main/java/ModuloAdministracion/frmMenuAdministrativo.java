@@ -78,7 +78,6 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
         OpcionLaboratoriosListado = new javax.swing.JMenuItem();
         jMenuInstituto = new javax.swing.JMenu();
         OpcionInstitutosListado = new javax.swing.JMenuItem();
-        OpcionAgregarInstituto = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -215,14 +214,6 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
         });
         jMenuInstituto.add(OpcionInstitutosListado);
 
-        OpcionAgregarInstituto.setText("Agregar Instituto");
-        OpcionAgregarInstituto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OpcionAgregarInstitutoActionPerformed(evt);
-            }
-        });
-        jMenuInstituto.add(OpcionAgregarInstituto);
-
         jMenuBar1.add(jMenuInstituto);
 
         setJMenuBar(jMenuBar1);
@@ -306,28 +297,18 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionLaboratoriosListadoActionPerformed
 
     private void OpcionInstitutosListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionInstitutosListadoActionPerformed
-        panelInstitutosListado panelInstituto = new panelInstitutosListado(institutoNegocio);
+        panelInstitutosListado panelInstituto = new panelInstitutosListado(institutoNegocio,laboratorioNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelInstituto, BorderLayout.CENTER);
         jPanelCambiante.revalidate();
         jPanelCambiante.repaint();
     }//GEN-LAST:event_OpcionInstitutosListadoActionPerformed
-
-    private void OpcionAgregarInstitutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarInstitutoActionPerformed
-        panelInstitutoNuevo panelInstituto = new panelInstitutoNuevo(institutoNegocio);
-        jPanelCambiante.setLayout(new BorderLayout());
-        jPanelCambiante.removeAll();
-        jPanelCambiante.add(panelInstituto, BorderLayout.CENTER);
-        jPanelCambiante.revalidate();
-        jPanelCambiante.repaint();
-    }//GEN-LAST:event_OpcionAgregarInstitutoActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem OpcionAgregarBloqueo;
     private javax.swing.JMenuItem OpcionAgregarCarrera;
-    private javax.swing.JMenuItem OpcionAgregarInstituto;
     private javax.swing.JMenuItem OpcionBloqueosListado;
     private javax.swing.JMenuItem OpcionCarrerasListado;
     private javax.swing.JMenuItem OpcionComputadorasListado;

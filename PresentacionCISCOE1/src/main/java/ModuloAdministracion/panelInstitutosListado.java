@@ -5,14 +5,17 @@
 package ModuloAdministracion;
 
 import DTOs.InstitutoTablaDTO;
+import DTOs.LaboratorioDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IInstitutoNegocio;
+import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
 import Utilidades.JButtonCellEditor;
 import Utilidades.JButtonRenderer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -23,12 +26,14 @@ import javax.swing.table.TableColumnModel;
 public class panelInstitutosListado extends javax.swing.JPanel {
 
     private final IInstitutoNegocio institutoNegocio;
+    private final ILaboratorioNegocio laboratorioNegocio;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelInstitutosListado(IInstitutoNegocio institutoNegocio) {
+    public panelInstitutosListado(IInstitutoNegocio institutoNegocio, ILaboratorioNegocio laboratorioNegocio) {
         this.institutoNegocio = institutoNegocio;
+        this.laboratorioNegocio = laboratorioNegocio;
         initComponents();
         this.metodosIniciales();
     }
@@ -70,12 +75,53 @@ public class panelInstitutosListado extends javax.swing.JPanel {
 
     private void editar() {
         Long id = this.getIdSeleccionadoTabla();
-        System.out.println("El id que se va a editar es " + id);
+        panelInstitutoEditar panel = new panelInstitutoEditar(institutoNegocio, id,laboratorioNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panel, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
     }
 
     private void eliminar() {
-        Long id = this.getIdSeleccionadoTabla();
-        System.out.println("El id que se va a eliminar es " + id);
+        boolean institutoLigado = false;
+
+        int confirmacion = JOptionPane.showConfirmDialog(
+            this,
+            "¿Estás seguro de que deseas eliminar este instituto?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                Long id = this.getIdSeleccionadoTabla(); // método que recupera el id del instituto seleccionado
+
+                if (id != 0L) {
+                    List<LaboratorioDTO> listaLaboratorios = laboratorioNegocio.obtener();
+
+                    for (LaboratorioDTO laboratorio : listaLaboratorios) {
+                        if (laboratorio.getInstituto().getIdInstituto().equals(id)) {
+                            institutoLigado = true;
+                            break;
+                        }
+                    }
+
+                    if (!institutoLigado) {
+                        institutoNegocio.eliminar(id);
+                        JOptionPane.showMessageDialog(this, "Instituto eliminado con éxito.");
+                        this.metodosIniciales();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "El instituto está ligado a uno o más laboratorios y no puede eliminarse.");
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecciona un instituto válido.");
+                }
+            } catch (NegocioException ex) {
+                JOptionPane.showMessageDialog(this, "No se pudo borrar el instituto: " + ex.getMessage());
+            }
+        }
     }
 
     private Long getIdSeleccionadoTabla() {
@@ -94,6 +140,8 @@ public class panelInstitutosListado extends javax.swing.JPanel {
     private void buscarTabla() {
         try {
             List<InstitutoTablaDTO> institutosTablaLista = this.institutoNegocio.obtenerTabla();
+            DefaultTableModel modelo = (DefaultTableModel) this.tablaInstitutos.getModel();
+            modelo.setRowCount(0);
             this.agregarRegistrosTabla(institutosTablaLista);
         } catch (NegocioException ex) {
             System.out.println(ex.getMessage());
@@ -217,7 +265,7 @@ public class panelInstitutosListado extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        panelInstitutoNuevo panelInstituto = new panelInstitutoNuevo(institutoNegocio);
+        panelInstitutoNuevo panelInstituto = new panelInstitutoNuevo(institutoNegocio,laboratorioNegocio);
         this.setLayout(new BorderLayout());
         this.removeAll();
         this.add(panelInstituto, BorderLayout.CENTER);
