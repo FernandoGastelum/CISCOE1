@@ -36,6 +36,9 @@ public class HorarioDAO implements IHorarioDAO {
 
     @Override
     public Horario guardar(HorarioDTOGuardar horario) throws PersistenciaException {
+        if(horario == null){
+            throw new PersistenciaException("El horario esta vacio");
+        }
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
 
@@ -72,7 +75,8 @@ public class HorarioDAO implements IHorarioDAO {
                                                          SELECT h
                                                          FROM Horario h
                                                          """, Horario.class);
-        if (query.getResultList() == null) {
+        List<Horario> resultado = query.getResultList();
+        if (resultado.isEmpty()) {
             throw new PersistenciaException("No se encontraron resultados");
         }
         return query.getResultList();

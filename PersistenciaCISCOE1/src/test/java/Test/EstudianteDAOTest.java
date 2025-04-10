@@ -154,7 +154,6 @@ public class EstudianteDAOTest {
         EstudianteDTOEditar dto = new EstudianteDTOEditar("NuevoNombre", "NuevoApellidoPaterno", "NuevoApellidoMaterno", 
                 "1234567@", false, new CarreraDTO(carrera.getIdCarrera(), "NuevoNombre", 100, "NuevoColor"));
         
-        // Prueva que lanza una exception cuando no lo edita
         assertThrows(PersistenciaException.class, () -> {
             instance.editar(999L, dto);
         });
@@ -173,7 +172,6 @@ public class EstudianteDAOTest {
         
         EstudianteDAO instance = new EstudianteDAO(new EntityManagerDAO());
         
-        // Prueba que lanza una excepcion si se intenta eliminar algo que no existe
         assertThrows(PersistenciaException.class, () -> {
             instance.eliminar(-999L);
         });

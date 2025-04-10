@@ -51,21 +51,22 @@ import static org.mockito.Mockito.when;
  */
 public class ComputadoraDAOTest {
     private IComputadoraDAO computadoraDAO;
-    private ILaboratorioDAO laboratorioDAO;
-    private IInstitutoDAO institutoDAO;
     private ICarreraDAO carreraDAO;
     private IEntityManager em;
+    
+    private ILaboratorioDAO laboratorioDAO;
+    private IInstitutoDAO institutoDAO;
     private LaboratorioDTO laboratorioDTO;
     private InstitutoDTO institutoDTO;
     Laboratorio laboratorioEntidad;
     Instituto institutoEntidad;
-    Carrera carreraEntidad;
     InstitutoDTOGuardar institutoDTOGuardar;
     LaboratorioDTOGuardar laboratorioDTOGuardar;
+    
+    Carrera carreraEntidad;
     CarreraDTOGuardar carreraDTOGuardar;
     @Before
     public void setUp() {
-        // Inicializas tu EntityManager y DAO antes de cada test
         em = new EntityManagerDAO();
         computadoraDAO = new ComputadoraDAO(em);
         laboratorioDAO = new LaboratorioDAO(em);
@@ -89,7 +90,6 @@ public class ComputadoraDAOTest {
     }
     @After
     public void tearDown() throws PersistenciaException {
-        // Llamamos a limpiar los registros
         limpiarRegistros();
         limpiarLaboratorio();
         limpiarInstituto();

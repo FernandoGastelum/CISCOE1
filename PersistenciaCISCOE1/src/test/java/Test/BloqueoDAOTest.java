@@ -52,7 +52,6 @@ public class BloqueoDAOTest {
     private ICarreraDAO carreraDAO;
     @Before
     public void setUp() {
-        // Inicializas tu EntityManager y DAO antes de cada test
         em = new EntityManagerDAO();
         bloqueoDAO = new BloqueoDAO(em);
         estudianteDAO = new EstudianteDAO(em);

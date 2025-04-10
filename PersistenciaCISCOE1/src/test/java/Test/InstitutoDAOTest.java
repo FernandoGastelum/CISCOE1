@@ -32,13 +32,11 @@ public class InstitutoDAOTest {
     
     @Before
     public void setUp() {
-        // Inicializas tu EntityManager y DAO antes de cada test
         em = new EntityManagerDAO();
         institutoDAO = new InstitutoDAO(em);
     }
     @After
     public void tearDown() throws PersistenciaException {
-        // Llamamos a limpiar los registros
         limpiarRegistros();
     }
     private void limpiarRegistros() throws PersistenciaException {

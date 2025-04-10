@@ -36,13 +36,11 @@ public class LaboratorioDAOTest {
     
     @Before
     public void setUp() {
-        // Inicializas tu EntityManager y DAO antes de cada test
         em = new EntityManagerDAO();
         institutoDAO = new InstitutoDAO(em);
     }
     @After
     public void tearDown() throws PersistenciaException {
-        // Llamamos a limpiar los registros
         limpiarRegistros();
         limpiarInstitutos();
     }
