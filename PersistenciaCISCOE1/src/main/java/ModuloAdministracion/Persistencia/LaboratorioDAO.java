@@ -5,6 +5,7 @@
 package ModuloAdministracion.Persistencia;
 
 import DTOs.LaboratorioDTO;
+import DTOs.LaboratorioDTOEditar;
 import DTOs.LaboratorioDTOGuardar;
 import Entidades.Instituto;
 import Entidades.Laboratorio;
@@ -63,6 +64,44 @@ public class LaboratorioDAO implements ILaboratorioDAO {
         } else {
             throw new PersistenciaException("No se encontro un laboratorio con el id " + id);
         }
+    }
+    
+    @Override
+    public Laboratorio editar(Long id, LaboratorioDTOEditar laboratorioDTO) throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+        
+        Laboratorio laboratorioEntidad = entity.find(Laboratorio.class, id);
+        if (laboratorioEntidad == null) {
+            throw new PersistenciaException("No se encontró el laboratorio con el id " + id);
+        }
+        
+        IInstitutoDAO institutoDAO = new InstitutoDAO(em);
+        Instituto institutoEntidad = institutoDAO.obtenerPorID(laboratorioDTO.getInstitutoDTO().getIdInstituto());
+        
+        laboratorioEntidad.setNombre(laboratorioDTO.getNombre());
+        laboratorioEntidad.setHoraApertura(laboratorioDTO.getHoraApertura());
+        laboratorioEntidad.setHoraCierre(laboratorioDTO.getHoraCierre());
+        laboratorioEntidad.setContrasenaMaestra(laboratorioDTO.getContrasenaMaestra());
+        laboratorioEntidad.setInstituto(institutoEntidad);
+        
+        entity.merge(laboratorioEntidad);
+        entity.getTransaction().commit();
+        return laboratorioEntidad;
+    }
+    
+    @Override
+    public void eliminar(Long id) throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+        
+        Laboratorio laboratorioEntidad = entity.find(Laboratorio.class, id);
+        if (laboratorioEntidad == null) {
+            throw new PersistenciaException("No se encontró el laboratorio con el id " + id);
+        }
+        
+        entity.remove(laboratorioEntidad);
+        entity.getTransaction().commit();
     }
 
     @Override

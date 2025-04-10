@@ -5,6 +5,7 @@
 package ModuloAdministracion.Interfaz;
 
 import DTOs.LaboratorioDTO;
+import DTOs.LaboratorioDTOEditar;
 import DTOs.LaboratorioDTOGuardar;
 import Entidades.Laboratorio;
 import Excepcion.PersistenciaException;
@@ -23,4 +24,8 @@ public interface ILaboratorioDAO {
     List<Laboratorio> obtener() throws PersistenciaException;
     
     LaboratorioDTO obtenerDTO(Long id) throws PersistenciaException;
+    
+    Laboratorio editar(Long id, LaboratorioDTOEditar laboratorioDTO) throws PersistenciaException;
+    
+    void eliminar(Long id) throws PersistenciaException;
 }

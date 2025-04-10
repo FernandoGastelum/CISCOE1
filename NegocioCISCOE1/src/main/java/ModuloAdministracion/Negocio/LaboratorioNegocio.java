@@ -1,6 +1,7 @@
 package ModuloAdministracion.Negocio;
 
 import DTOs.LaboratorioDTO;
+import DTOs.LaboratorioDTOEditar;
 import DTOs.LaboratorioDTOGuardar;
 import DTOs.LaboratorioTablaDTO;
 import Entidades.Laboratorio;
@@ -82,8 +83,47 @@ public class LaboratorioNegocio implements ILaboratorioNegocio {
             throw new NegocioException("Error " + ex.getMessage());
         }
     }
+    
+    @Override
+    public LaboratorioDTO editar(Long id, LaboratorioDTOEditar laboratorio) throws NegocioException {
+        try {
+            this.reglasNegocioEditar(laboratorio);
+            Laboratorio laboratorioEditado = this.laboratorioDAO.editar(id, laboratorio);
+            return this.laboratorioDAO.obtenerDTO(laboratorioEditado.getIdLaboratorio());
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
+    
+    @Override
+    public void eliminar(Long id) throws NegocioException {
+        try {
+            this.laboratorioDAO.eliminar(id);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
 
     private boolean reglasNegocioGuardar(LaboratorioDTOGuardar laboratorio) throws NegocioException {
+        if (laboratorio.getNombre() == null) {
+            throw new NegocioException("El nombre no puede estar vacío");
+        }
+        if (laboratorio.getHoraApertura() == null) {
+            throw new NegocioException("La hora de apertura no puede estar vacía");
+        }
+        if (laboratorio.getHoraCierre() == null) {
+            throw new NegocioException("La hora de cierre no puede estar vacía");
+        }
+        if (laboratorio.getContrasenaMaestra() == null) {
+            throw new NegocioException("La contraseña maestra no puede estar vacía");
+        }
+        if (laboratorio.getInstitutoDTO() == null) {
+            throw new NegocioException("El instituto no puede estar vacío");
+        }
+        return true;
+    }
+    
+    private boolean reglasNegocioEditar(LaboratorioDTOEditar laboratorio) throws NegocioException {
         if (laboratorio.getNombre() == null) {
             throw new NegocioException("El nombre no puede estar vacío");
         }

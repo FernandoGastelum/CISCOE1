@@ -4,7 +4,17 @@
  */
 package ModuloAdministracion;
 
+import DTOs.InstitutoDTO;
+import DTOs.LaboratorioDTO;
+import DTOs.LaboratorioDTOEditar;
+import Excepcion.NegocioException;
+import ModuloAdministracion.Interfaz.IInstitutoNegocio;
 import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
+import Utilidades.ContraseniaUtil;
+import java.awt.BorderLayout;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 
 /**
  *
@@ -13,13 +23,92 @@ import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
 public class panelLaboratorioEditar extends javax.swing.JPanel {
 
     private final ILaboratorioNegocio laboratorioNegocio;
+    private final IInstitutoNegocio institutoNegocio;
+    private Long idLaboratorio;
+    private LaboratorioDTO laboratorioDTO;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelLaboratorioEditar(ILaboratorioNegocio laboratorioNegocio) {
+    public panelLaboratorioEditar(ILaboratorioNegocio laboratorioNegocio, IInstitutoNegocio institutoNegocio, Long ID) throws NegocioException {
         this.laboratorioNegocio = laboratorioNegocio;
+        this.institutoNegocio = institutoNegocio;
+        idLaboratorio = ID;
         initComponents();
+        this.cargarInstituto();
+
+        laboratorioDTO = laboratorioNegocio.obtenerPorID(ID);
+
+        lblID.setText(Long.toString(ID));
+        txtNombre.setText(laboratorioDTO.getNombre());
+        // FALTA LAS HORAS
+        cboInstituto.setSelectedItem(laboratorioDTO.getInstituto());
+    }
+
+    private void cargarInstituto() {
+        try {
+            List<InstitutoDTO> listaInstitutos = institutoNegocio.obtener();
+            if (listaInstitutos != null) {
+                for (InstitutoDTO listaInstituto : listaInstitutos) {
+                    this.cboInstituto.addItem(listaInstituto);
+                }
+            } else {
+                throw new NegocioException("No hay institutos registrados");
+            }
+        } catch (NegocioException ex) {
+            System.out.println("Error al cargar las combo boxes " + ex.getMessage());
+        }
+    }
+    
+    private void editarLaboratorio() throws NegocioException {
+        LaboratorioDTOEditar laboratorioEditado = new LaboratorioDTOEditar();
+        
+        laboratorioEditado.setNombre(txtNombre.getText());
+        laboratorioEditado.setInstitutoDTO((InstitutoDTO) cboInstituto.getSelectedItem());
+        
+        // FALTA LAS HORAS
+        
+        if (verificarContrasenias(this.contraseniaFIeld, this.confirmarContraseniaField)) {
+            String contrasenia = new String(this.contraseniaFIeld.getPassword());
+            String contraseniaEncriptada = ContraseniaUtil.encriptar(contrasenia);
+            laboratorioDTO.setContrasenaMaestra(contraseniaEncriptada);
+            laboratorioDTO.setContrasenaMaestra(contraseniaEncriptada);
+        }
+
+        try {
+            LaboratorioDTO resultado = laboratorioNegocio.editar(idLaboratorio, laboratorioEditado);
+            JOptionPane.showMessageDialog(this, "Laboratorio guardada con éxito con el nombre: " + resultado.getNombre());
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar el laboratorio: " + e.getMessage());
+        }
+
+    }
+
+    private boolean verificarContrasenias(JPasswordField contrasenia, JPasswordField confirmarContrasenia) {
+        String pass1 = new String(contrasenia.getPassword());
+        String pass2 = new String(confirmarContrasenia.getPassword());
+
+        if (pass1.isEmpty() || pass2.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Por favor, llena ambos campos de contraseña.", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        if (!pass1.equals(pass2)) {
+            JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden.", "Error de coincidencia", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (pass1.length() < 8) {
+            JOptionPane.showMessageDialog(null, "La contraseña debe tener al menos 8 caracteres.", "Contraseña muy corta", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (!pass1.matches(".*[!@#$%^&*()_+\\-={}:;\"'?<>,.\\[\\]\\\\/].*")) {
+            JOptionPane.showMessageDialog(null, "La contraseña debe contener al menos un símbolo especial.", "Contraseña insegura", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -42,14 +131,15 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         txtHoraApertura = new javax.swing.JTextField();
-        txtContrasenaMaestra = new javax.swing.JTextField();
-        txtConfirmarContrasena = new javax.swing.JTextField();
-        btnCancelar = new javax.swing.JButton();
+        btnRestaurar = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         txtHoraCierre = new javax.swing.JTextField();
-        comboBoxInstituto = new javax.swing.JComboBox<>();
+        cboInstituto = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         lblID = new javax.swing.JLabel();
+        btnRegresar = new javax.swing.JButton();
+        contraseniaFIeld = new javax.swing.JPasswordField();
+        confirmarContraseniaField = new javax.swing.JPasswordField();
 
         setBackground(new java.awt.Color(35, 35, 35));
 
@@ -65,7 +155,7 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
         jPanelPantalla.setLayout(jPanelPantallaLayout);
         jPanelPantallaLayout.setHorizontalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1920, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelPantallaLayout.setVerticalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -83,6 +173,11 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
         btnGuardar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
         btnGuardar.setText("Guardar Cambios");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -108,13 +203,15 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
 
         txtHoraApertura.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
-        txtContrasenaMaestra.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
-
-        txtConfirmarContrasena.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
-
-        btnCancelar.setBackground(new java.awt.Color(246, 255, 0));
-        btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        btnCancelar.setText("Cancelar");
+        btnRestaurar.setBackground(new java.awt.Color(255, 0, 0));
+        btnRestaurar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnRestaurar.setForeground(new java.awt.Color(255, 255, 255));
+        btnRestaurar.setText("Restaurar");
+        btnRestaurar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestaurarActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
@@ -122,7 +219,7 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
 
         txtHoraCierre.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
-        comboBoxInstituto.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+        cboInstituto.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
@@ -131,27 +228,24 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
         lblID.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         lblID.setForeground(new java.awt.Color(255, 255, 255));
 
+        btnRegresar.setBackground(new java.awt.Color(246, 255, 0));
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
+        contraseniaFIeld.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        confirmarContraseniaField.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanelPantalla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(95, 95, 95)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(126, 126, 126)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel7))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(80, 80, 80))
             .addGroup(layout.createSequentialGroup()
                 .addGap(126, 126, 126)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -166,27 +260,46 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
                                 .addComponent(jLabel8)
                                 .addGap(68, 68, 68)
                                 .addComponent(txtHoraCierre, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(txtContrasenaMaestra, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(comboBoxInstituto, 0, 474, Short.MAX_VALUE)
-                                    .addComponent(txtConfirmarContrasena)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(lblID, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)))))
-                .addContainerGap(495, Short.MAX_VALUE))
+                                .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(confirmarContraseniaField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
+                                .addComponent(contraseniaFIeld, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(cboInstituto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(495, 495, 495))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(95, 95, 95)
+                        .addComponent(btnRestaurar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(126, 126, 126)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel7))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnRegresar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE))
+                .addGap(80, 80, 80))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanelPantalla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
-                .addComponent(jLabel2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(btnRegresar))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(lblID, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -196,31 +309,60 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
                     .addComponent(txtHoraApertura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
                     .addComponent(txtHoraCierre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(47, 47, 47)
+                .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtContrasenaMaestra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
+                    .addComponent(contraseniaFIeld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtConfirmarContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                    .addComponent(confirmarContraseniaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboBoxInstituto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboInstituto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
-                    .addComponent(btnCancelar))
+                    .addComponent(btnRestaurar))
                 .addGap(83, 83, 83))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        panelLaboratoriosListado panelLaboratorio = new panelLaboratoriosListado(laboratorioNegocio, institutoNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelLaboratorio, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnRestaurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestaurarActionPerformed
+        lblID.setText(Long.toString(idLaboratorio));
+        txtNombre.setText(laboratorioDTO.getNombre());
+        // FALTA LAS HORAS
+        cboInstituto.setSelectedItem(laboratorioDTO.getInstituto());
+        contraseniaFIeld.setText("");
+        confirmarContraseniaField.setText("");
+    }//GEN-LAST:event_btnRestaurarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        try {
+            this.editarLaboratorio();
+        } catch (NegocioException ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JComboBox<String> comboBoxInstituto;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JButton btnRestaurar;
+    private javax.swing.JComboBox<InstitutoDTO> cboInstituto;
+    private javax.swing.JPasswordField confirmarContraseniaField;
+    private javax.swing.JPasswordField contraseniaFIeld;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -232,8 +374,6 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanelPantalla;
     private javax.swing.JLabel lblID;
-    private javax.swing.JTextField txtConfirmarContrasena;
-    private javax.swing.JTextField txtContrasenaMaestra;
     private javax.swing.JTextField txtHoraApertura;
     private javax.swing.JTextField txtHoraCierre;
     private javax.swing.JTextField txtNombre;

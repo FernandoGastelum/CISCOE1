@@ -99,7 +99,6 @@ public class EstudianteDAO implements IEstudianteDAO {
             throw new PersistenciaException("No se encontró un estudiante con el id " + id);
         }
         
-        // (¿Era borrar o marcarlo como que no esta inscrito?)
         entity.remove(estudianteEntidad);
         entity.getTransaction().commit();
     }

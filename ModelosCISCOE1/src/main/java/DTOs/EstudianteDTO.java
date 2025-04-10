@@ -104,7 +104,7 @@ public class EstudianteDTO {
 
     @Override
     public String toString() {
-        return idInstitucional + " " + nombre + " " + apellidoPaterno + "" + estatusInscripcion + " " + carrera.toString();
+        return idInstitucional + " " + nombre + " " + apellidoPaterno + "" + estatusInscripcion + " " + carrera.getNombreCarrera();
     }
 
     

@@ -16,6 +16,7 @@ public class LaboratorioDTOEditar {
     private Calendar horaApertura;
     private Calendar horaCierre;
     private String contrasenaMaestra;
+    private InstitutoDTO institutoDTO;
 
     /**
      * Constructor por ausencia
@@ -23,11 +24,12 @@ public class LaboratorioDTOEditar {
     public LaboratorioDTOEditar() {
     }
 
-    public LaboratorioDTOEditar(String nombre, Calendar horaApertura, Calendar horaCierre, String contrasenaMaestra) {
+    public LaboratorioDTOEditar(String nombre, Calendar horaApertura, Calendar horaCierre, String contrasenaMaestra, InstitutoDTO institutoDTO) {
         this.nombre = nombre;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
         this.contrasenaMaestra = contrasenaMaestra;
+        this.institutoDTO = institutoDTO;
     }
 
     public String getNombre() {
@@ -62,11 +64,18 @@ public class LaboratorioDTOEditar {
         this.contrasenaMaestra = contrasenaMaestra;
     }
 
+    public InstitutoDTO getInstitutoDTO() {
+        return institutoDTO;
+    }
+
+    public void setInstitutoDTO(InstitutoDTO institutoDTO) {
+        this.institutoDTO = institutoDTO;
+    }
+
     @Override
     public String toString() {
-        return "EditarLaboratorioDTO{" + "nombre=" + nombre + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", contrasenaMaestra=" + contrasenaMaestra + '}';
-    }
-    
+        return "LaboratorioDTOEditar{" + "nombre=" + nombre + ", horaApertura=" + horaApertura + ", horaCierre=" + horaCierre + ", contrasenaMaestra=" + contrasenaMaestra + ", institutoDTO=" + institutoDTO + '}';
+    }    
     
     
 }

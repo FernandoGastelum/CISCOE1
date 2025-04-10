@@ -16,6 +16,9 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -47,8 +50,12 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
         ActionListener onEditarClickListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Metodo para editar
-                editar();
+                try {
+                    //Metodo para editar
+                    editar();
+                } catch (NegocioException ex) {
+                    Logger.getLogger(panelLaboratoriosListado.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         };
         int indiceColumnaEditar = 4;
@@ -73,14 +80,26 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
                 .setCellEditor(new JButtonCellEditor("Eliminar", onEliminarClickListener));
     }
 
-    private void editar() {
+    private void editar() throws NegocioException {
         Long id = this.getIdSeleccionadoTabla();
-        System.out.println("El id que se va a editar es " + id);
+        
+        panelLaboratorioEditar panelLaboratorio = new panelLaboratorioEditar(laboratorioNegocio, institutoNegocio, id);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelLaboratorio, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
     }
 
     private void eliminar() {
         Long id = this.getIdSeleccionadoTabla();
-        System.out.println("El id que se va a eliminar es " + id);
+        try {
+            laboratorioNegocio.eliminar(id);
+            this.metodosIniciales();
+            JOptionPane.showMessageDialog(this, "Laboratorio eliminado con éxito con el id: " + id);
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al eliminar el laboratorio: " + e.getMessage());
+        }
     }
 
     private Long getIdSeleccionadoTabla() {

@@ -40,6 +40,7 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
         this.carreraNegocio = carreraNegocio;
         initComponents();
         this.cargarCarreras();
+        this.cboCarrera.setSelectedIndex(-1);
     }
 
     private void guardarEstudiante() throws NegocioException {

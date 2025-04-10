@@ -1,6 +1,7 @@
 package ModuloAdministracion.Interfaz;
 
 import DTOs.LaboratorioDTO;
+import DTOs.LaboratorioDTOEditar;
 import DTOs.LaboratorioDTOGuardar;
 import DTOs.LaboratorioTablaDTO;
 import Excepcion.NegocioException;
@@ -18,4 +19,8 @@ public interface ILaboratorioNegocio {
     List<LaboratorioTablaDTO> obtenerTabla() throws NegocioException;
     
     LaboratorioDTO obtenerPorID(Long id) throws NegocioException;
+    
+    LaboratorioDTO editar(Long id, LaboratorioDTOEditar laboratorio) throws NegocioException;
+    
+    void eliminar(Long id) throws NegocioException;
 }

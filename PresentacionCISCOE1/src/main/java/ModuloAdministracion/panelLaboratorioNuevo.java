@@ -7,6 +7,7 @@ import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IInstitutoNegocio;
 import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
 import Utilidades.ContraseniaUtil;
+import java.awt.BorderLayout;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,6 +36,9 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         this.institutoNegocio = institutoNegocio;
         initComponents();
         this.cargarInstituto();
+        this.cboInstituto.setSelectedIndex(-1);
+        cboApertura.setSelectedIndex(-1);
+        cboCierre.setSelectedIndex(-1);
     }
 
     private void cargarInstituto() {
@@ -57,15 +61,15 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         laboratorioDTO.setNombre(txtNombre.getText());
         laboratorioDTO.setInstitutoDTO((InstitutoDTO) cboInstituto.getSelectedItem());
 
-        if (!txtHoraApertura.getText().matches("^\\d{2}:\\d{2}$") || !txtHoraCierre.getText().matches("^\\d{2}:\\d{2}$")) {
-            JOptionPane.showMessageDialog(this, "Por favor ingresa la hora en formato HH:mm (por ejemplo, 09:30, 17:26).", "Formato incorrecto", JOptionPane.WARNING_MESSAGE);
-        } else {
-            Calendar horaApertura = parseHora(txtHoraApertura.getText().trim());
-            Calendar horaCierre = parseHora(txtHoraCierre.getText().trim());
-
-            laboratorioDTO.setHoraApertura(horaApertura);
-            laboratorioDTO.setHoraCierre(horaCierre);
-        }
+//        if (!txtHoraApertura.getText().matches("^\\d{2}:\\d{2}$") || !txtHoraCierre.getText().matches("^\\d{2}:\\d{2}$")) {
+//            JOptionPane.showMessageDialog(this, "Por favor ingresa la hora en formato HH:mm (por ejemplo, 09:30, 17:26).", "Formato incorrecto", JOptionPane.WARNING_MESSAGE);
+//        } else {
+//            Calendar horaApertura = parseHora(txtHoraApertura.getText().trim());
+//            Calendar horaCierre = parseHora(txtHoraCierre.getText().trim());
+//
+//            laboratorioDTO.setHoraApertura(horaApertura);
+//            laboratorioDTO.setHoraCierre(horaCierre);
+//        }
 
         if (verificarContrasenias(this.contraseniaFIeld, this.confirmarContraseniaField)) {
             String contrasenia = new String(this.contraseniaFIeld.getPassword());
@@ -136,13 +140,14 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
-        txtHoraApertura = new javax.swing.JTextField();
-        btnCancelar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
-        txtHoraCierre = new javax.swing.JTextField();
         cboInstituto = new javax.swing.JComboBox<>();
         contraseniaFIeld = new javax.swing.JPasswordField();
         confirmarContraseniaField = new javax.swing.JPasswordField();
+        cboApertura = new javax.swing.JComboBox<>();
+        cboCierre = new javax.swing.JComboBox<>();
+        btnRegresar = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(35, 35, 35));
 
@@ -204,14 +209,13 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
 
         txtNombre.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
-        txtHoraApertura.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
-
-        btnCancelar.setBackground(new java.awt.Color(246, 255, 0));
-        btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+        btnLimpiar.setBackground(new java.awt.Color(255, 0, 0));
+        btnLimpiar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnLimpiar.setForeground(new java.awt.Color(255, 255, 255));
+        btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
+                btnLimpiarActionPerformed(evt);
             }
         });
 
@@ -219,59 +223,75 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Hora Cierre");
 
-        txtHoraCierre.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
-
         cboInstituto.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
         contraseniaFIeld.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
         confirmarContraseniaField.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
+        cboApertura.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        cboCierre.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        btnRegresar.setBackground(new java.awt.Color(246, 255, 0));
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanelPantalla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(126, 126, 126)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(309, 309, 309)
-                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(102, 102, 102)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtHoraApertura, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(101, 101, 101)
-                                .addComponent(jLabel8)
-                                .addGap(68, 68, 68)
-                                .addComponent(txtHoraCierre, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(contraseniaFIeld)
-                                .addGap(370, 370, 370))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(68, 68, 68)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cboInstituto, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(confirmarContraseniaField, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(495, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(126, 126, 126)
-                        .addComponent(jLabel6))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING))
+                                        .addGap(102, 102, 102)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(contraseniaFIeld, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(cboApertura, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(117, 117, 117)
+                                                .addComponent(jLabel8)
+                                                .addGap(31, 31, 31)
+                                                .addComponent(cboCierre, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addGap(68, 68, 68)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(confirmarContraseniaField, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(cboInstituto, javax.swing.GroupLayout.PREFERRED_SIZE, 830, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addGap(309, 309, 309)
+                                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(95, 95, 95)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(126, 126, 126)
+                                .addComponent(jLabel6))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(95, 95, 95)
+                                .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(80, 80, 80))
         );
         layout.setVerticalGroup(
@@ -279,7 +299,9 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanelPantalla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
-                .addComponent(jLabel2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(btnRegresar))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(39, 39, 39)
@@ -288,10 +310,10 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
                             .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(65, 65, 65)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtHoraApertura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
-                            .addComponent(txtHoraCierre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8))
+                            .addComponent(jLabel8)
+                            .addComponent(cboApertura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboCierre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(61, 61, 61)
                         .addComponent(jLabel4)
                         .addGap(51, 51, 51)
@@ -308,7 +330,7 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
                                 .addGap(60, 60, 60)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnAgregar)
-                            .addComponent(btnCancelar))
+                            .addComponent(btnLimpiar))
                         .addGap(83, 83, 83))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(301, 301, 301)
@@ -325,14 +347,31 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCancelarActionPerformed
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        this.txtNombre.setText("");
+        this.cboApertura.setSelectedIndex(-1);
+        this.cboCierre.setSelectedIndex(-1);
+        this.cboInstituto.setSelectedIndex(-1);
+        this.contraseniaFIeld.setText("");
+        this.confirmarContraseniaField.setText("");
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        panelLaboratoriosListado panelLaboratorio = new panelLaboratoriosListado(laboratorioNegocio, institutoNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelLaboratorio, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
-    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JComboBox<String> cboApertura;
+    private javax.swing.JComboBox<String> cboCierre;
     private javax.swing.JComboBox<InstitutoDTO> cboInstituto;
     private javax.swing.JPasswordField confirmarContraseniaField;
     private javax.swing.JPasswordField contraseniaFIeld;
@@ -345,8 +384,6 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanelPantalla;
-    private javax.swing.JTextField txtHoraApertura;
-    private javax.swing.JTextField txtHoraCierre;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }
