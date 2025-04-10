@@ -118,12 +118,13 @@ public class EstudianteDAOTest {
             instance.obtenerPorID(-1L); 
         });
         
-        Carrera carrera = new Carrera();
-        carrera.setIdCarrera(1L);
-        Estudiante estudiante = new Estudiante("55545", "Angel", "Ruiz", "Garcia", "1234567@", carrera);
+        
 
         EntityManager em = new EntityManagerDAO().crearEntityManager();
         em.getTransaction().begin();
+        Carrera carrera = new Carrera("Nombre", 000, "Color");
+        em.persist(carrera);
+        Estudiante estudiante = new Estudiante("55545", "Angel", "Ruiz", "Garcia", "1234567@", carrera);
         em.persist(estudiante);
         em.getTransaction().commit();
 
@@ -177,10 +178,11 @@ public class EstudianteDAOTest {
             instance.eliminar(-999L);
         });
         
-        Carrera carrera = new Carrera();
-        carrera.setIdCarrera(1L);
+        
         EntityManager em = new EntityManagerDAO().crearEntityManager();
         em.getTransaction().begin();
+        Carrera carrera = new Carrera("Nombre", 000, "Color");
+        em.persist(carrera);
         Estudiante estudiante = new Estudiante("23845", "Angel", "Ruiz", "Garcia", "1234567@", carrera);
         em.persist(estudiante);
         em.getTransaction().commit();
@@ -206,12 +208,13 @@ public class EstudianteDAOTest {
             instance.obtenerPorIdInstitucional("99999"); 
         });
         
-        Carrera carrera = new Carrera();
-        carrera.setIdCarrera(1L);
-        Estudiante estudiante = new Estudiante("77745", "Angel", "Ruiz", "Garcia", "1234567@", carrera);
+        
 
         EntityManager em = new EntityManagerDAO().crearEntityManager();
         em.getTransaction().begin();
+        Carrera carrera = new Carrera("Prueba", 300, "red");
+        em.persist(carrera);
+        Estudiante estudiante = new Estudiante("77745", "Angel", "Ruiz", "Garcia", "1234567@", carrera);
         em.persist(estudiante);
         em.getTransaction().commit();
 

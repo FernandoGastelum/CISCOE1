@@ -91,12 +91,40 @@ public class ComputadoraDAOTest {
     public void tearDown() throws PersistenciaException {
         // Llamamos a limpiar los registros
         limpiarRegistros();
+        limpiarLaboratorio();
+        limpiarInstituto();
+        
+        limpiarCarrera();
     }
     private void limpiarRegistros() throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
 
         entity.createQuery("DELETE FROM Computadora").executeUpdate();
+
+        entity.getTransaction().commit();
+    }
+    private void limpiarInstituto() throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+
+        entity.createQuery("DELETE FROM Instituto").executeUpdate();
+
+        entity.getTransaction().commit();
+    }
+    private void limpiarCarrera() throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+
+        entity.createQuery("DELETE FROM Carrera").executeUpdate();
+
+        entity.getTransaction().commit();
+    }
+    private void limpiarLaboratorio() throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+
+        entity.createQuery("DELETE FROM Laboratorio").executeUpdate();
 
         entity.getTransaction().commit();
     }

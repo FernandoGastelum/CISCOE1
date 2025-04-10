@@ -44,12 +44,21 @@ public class LaboratorioDAOTest {
     public void tearDown() throws PersistenciaException {
         // Llamamos a limpiar los registros
         limpiarRegistros();
+        limpiarInstitutos();
     }
     private void limpiarRegistros() throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
 
         entity.createQuery("DELETE FROM Laboratorio").executeUpdate();
+
+        entity.getTransaction().commit();
+    }
+    private void limpiarInstitutos() throws PersistenciaException {
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+
+        entity.createQuery("DELETE FROM Instituto").executeUpdate();
 
         entity.getTransaction().commit();
     }
