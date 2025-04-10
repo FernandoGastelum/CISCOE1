@@ -4,6 +4,13 @@
  */
 package Test;
 
+import DTOs.InstitutoDTOGuardar;
+import Entidades.Instituto;
+import Excepcion.PersistenciaException;
+import ModuloAdministracion.Interfaz.IEntityManager;
+import ModuloAdministracion.Interfaz.IInstitutoDAO;
+import ModuloAdministracion.Persistencia.EntityManagerDAO;
+import ModuloAdministracion.Persistencia.InstitutoDAO;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,28 +24,21 @@ import static org.junit.Assert.*;
  */
 public class InstitutoDAOTest {
     
-    public InstitutoDAOTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
+    public IEntityManager entityManager;
+
     @Before
     public void setUp() {
+        entityManager = new EntityManagerDAO();
     }
     
-    @After
-    public void tearDown() {
+    public void registrarInstituto() {
+        IInstitutoDAO institutoDAO = new InstitutoDAO(entityManager);
+        InstitutoDTOGuardar institutoDTO = new InstitutoDTOGuardar("Instituto Tecnologico de Sonora", "ITSON");
+        try {
+            Instituto institutoEntiad = institutoDAO.guardar(institutoDTO);
+            assertEquals("ITSON", institutoDAO.obtenerPorID(institutoEntiad.getIdInstituto()).getNombreAbreviado());
+        } catch (PersistenciaException ex) {
+            System.out.println("Error: "+ex.getMessage());
+        }
     }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
 }

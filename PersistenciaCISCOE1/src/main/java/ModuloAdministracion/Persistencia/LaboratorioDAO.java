@@ -108,13 +108,14 @@ public class LaboratorioDAO implements ILaboratorioDAO {
     public List<Laboratorio> obtener() throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         TypedQuery<Laboratorio> query = entity.createQuery("""
-                                                         SELECT l
-                                                         FROM Laboratorio l
-                                                         """, Laboratorio.class);
-        if (query.getResultList() == null) {
+                                                           SELECT l
+                                                           FROM Laboratorio l
+                                                           """, Laboratorio.class);
+        List<Laboratorio> resultados = query.getResultList();
+        if (resultados.isEmpty()) {
             throw new PersistenciaException("No se encontraron resultados");
         }
-        return query.getResultList();
+        return resultados;
     }
 
     @Override
