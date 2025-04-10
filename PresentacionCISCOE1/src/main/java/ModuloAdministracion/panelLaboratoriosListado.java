@@ -188,7 +188,7 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Nombré", "Hora Apertura", "Hora Cierre", "Editar", "Eliminar"
+                "ID", "Nombre", "Hora Apertura", "Hora Cierre", "Editar", "Eliminar"
             }
         ) {
             boolean[] canEdit = new boolean [] {

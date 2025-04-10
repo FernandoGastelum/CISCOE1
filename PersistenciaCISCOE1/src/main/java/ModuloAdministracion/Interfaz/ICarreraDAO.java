@@ -5,6 +5,7 @@
 package ModuloAdministracion.Interfaz;
 
 import DTOs.CarreraDTO;
+import DTOs.CarreraDTOEditar;
 import DTOs.CarreraDTOGuardar;
 import Entidades.Carrera;
 import Excepcion.PersistenciaException;
@@ -24,4 +25,7 @@ public interface ICarreraDAO {
     
     CarreraDTO obtenerDTO(Long id) throws PersistenciaException;
     
+    Carrera editar(Long id, CarreraDTOEditar carreraDTO) throws PersistenciaException;
+    
+    void eliminar(Long id) throws PersistenciaException;
 }

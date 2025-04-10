@@ -107,7 +107,16 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
             System.out.println("Error al cargar las combo boxes " + ex.getMessage());
         }
     }
-
+    
+    private void regresar() {
+        panelEstudiantesListado panelEstudiante = new panelEstudiantesListado(estudianteNegocio, carreraNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelEstudiante, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -320,6 +329,7 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         try {
             this.guardarEstudiante();
+            this.regresar();
         } catch (NegocioException ex) {
             System.out.println("Error: " + ex.getMessage());
         }
@@ -335,12 +345,7 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        panelEstudiantesListado panelEstudiante = new panelEstudiantesListado(estudianteNegocio, carreraNegocio);
-        this.setLayout(new BorderLayout());
-        this.removeAll();
-        this.add(panelEstudiante, BorderLayout.CENTER);
-        this.revalidate();
-        this.repaint();
+        this.regresar();
     }//GEN-LAST:event_btnRegresarActionPerformed
 
 

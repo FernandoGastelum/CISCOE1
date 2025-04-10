@@ -13,6 +13,9 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -42,8 +45,12 @@ public class panelCarrerasListado extends javax.swing.JPanel {
         ActionListener onEditarClickListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Metodo para editar
-                editar();
+                try {
+                    //Metodo para editar
+                    editar();
+                } catch (NegocioException ex) {
+                    System.out.println("Error: " + ex.getMessage());
+                }
             }
         };
         int indiceColumnaEditar = 3;
@@ -68,14 +75,26 @@ public class panelCarrerasListado extends javax.swing.JPanel {
                 .setCellEditor(new JButtonCellEditor("Eliminar", onEliminarClickListener));
     }
 
-    private void editar() {
+    private void editar() throws NegocioException {
         Long id = this.getIdSeleccionadoTabla();
-        System.out.println("El id que se va a editar es " + id);
+        
+        panelCarreraEditar panelCarrera = new panelCarreraEditar(carreraNegocio, id);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panelCarrera, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
     }
 
     private void eliminar() {
         Long id = this.getIdSeleccionadoTabla();
-        System.out.println("El id que se va a eliminar es " + id);
+        try {
+            carreraNegocio.eliminar(id);
+            this.metodosIniciales();
+            JOptionPane.showMessageDialog(this, "Carrera eliminada con éxito con el id: " + id);
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al eliminar la carrera: " + e.getMessage());
+        }
     }
 
     private Long getIdSeleccionadoTabla() {

@@ -5,6 +5,7 @@
 package ModuloAdministracion.Negocio;
 
 import DTOs.CarreraDTO;
+import DTOs.CarreraDTOEditar;
 import DTOs.CarreraDTOGuardar;
 import DTOs.CarreraTablaDTO;
 import Entidades.Carrera;
@@ -86,7 +87,40 @@ public class CarreraNegocio implements ICarreraNegocio {
         }
     }
     
+    @Override
+    public CarreraDTO editar(Long id, CarreraDTOEditar carrera) throws NegocioException {
+        try {
+            this.reglasNegocioEditar(carrera);
+            Carrera carreraEditado = this.carreraDAO.editar(id, carrera);
+            return this.carreraDAO.obtenerDTO(carreraEditado.getIdCarrera());
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
+    
+    @Override
+    public void eliminar(Long id) throws NegocioException {
+        try {
+            this.carreraDAO.eliminar(id);
+        } catch (PersistenciaException ex) {
+            throw new NegocioException("Error " + ex.getMessage());
+        }
+    }
+    
     private boolean reglasNegocioGuardar(CarreraDTOGuardar carrera) throws NegocioException {
+        if (carrera.getNombreCarrera() == null) {
+            throw new NegocioException("El nombre no puede estar vacío");
+        }
+        if (carrera.getTiempoMaximoDiario() == null) {
+            throw new NegocioException("El tiempo máximo diario no puede estar vacía");
+        }
+        if (carrera.getColor() == null) {
+            throw new NegocioException("El color no puede estar vacía");
+        }
+        return true;
+    }
+    
+    private boolean reglasNegocioEditar(CarreraDTOEditar carrera) throws NegocioException {
         if (carrera.getNombreCarrera() == null) {
             throw new NegocioException("El nombre no puede estar vacío");
         }
