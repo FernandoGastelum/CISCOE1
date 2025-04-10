@@ -4,7 +4,14 @@
  */
 package ModuloAdministracion;
 
+import DTOs.InstitutoDTO;
+import DTOs.InstitutoDTOEditar;
+import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IInstitutoNegocio;
+import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
+import java.awt.BorderLayout;
+import java.awt.HeadlessException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,13 +20,52 @@ import ModuloAdministracion.Interfaz.IInstitutoNegocio;
 public class panelInstitutoEditar extends javax.swing.JPanel {
 
     private final IInstitutoNegocio institutoNegocio;
+    private final ILaboratorioNegocio laboratorioNegocio;
+    private final Long idInstituto;
+    private InstitutoDTO InstitutoDTO;
 
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelInstitutoEditar(IInstitutoNegocio institutoNegocio) {
+    public panelInstitutoEditar(IInstitutoNegocio institutoNegocio,Long idInstituto,ILaboratorioNegocio laboratorioNegocio) {
         this.institutoNegocio = institutoNegocio;
+        this.laboratorioNegocio = laboratorioNegocio;
+        this.idInstituto = idInstituto;
         initComponents();
+        this.cargarDatos();
+    }
+    private InstitutoDTO obtenerInstituto(Long id) throws NegocioException{
+        return institutoNegocio.obtenerPorID(id);
+    }
+    private void regresar(){
+        panelInstitutosListado panel = new panelInstitutosListado(institutoNegocio,laboratorioNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panel, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    private void restaurarCampos(){
+        this.cargarDatos();
+    }
+    private void cargarDatos(){
+        try {
+            InstitutoDTO = this.obtenerInstituto(this.idInstituto);
+        } catch (NegocioException ex) {
+            System.out.println("Error: "+ ex.getMessage());
+        }
+        this.lblID.setText(this.idInstituto.toString());
+        this.txtNombreOficial.setText(InstitutoDTO.getNombreOficial());
+        this.txtAbreviatura.setText(InstitutoDTO.getNombreAbreviado());
+    }
+    private void editar(){
+        InstitutoDTOEditar institutoEditarDTO = new InstitutoDTOEditar(txtNombreOficial.getText(), txtAbreviatura.getText(), this.idInstituto);
+        try {
+            InstitutoDTO resultado = institutoNegocio.editar(institutoEditarDTO);
+            JOptionPane.showMessageDialog(this, "Instituto actualizado con éxito con el nombre: " + resultado.getNombreAbreviado());
+        } catch (NegocioException | HeadlessException e) {
+            JOptionPane.showMessageDialog(this, "Error al actualizar el instituto: " + e.getMessage());
+        }
     }
 
     /**
@@ -33,6 +79,7 @@ public class panelInstitutoEditar extends javax.swing.JPanel {
 
         jPanelPantalla = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        btnRegresar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -53,11 +100,23 @@ public class panelInstitutoEditar extends javax.swing.JPanel {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Institutos");
 
+        btnRegresar.setBackground(new java.awt.Color(246, 255, 0));
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelPantallaLayout = new javax.swing.GroupLayout(jPanelPantalla);
         jPanelPantalla.setLayout(jPanelPantallaLayout);
         jPanelPantallaLayout.setHorizontalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1920, Short.MAX_VALUE)
+            .addGroup(jPanelPantallaLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1594, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanelPantallaLayout.setVerticalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -65,6 +124,10 @@ public class panelInstitutoEditar extends javax.swing.JPanel {
                 .addGap(15, 15, 15)
                 .addComponent(jLabel1)
                 .addContainerGap(22, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPantallaLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRegresar)
+                .addGap(51, 51, 51))
         );
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 64)); // NOI18N
@@ -75,6 +138,11 @@ public class panelInstitutoEditar extends javax.swing.JPanel {
         btnGuardar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
         btnGuardar.setText("Guardar Cambios");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -82,13 +150,19 @@ public class panelInstitutoEditar extends javax.swing.JPanel {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Nombré Oficial");
+        jLabel7.setText("Nombre Oficial");
 
         txtAbreviatura.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
-        btnCancelar.setBackground(new java.awt.Color(246, 255, 0));
+        btnCancelar.setBackground(new java.awt.Color(255, 0, 0));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        btnCancelar.setText("Cancelar");
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setText("Restaurar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         txtNombreOficial.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
@@ -152,10 +226,23 @@ public class panelInstitutoEditar extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        this.regresar();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.restaurarCampos();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        this.editar();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

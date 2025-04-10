@@ -8,6 +8,8 @@ import DTOs.InstitutoDTO;
 import DTOs.InstitutoDTOGuardar;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IInstitutoNegocio;
+import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
+import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,12 +19,16 @@ import javax.swing.JOptionPane;
 public class panelInstitutoNuevo extends javax.swing.JPanel {
     
     private final IInstitutoNegocio institutoNegocio;
+    private final ILaboratorioNegocio laboratorioNegocio;
+    
 
     /**
      * Creates new form panelListadoEstudiantes
+     * @param institutoNegocio
      */
-    public panelInstitutoNuevo(IInstitutoNegocio institutoNegocio) {
+    public panelInstitutoNuevo(IInstitutoNegocio institutoNegocio,ILaboratorioNegocio laboratorioNegocio) {
         this.institutoNegocio = institutoNegocio;
+        this.laboratorioNegocio = laboratorioNegocio;
         initComponents();
     }
     
@@ -39,6 +45,18 @@ public class panelInstitutoNuevo extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Error al guardar el instituto: " + e.getMessage());
         }
     }
+    private void regresar(){
+        panelInstitutosListado panel = new panelInstitutosListado(institutoNegocio,laboratorioNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panel, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    private void restaurarCampos(){
+        this.txtNombreOficial.setText("");
+        this.txtAbreviatura.setText("");
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -51,6 +69,7 @@ public class panelInstitutoNuevo extends javax.swing.JPanel {
 
         jPanelPantalla = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        btnRegresar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -69,11 +88,23 @@ public class panelInstitutoNuevo extends javax.swing.JPanel {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Institutos");
 
+        btnRegresar.setBackground(new java.awt.Color(246, 255, 0));
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelPantallaLayout = new javax.swing.GroupLayout(jPanelPantalla);
         jPanelPantalla.setLayout(jPanelPantallaLayout);
         jPanelPantallaLayout.setHorizontalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1920, Short.MAX_VALUE)
+            .addGroup(jPanelPantallaLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1594, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanelPantallaLayout.setVerticalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -81,6 +112,10 @@ public class panelInstitutoNuevo extends javax.swing.JPanel {
                 .addGap(15, 15, 15)
                 .addComponent(jLabel1)
                 .addContainerGap(22, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPantallaLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRegresar)
+                .addGap(49, 49, 49))
         );
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 64)); // NOI18N
@@ -107,9 +142,15 @@ public class panelInstitutoNuevo extends javax.swing.JPanel {
 
         txtAbreviatura.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
-        btnCancelar.setBackground(new java.awt.Color(246, 255, 0));
+        btnCancelar.setBackground(new java.awt.Color(255, 0, 0));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        btnCancelar.setText("Cancelar");
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setText("Restaurar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         txtNombreOficial.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
@@ -164,10 +205,19 @@ public class panelInstitutoNuevo extends javax.swing.JPanel {
         this.guardarInstituto();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        this.regresar();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.restaurarCampos();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

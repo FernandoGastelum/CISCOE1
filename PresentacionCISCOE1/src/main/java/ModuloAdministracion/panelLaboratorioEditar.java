@@ -249,7 +249,7 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Nombré");
+        jLabel7.setText("Nombre");
 
         txtNombre.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 

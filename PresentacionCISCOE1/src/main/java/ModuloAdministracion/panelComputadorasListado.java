@@ -113,7 +113,7 @@ public class panelComputadorasListado extends javax.swing.JPanel {
                             computadoraLigada=true;
                         }
                     }
-                    if(computadoraLigada=false){
+                    if(!computadoraLigada){
                         computadoraNegocio.eliminar(id);
                     JOptionPane.showMessageDialog(this, "Computadora eliminada con éxito.");
                     this.metodosIniciales(); 
@@ -145,11 +145,8 @@ public class panelComputadorasListado extends javax.swing.JPanel {
     private void buscarTabla() {
         try {
             List<ComputadoraTablaDTO> computadorasTablaLista = this.computadoraNegocio.obtenerTabla();
-
-            
             DefaultTableModel modelo = (DefaultTableModel) this.tablaComputadoras.getModel();
             modelo.setRowCount(0);
-
             this.agregarRegistrosTabla(computadorasTablaLista);
         } catch (NegocioException ex) {
             System.out.println(ex.getMessage());
