@@ -45,17 +45,21 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
 
     private void guardarEstudiante() throws NegocioException {
         int randomNumber = 100000 + x.nextInt(900000);
+        String idInstitucional = String.format("%011d", randomNumber);
+
         EstudianteDTOGuardar estudianteDTO = new EstudianteDTOGuardar();
         estudianteDTO.setNombre(txtNombre.getText());
         estudianteDTO.setApellidoPaterno(txtApellidoPaterno.getText());
         estudianteDTO.setApellidoMaterno(txtApellidoMaterno.getText());
         estudianteDTO.setCarreraDTO((CarreraDTO) cboCarrera.getSelectedItem());
-        estudianteDTO.setIdInstitucional(String.valueOf(randomNumber));
+        estudianteDTO.setIdInstitucional(idInstitucional);  // Establecer el idInstitucional formateado
+
         if (verificarContrasenias(this.contraseniaFIeld, this.confirmarContraseniaField)) {
             String contrasenia = new String(this.contraseniaFIeld.getPassword());
             String contraseniaEncriptada = ContraseniaUtil.encriptar(contrasenia);
             estudianteDTO.setContrasena(contraseniaEncriptada);
             estudianteDTO.setContrasena(contraseniaEncriptada);
+
             try {
                 EstudianteDTO resultado = estudianteNegocio.guardar(estudianteDTO);
                 JOptionPane.showMessageDialog(this, "Estudiante guardado con éxito con el id institucional: " + resultado.getIdInstitucional());
@@ -63,7 +67,6 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Error al guardar el estudiante: " + e.getMessage());
             }
         }
-
     }
 
     private boolean verificarContrasenias(JPasswordField contrasenia, JPasswordField confirmarContrasenia) {

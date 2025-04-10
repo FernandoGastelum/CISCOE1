@@ -93,12 +93,25 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
 
     private void eliminar() {
         Long id = this.getIdSeleccionadoTabla();
-        try {
-            laboratorioNegocio.eliminar(id);
-            this.metodosIniciales();
-            JOptionPane.showMessageDialog(this, "Laboratorio eliminado con éxito con el id: " + id);
-        } catch (NegocioException e) {
-            JOptionPane.showMessageDialog(this, "Error al eliminar el laboratorio: " + e.getMessage());
+
+        int confirmacion = JOptionPane.showConfirmDialog(
+            this,
+            "¿Estás seguro de que deseas eliminar este laboratorio?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                laboratorioNegocio.eliminar(id);
+                this.metodosIniciales();
+                JOptionPane.showMessageDialog(this, "Laboratorio eliminado con éxito con el id: " + id);
+            } catch (NegocioException e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el laboratorio: " + e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Eliminación cancelada.");
         }
     }
 

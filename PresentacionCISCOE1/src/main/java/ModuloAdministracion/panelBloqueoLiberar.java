@@ -73,6 +73,7 @@ public class panelBloqueoLiberar extends javax.swing.JPanel {
             bloqueoDTOEditar.setFechaLiberacion(Calendar.getInstance());
             BloqueoDTO resultado = bloqueoNegocio.editar(bloqueoDTOEditar);
             JOptionPane.showMessageDialog(this, "Bloqueo actualizado con éxito con el id: " + resultado.getIdBloqueo());
+            this.regresar();
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error al actualizar el bloqueo: " + e.getMessage());
         }

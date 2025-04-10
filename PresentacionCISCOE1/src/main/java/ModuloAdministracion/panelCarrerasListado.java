@@ -88,12 +88,25 @@ public class panelCarrerasListado extends javax.swing.JPanel {
 
     private void eliminar() {
         Long id = this.getIdSeleccionadoTabla();
-        try {
-            carreraNegocio.eliminar(id);
-            this.metodosIniciales();
-            JOptionPane.showMessageDialog(this, "Carrera eliminada con éxito con el id: " + id);
-        } catch (NegocioException e) {
-            JOptionPane.showMessageDialog(this, "Error al eliminar la carrera: " + e.getMessage());
+
+        int confirmacion = JOptionPane.showConfirmDialog(
+            this,
+            "¿Estás seguro de que deseas eliminar esta carrera?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                carreraNegocio.eliminar(id);
+                this.metodosIniciales();
+                JOptionPane.showMessageDialog(this, "Carrera eliminada con éxito con el id: " + id);
+            } catch (NegocioException e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar la carrera: " + e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Eliminación cancelada.");
         }
     }
 
@@ -113,6 +126,8 @@ public class panelCarrerasListado extends javax.swing.JPanel {
     private void buscarTabla() {
         try {
             List<CarreraTablaDTO> carrerasTablaLista = this.carreraNegocio.obtenerTabla();
+            DefaultTableModel modelo = (DefaultTableModel) this.tablaCarreras.getModel();
+            modelo.setRowCount(0);
             this.agregarRegistrosTabla(carrerasTablaLista);
         } catch (NegocioException ex) {
             System.out.println(ex.getMessage());
@@ -180,7 +195,7 @@ public class panelCarrerasListado extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Nombré", "Tiempo Limite", "Editar", "Eliminar"
+                "ID", "Nombre", "Tiempo Limite", "Editar", "Eliminar"
             }
         ) {
             boolean[] canEdit = new boolean [] {

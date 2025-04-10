@@ -95,7 +95,7 @@ public class panelInstitutosListado extends javax.swing.JPanel {
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
-                Long id = this.getIdSeleccionadoTabla(); // método que recupera el id del instituto seleccionado
+                Long id = this.getIdSeleccionadoTabla(); 
 
                 if (id != 0L) {
                     List<LaboratorioDTO> listaLaboratorios = laboratorioNegocio.obtener();

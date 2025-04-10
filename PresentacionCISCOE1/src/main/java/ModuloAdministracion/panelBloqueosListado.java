@@ -137,6 +137,8 @@ public class panelBloqueosListado extends javax.swing.JPanel {
     private void buscarTabla() {
         try {
             List<BloqueoTablaDTO> bloqueosTablaLista = this.bloqueoNegocio.obtenerTabla();
+            DefaultTableModel modelo = (DefaultTableModel) this.tablaBloqueos.getModel();
+            modelo.setRowCount(0);
             this.agregarRegistrosTabla(bloqueosTablaLista);
         } catch (NegocioException ex) {
             System.out.println(ex.getMessage());

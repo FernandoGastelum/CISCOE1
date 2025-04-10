@@ -89,13 +89,21 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
     private void eliminar() {
         Long id = this.getIdSeleccionadoTabla();
         System.out.println("El id que se va a eliminar es " + id);
-        
-        try {
-            estudianteNegocio.eliminar(id);
-            this.metodosIniciales();
-            JOptionPane.showMessageDialog(this, "Estudiante eliminado con éxito con el id institucional: " + id);
-        } catch (NegocioException e) {
-            JOptionPane.showMessageDialog(this, "Error al eliminar el estudiante: " + e.getMessage());
+
+        int confirmacion = JOptionPane.showConfirmDialog(this, 
+                "¿Estás seguro de que deseas eliminar el estudiante con el id institucional: " + id + "?", 
+                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                estudianteNegocio.eliminar(id); 
+                this.metodosIniciales(); 
+                JOptionPane.showMessageDialog(this, "Estudiante eliminado con éxito con el id institucional: " + id);
+            } catch (NegocioException e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el estudiante: " + e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Eliminación cancelada.");
         }
     }
 
@@ -114,6 +122,8 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
     private void buscarTabla() {
         try {
             List<EstudianteTablaDTO> estudiantesTablaLista = this.estudianteNegocio.obtenerTabla();
+            DefaultTableModel modelo = (DefaultTableModel) this.tablaEstudiantes.getModel();
+            modelo.setRowCount(0);
             this.agregarRegistrosTabla(estudiantesTablaLista);
         } catch (NegocioException ex) {
             System.out.println(ex.getMessage());

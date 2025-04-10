@@ -88,7 +88,8 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
 
         try {
             LaboratorioDTO resultado = laboratorioNegocio.editar(idLaboratorio, laboratorioEditado);
-            JOptionPane.showMessageDialog(this, "Laboratorio guardada con éxito con el nombre: " + resultado.getNombre());
+            JOptionPane.showMessageDialog(this, "Laboratorio editado con éxito con el nombre: " + resultado.getNombre());
+            this.regresar();
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error al guardar el laboratorio: " + e.getMessage());
         }

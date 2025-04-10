@@ -45,7 +45,7 @@ public class LaboratorioDAO implements ILaboratorioDAO {
         return laboratorioEntidad;
     }
 
-    private Laboratorio convertirEntidad(LaboratorioDTOGuardar laboratorio) throws PersistenciaException {
+    public Laboratorio convertirEntidad(LaboratorioDTOGuardar laboratorio) throws PersistenciaException {
         IInstitutoDAO institutoDAO = new InstitutoDAO(em);
 
         Instituto institutoEntidad = institutoDAO.obtenerPorID(laboratorio.getInstitutoDTO().getIdInstituto());
