@@ -4,7 +4,16 @@
  */
 package ModuloAdministracion;
 
+import DTOs.BloqueoDTO;
+import DTOs.BloqueoDTOEditar;
+import DTOs.EstudianteDTO;
+import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IBloqueoNegocio;
+import ModuloAdministracion.Interfaz.IEstudianteDAO;
+import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import java.awt.BorderLayout;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,13 +21,70 @@ import ModuloAdministracion.Interfaz.IBloqueoNegocio;
  */
 public class panelBloqueoEditar extends javax.swing.JPanel {
     private final IBloqueoNegocio bloqueoNegocio;
-
+    private final IEstudianteNegocio estudianteNegocio;
+    private final Long idBloqueo;
+    private BloqueoDTO bloqueoDTO;
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelBloqueoEditar(IBloqueoNegocio bloqueoNegocio) {
+    public panelBloqueoEditar(IBloqueoNegocio bloqueoNegocio, Long idBloqueo,IEstudianteNegocio estudianteNegocio) {
         this.bloqueoNegocio = bloqueoNegocio;
+        this.estudianteNegocio = estudianteNegocio;
+        this.idBloqueo = idBloqueo;
         initComponents();
+        this.cargarDatos();
+        this.cargarEstudiantes();
+    }
+    private BloqueoDTO obtenerBloqueo(Long id) throws NegocioException{
+        return bloqueoNegocio.obtenerPorID(id);
+    }
+    private void cargarDatos(){
+        try {
+            bloqueoDTO = this.obtenerBloqueo(this.idBloqueo);
+        } catch (NegocioException ex) {
+            System.out.println("Error: "+ ex.getMessage());
+        }
+        this.lblID.setText(this.idBloqueo.toString());
+        this.txtMotivo.setText(bloqueoDTO.getMotivo());
+        this.estudianteComboBox.setSelectedItem(bloqueoDTO.getEstudiante());
+    }
+    private void editar(){
+        BloqueoDTOEditar bloqueoDTOEditar = new BloqueoDTOEditar();
+        bloqueoDTOEditar.setIdBloqueo(this.idBloqueo);
+        bloqueoDTOEditar.setMotivo(txtMotivo.getText());
+        bloqueoDTOEditar.setFechaBloqueo(bloqueoDTO.getFechaBloqueo());
+        bloqueoDTOEditar.setEstudianteDTO((EstudianteDTO) estudianteComboBox.getSelectedItem());
+        try {
+            BloqueoDTO resultado = bloqueoNegocio.editar(bloqueoDTOEditar);
+            JOptionPane.showMessageDialog(this, "Bloqueo actualizado con éxito con el id: " + resultado.getIdBloqueo());
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al actualizar el bloqueo: " + e.getMessage());
+        }
+    }
+    private void cargarEstudiantes(){
+        try {
+            List<EstudianteDTO> listaEstudiantes = estudianteNegocio.obtener();
+            if(listaEstudiantes!=null){
+                for (EstudianteDTO listaEstudiante : listaEstudiantes) {
+                    this.estudianteComboBox.addItem(listaEstudiante);
+                }
+            }else{
+                throw new NegocioException("No hay estudiantes registradas");
+            }
+        } catch (NegocioException ex) {
+            System.out.println("Error al cargar las combo boxes " + ex.getMessage());
+        }
+    }
+    private void restaurar(){
+        this.cargarDatos();
+    }
+    private void regresar(){
+        panelBloqueosListado panel = new panelBloqueosListado(bloqueoNegocio, estudianteNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panel, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
     }
 
     /**
@@ -32,13 +98,14 @@ public class panelBloqueoEditar extends javax.swing.JPanel {
 
         jPanelPantalla = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        btnRegresar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txtMotivo = new javax.swing.JTextField();
         btnCancelar = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        estudianteComboBox = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         lblID = new javax.swing.JLabel();
 
@@ -52,17 +119,34 @@ public class panelBloqueoEditar extends javax.swing.JPanel {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Bloqueos");
 
+        btnRegresar.setBackground(new java.awt.Color(246, 255, 0));
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelPantallaLayout = new javax.swing.GroupLayout(jPanelPantalla);
         jPanelPantalla.setLayout(jPanelPantallaLayout);
         jPanelPantallaLayout.setHorizontalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1920, Short.MAX_VALUE)
+            .addGroup(jPanelPantallaLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1614, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanelPantallaLayout.setVerticalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPantallaLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel1)
+                .addGroup(jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelPantallaLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanelPantallaLayout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(btnRegresar)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -74,6 +158,11 @@ public class panelBloqueoEditar extends javax.swing.JPanel {
         btnGuardar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
         btnGuardar.setText("Guardar Cambios");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -85,11 +174,18 @@ public class panelBloqueoEditar extends javax.swing.JPanel {
 
         txtMotivo.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
-        btnCancelar.setBackground(new java.awt.Color(246, 255, 0));
+        btnCancelar.setBackground(new java.awt.Color(255, 0, 51));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        btnCancelar.setText("Cancelar");
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setText("Restaurar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+        estudianteComboBox.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+        estudianteComboBox.setEnabled(false);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
@@ -121,9 +217,9 @@ public class panelBloqueoEditar extends javax.swing.JPanel {
                         .addGap(158, 158, 158)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtMotivo, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(estudianteComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(976, Short.MAX_VALUE))
+                .addContainerGap(996, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,7 +234,7 @@ public class panelBloqueoEditar extends javax.swing.JPanel {
                 .addGap(70, 70, 70)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(estudianteComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(74, 74, 74)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -151,11 +247,24 @@ public class panelBloqueoEditar extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        this.editar();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.restaurar();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        this.regresar();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JComboBox<EstudianteDTO> estudianteComboBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -10,6 +10,7 @@ import DTOs.EstudianteDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IBloqueoNegocio;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import java.awt.BorderLayout;
 import java.util.Calendar;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -62,6 +63,18 @@ public class panelBloqueoNuevo extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Error al guardar el bloqueo: " + e.getMessage());
         }
     }
+    private void restaurar(){
+        txtMotivo.setText("");
+        cboEstudiante.setSelectedItem(-1);
+    }
+    private void regresar(){
+        panelBloqueosListado panel = new panelBloqueosListado(bloqueoNegocio, estudianteNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panel, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -74,6 +87,7 @@ public class panelBloqueoNuevo extends javax.swing.JPanel {
 
         jPanelPantalla = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        btnRegresar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -92,17 +106,34 @@ public class panelBloqueoNuevo extends javax.swing.JPanel {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Bloqueos");
 
+        btnRegresar.setBackground(new java.awt.Color(246, 255, 0));
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelPantallaLayout = new javax.swing.GroupLayout(jPanelPantalla);
         jPanelPantalla.setLayout(jPanelPantallaLayout);
         jPanelPantallaLayout.setHorizontalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1920, Short.MAX_VALUE)
+            .addGroup(jPanelPantallaLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1694, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanelPantallaLayout.setVerticalGroup(
             jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPantallaLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel1)
+                .addGroup(jPanelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelPantallaLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanelPantallaLayout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(btnRegresar)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -130,9 +161,10 @@ public class panelBloqueoNuevo extends javax.swing.JPanel {
 
         txtMotivo.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
-        btnCancelar.setBackground(new java.awt.Color(246, 255, 0));
+        btnCancelar.setBackground(new java.awt.Color(255, 0, 0));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        btnCancelar.setText("Cancelar");
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setText("Restaurar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelarActionPerformed(evt);
@@ -194,12 +226,18 @@ public class panelBloqueoNuevo extends javax.swing.JPanel {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
+        this.restaurar();
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        this.regresar();
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JComboBox<EstudianteDTO> cboEstudiante;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

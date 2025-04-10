@@ -81,7 +81,8 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
     private void volver() {
         frmReservas.habilitarVentana();
         frmReservas.cargarComputadoras();
-        frmReservas.setVentanaReservaAbierta(false); // Reset del flag
+        frmReservas.setVentanaReservaAbierta(false);
+        frmReservas.cargarMinutosdDisponibles();
         this.dispose();
     }
     private void guardarReserva(){

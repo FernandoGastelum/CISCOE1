@@ -5,6 +5,7 @@
 package ModuloAdministracion.Interfaz;
 
 import DTOs.BloqueoDTO;
+import DTOs.BloqueoDTOEditar;
 import DTOs.BloqueoDTOGuardar;
 import Entidades.Bloqueo;
 import Excepcion.PersistenciaException;
@@ -17,6 +18,8 @@ import java.util.List;
 public interface IBloqueoDAO {
     
     Bloqueo guardar(BloqueoDTOGuardar bloqueo) throws PersistenciaException;
+    Bloqueo editar(BloqueoDTOEditar bloqueo) throws PersistenciaException;
+    void eliminar(Long id) throws PersistenciaException;
     
     Bloqueo obtenerPorID(Long id) throws PersistenciaException;
     

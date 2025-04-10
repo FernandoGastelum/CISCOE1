@@ -117,6 +117,8 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
 
     private void buscarTabla() {
         try {
+            DefaultTableModel modelo = (DefaultTableModel) this.tablaLaboratorios.getModel();
+            modelo.setRowCount(0);
             List<LaboratorioTablaDTO> laboratoriosTablaLista = this.laboratorioNegocio.obtenerTabla();
             this.agregarRegistrosTabla(laboratoriosTablaLista);
         } catch (NegocioException ex) {

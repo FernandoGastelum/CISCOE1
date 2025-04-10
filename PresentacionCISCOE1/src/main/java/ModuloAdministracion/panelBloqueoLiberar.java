@@ -4,7 +4,16 @@
  */
 package ModuloAdministracion;
 
+import DTOs.BloqueoDTO;
+import DTOs.BloqueoDTOEditar;
+import DTOs.EstudianteDTO;
+import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.IBloqueoNegocio;
+import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import java.awt.BorderLayout;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,13 +21,62 @@ import ModuloAdministracion.Interfaz.IBloqueoNegocio;
  */
 public class panelBloqueoLiberar extends javax.swing.JPanel {
     private final IBloqueoNegocio bloqueoNegocio;
-
+    private final IEstudianteNegocio estudianteNegocio;
+    private final Long idBloqueo;
+    private BloqueoDTO bloqueoDTO;
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelBloqueoLiberar(IBloqueoNegocio bloqueoNegocio) {
+    public panelBloqueoLiberar(IBloqueoNegocio bloqueoNegocio,IEstudianteNegocio estudianteNegocio,Long idBloqueo) {
         this.bloqueoNegocio = bloqueoNegocio;
+        this.estudianteNegocio = estudianteNegocio;
+        this.idBloqueo = idBloqueo;
         initComponents();
+        this.cargarDatos();
+    }
+    private BloqueoDTO obtenerBloqueo(Long id) throws NegocioException{
+        return bloqueoNegocio.obtenerPorID(id);
+    }
+    private void cargarDatos(){
+        try {
+            bloqueoDTO = this.obtenerBloqueo(this.idBloqueo);
+        } catch (NegocioException ex) {
+            System.out.println("Error: "+ ex.getMessage());
+        }
+        this.lblID.setText(this.idBloqueo.toString());
+        this.lblEstudiante.setText(bloqueoDTO.getEstudiante().getNombre()+" "
+                +bloqueoDTO.getEstudiante().getApellidoPaterno()+" "
+                +bloqueoDTO.getEstudiante().getApellidoMaterno());
+        Calendar calendario = bloqueoDTO.getFechaBloqueo();
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+        String fecha = formatoFecha.format(calendario.getTime());
+        this.lblFechaBloqueo.setText(fecha);
+        this.lblMotivo.setText(bloqueoDTO.getMotivo());
+        
+    }
+    private void regresar(){
+        panelBloqueosListado panel = new panelBloqueosListado(bloqueoNegocio, estudianteNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panel, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    private void liberar(){
+        
+        try {
+            BloqueoDTOEditar bloqueoDTOEditar = new BloqueoDTOEditar();
+            bloqueoDTOEditar.setIdBloqueo(this.idBloqueo);
+            bloqueoDTOEditar.setMotivo(lblMotivo.getText());
+            bloqueoDTOEditar.setEstudianteDTO(estudianteNegocio.obtenerPorID(bloqueoDTO.getEstudiante().getIdEstudiante()));
+            bloqueoDTOEditar.setFechaBloqueo(bloqueoDTO.getFechaBloqueo());
+            bloqueoDTOEditar.setFechaLiberacion(Calendar.getInstance());
+            BloqueoDTO resultado = bloqueoNegocio.editar(bloqueoDTOEditar);
+            JOptionPane.showMessageDialog(this, "Bloqueo actualizado con éxito con el id: " + resultado.getIdBloqueo());
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al actualizar el bloqueo: " + e.getMessage());
+        }
+    
     }
 
     /**
@@ -77,6 +135,11 @@ public class panelBloqueoLiberar extends javax.swing.JPanel {
         btnLiberar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnLiberar.setForeground(new java.awt.Color(255, 255, 255));
         btnLiberar.setText("Liberar Bloqueo");
+        btnLiberar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLiberarActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -89,6 +152,11 @@ public class panelBloqueoLiberar extends javax.swing.JPanel {
         btnCancelar.setBackground(new java.awt.Color(246, 255, 0));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
@@ -177,6 +245,14 @@ public class panelBloqueoLiberar extends javax.swing.JPanel {
                 .addGap(71, 71, 71))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.regresar();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnLiberarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLiberarActionPerformed
+        this.liberar();
+    }//GEN-LAST:event_btnLiberarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

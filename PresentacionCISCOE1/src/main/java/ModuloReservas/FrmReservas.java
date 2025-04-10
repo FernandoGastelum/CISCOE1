@@ -154,7 +154,7 @@ public class FrmReservas extends javax.swing.JFrame {
                 this.dispose(); 
             }
     }
-    private int cargarMinutosdDisponibles() {
+    public int cargarMinutosdDisponibles() {
         int minutosMaximos = estudianteDTO.getCarrera().getTiempoMaximoDiario(); 
         int minutosUsados = 0;
 

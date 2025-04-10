@@ -68,12 +68,10 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
         OpcionEstudiantesListado = new javax.swing.JMenuItem();
         jMenuCarreras = new javax.swing.JMenu();
         OpcionCarrerasListado = new javax.swing.JMenuItem();
-        OpcionAgregarCarrera = new javax.swing.JMenuItem();
         jMenuComputadoras = new javax.swing.JMenu();
         OpcionComputadorasListado = new javax.swing.JMenuItem();
         jMenuBloqueos = new javax.swing.JMenu();
         OpcionBloqueosListado = new javax.swing.JMenuItem();
-        OpcionAgregarBloqueo = new javax.swing.JMenuItem();
         jMenuLaboratorio = new javax.swing.JMenu();
         OpcionLaboratoriosListado = new javax.swing.JMenuItem();
         jMenuInstituto = new javax.swing.JMenu();
@@ -146,14 +144,6 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
         });
         jMenuCarreras.add(OpcionCarrerasListado);
 
-        OpcionAgregarCarrera.setText("Agregar Carrera");
-        OpcionAgregarCarrera.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OpcionAgregarCarreraActionPerformed(evt);
-            }
-        });
-        jMenuCarreras.add(OpcionAgregarCarrera);
-
         jMenuBar1.add(jMenuCarreras);
 
         jMenuComputadoras.setText("Computadoras");
@@ -179,14 +169,6 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
             }
         });
         jMenuBloqueos.add(OpcionBloqueosListado);
-
-        OpcionAgregarBloqueo.setText("Agregar Bloqueos");
-        OpcionAgregarBloqueo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OpcionAgregarBloqueoActionPerformed(evt);
-            }
-        });
-        jMenuBloqueos.add(OpcionAgregarBloqueo);
 
         jMenuBar1.add(jMenuBloqueos);
 
@@ -251,15 +233,6 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
         jPanelCambiante.repaint();
     }//GEN-LAST:event_OpcionCarrerasListadoActionPerformed
 
-    private void OpcionAgregarCarreraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarCarreraActionPerformed
-        panelCarreraNuevo panelCarrera = new panelCarreraNuevo(carreraNegocio);
-        jPanelCambiante.setLayout(new BorderLayout());
-        jPanelCambiante.removeAll();
-        jPanelCambiante.add(panelCarrera, BorderLayout.CENTER);
-        jPanelCambiante.revalidate();
-        jPanelCambiante.repaint();
-    }//GEN-LAST:event_OpcionAgregarCarreraActionPerformed
-
     private void OpcionComputadorasListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionComputadorasListadoActionPerformed
         panelComputadorasListado panelComputadora = new panelComputadorasListado(computadoraNegocio,carreraNegocio, laboratorioNegocio,reservaNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
@@ -277,15 +250,6 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
         jPanelCambiante.revalidate();
         jPanelCambiante.repaint();
     }//GEN-LAST:event_OpcionBloqueosListadoActionPerformed
-
-    private void OpcionAgregarBloqueoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionAgregarBloqueoActionPerformed
-        panelBloqueoNuevo panelBloqueo = new panelBloqueoNuevo(bloqueoNegocio, estudianteNegocio);
-        jPanelCambiante.setLayout(new BorderLayout());
-        jPanelCambiante.removeAll();
-        jPanelCambiante.add(panelBloqueo, BorderLayout.CENTER);
-        jPanelCambiante.revalidate();
-        jPanelCambiante.repaint();
-    }//GEN-LAST:event_OpcionAgregarBloqueoActionPerformed
 
     private void OpcionLaboratoriosListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionLaboratoriosListadoActionPerformed
         panelLaboratoriosListado panelLaboratorio = new panelLaboratoriosListado(laboratorioNegocio, institutoNegocio);
@@ -307,8 +271,6 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem OpcionAgregarBloqueo;
-    private javax.swing.JMenuItem OpcionAgregarCarrera;
     private javax.swing.JMenuItem OpcionBloqueosListado;
     private javax.swing.JMenuItem OpcionCarrerasListado;
     private javax.swing.JMenuItem OpcionComputadorasListado;

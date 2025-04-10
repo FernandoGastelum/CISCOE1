@@ -5,6 +5,7 @@
 package ModuloAdministracion.Negocio;
 
 import DTOs.BloqueoDTO;
+import DTOs.BloqueoDTOEditar;
 import DTOs.BloqueoDTOGuardar;
 import DTOs.BloqueoTablaDTO;
 import Entidades.Bloqueo;
@@ -97,5 +98,24 @@ public class BloqueoNegocio implements IBloqueoNegocio {
             throw new NegocioException("El motivo no puede estar vacía");
         }
         return true;
+    }
+
+    @Override
+    public BloqueoDTO editar(BloqueoDTOEditar bloqueo) throws NegocioException {
+        try {
+            Bloqueo bloqueoEntidad = bloqueoDAO.editar(bloqueo);
+            return bloqueoDAO.obtenerDTO(bloqueoEntidad.getIdBloqueo());
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al actualizar el bloqueo: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void eliminar(Long idBloqueo) throws NegocioException {
+        try {
+            bloqueoDAO.eliminar(idBloqueo);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al eliminar el bloqueo: " + e.getMessage());
+        }
     }
 }

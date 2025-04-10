@@ -4,17 +4,22 @@
  */
 package ModuloDesbloqueo;
 
+import DTOs.BloqueoDTO;
 import DTOs.ComputadoraDTO;
 import DTOs.EstudianteDTO;
 import DTOs.ReservaDTO;
 import Excepcion.NegocioException;
+import ModuloAdministracion.Interfaz.IBloqueoDAO;
+import ModuloAdministracion.Interfaz.IBloqueoNegocio;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import ModuloAdministracion.Negocio.BloqueoNegocio;
 import ModuloAdministracion.Negocio.ComputadoraNegocio;
 import ModuloAdministracion.Negocio.EstudianteNegocio;
+import ModuloAdministracion.Persistencia.BloqueoDAO;
 import ModuloAdministracion.Persistencia.ComputadoraDAO;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
 import ModuloAdministracion.Persistencia.EstudianteDAO;
@@ -43,16 +48,18 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
     private IEstudianteNegocio estudianteNegocio;
     private IReservaNegocio reservaNegocio;
     private IComputadoraNegocio computadoraNegocio;
+    private IBloqueoNegocio bloqueoNegocio;
     private EstudianteDTO estudianteDTO;
     private ComputadoraDTO computadoraDTO;
     private ReservaDTO reservaDTO;
     /**
      * Creates new form FrmDesbloqueo
      */
-    public FrmDesbloqueo(IEstudianteNegocio estudianteNegocio,IReservaNegocio reservaNegocio,IComputadoraNegocio computadoraNegocio) throws NegocioException {
+    public FrmDesbloqueo(IEstudianteNegocio estudianteNegocio,IReservaNegocio reservaNegocio,IComputadoraNegocio computadoraNegocio,IBloqueoNegocio bloqueoNegocio) throws NegocioException {
         this.estudianteNegocio = estudianteNegocio;
         this.reservaNegocio = reservaNegocio;
         this.computadoraNegocio = computadoraNegocio;
+        this.bloqueoNegocio = bloqueoNegocio;
         this.estudianteDTO = this.cargarAlumno();
         initComponents();
         this.cargarFondo();
@@ -83,30 +90,55 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
     }
     private EstudianteDTO cargarAlumno() throws NegocioException {
         List<ReservaDTO> listaReservasDTO = reservaNegocio.obtener();
-            
+        List<BloqueoDTO> listaBloqueosDTO = bloqueoNegocio.obtener(); 
+
         while (true) {
             String alumno = JOptionPane.showInputDialog(this, "Ingrese el ID institucional del alumno:");
 
             if (alumno == null || alumno.trim().isEmpty()) {
                 int opcion = JOptionPane.showConfirmDialog(this, "¿Desea cancelar el proceso de desbloqueo?", "Cancelar", JOptionPane.YES_NO_OPTION);
                 if (opcion == JOptionPane.YES_OPTION) {
-                    dispose(); 
+                    dispose();
                     throw new NegocioException("Proceso cancelado por el usuario.");
                 }
-                continue; 
+                continue;
             }
 
             try {
+                EstudianteDTO estudiante = estudianteNegocio.obtenerPorIdInstitucional(alumno.trim());
+
+                boolean tieneReservaActiva = false;
                 for (ReservaDTO reservaDTO : listaReservasDTO) {
-                    if(reservaDTO.getEstudiante().getIdEstudiante().equals(alumno)){
-                        if(reservaDTO.getHoraFin()==null){
-                            return estudianteNegocio.obtenerPorIdInstitucional(alumno.trim());
-                        }
+                    if (reservaDTO.getEstudiante().getIdInstitucional().equals(alumno) &&
+                        reservaDTO.getHoraFin() == null) {
+                        tieneReservaActiva = true;
+                        break;
                     }
                 }
-                JOptionPane.showMessageDialog(this, "No se encontró una reserva para el estudiante: "+alumno.trim());
-                this.dispose();
-                
+
+                if (!tieneReservaActiva) {
+                    JOptionPane.showMessageDialog(this, "El estudiante no tiene una reserva activa.");
+                    dispose();
+                    throw new NegocioException("El estudiante no tiene una reserva activa.");
+                }
+
+                boolean tieneBloqueoActivo = false;
+                for (BloqueoDTO bloqueoDTO : listaBloqueosDTO) {
+                    if (bloqueoDTO.getEstudiante().getIdInstitucional().equals(alumno) &&
+                        bloqueoDTO.getFechaLiberacion() == null) {
+                        tieneBloqueoActivo = true;
+                        break;
+                    }
+                }
+
+                if (tieneBloqueoActivo) {
+                    JOptionPane.showMessageDialog(this, "El estudiante tiene un bloqueo activo.");
+                    dispose();
+                    throw new NegocioException("El estudiante tiene un bloqueo activo.");
+                }
+
+                return estudiante;
+
             } catch (NegocioException ex) {
                 JOptionPane.showMessageDialog(this, "No se encontró un estudiante con el ID: " + alumno.trim(), "ID inválido", JOptionPane.WARNING_MESSAGE);
             }
@@ -311,6 +343,9 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
         
         IComputadoraDAO computadoraDAO = new ComputadoraDAO(entityManager);
         IComputadoraNegocio computadoraNegocio = new ComputadoraNegocio(computadoraDAO);
+        
+        IBloqueoDAO bloqueoDAO = new BloqueoDAO(entityManager);
+        IBloqueoNegocio bloqueoNegocio = new BloqueoNegocio(bloqueoDAO);
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -339,7 +374,7 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
             public void run() {
                 
                 try {
-                    new FrmDesbloqueo(estudianteNegocio, reservaNegocio, computadoraNegocio).setVisible(true);
+                    new FrmDesbloqueo(estudianteNegocio, reservaNegocio, computadoraNegocio,bloqueoNegocio).setVisible(true);
                 } catch (NegocioException ex) {
                     System.out.println(ex.getMessage());
                 }

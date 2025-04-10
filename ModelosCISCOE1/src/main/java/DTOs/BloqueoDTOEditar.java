@@ -4,7 +4,6 @@
  */
 package DTOs;
 
-import Entidades.Estudiante;
 import java.util.Calendar;
 
 /**
@@ -12,11 +11,11 @@ import java.util.Calendar;
  * @author Knocmare
  */
 public class BloqueoDTOEditar {
-    
+    private Long idBloqueo;
     private Calendar fechaBloqueo;
     private Calendar fechaLiberacion;
     private String motivo;
-    private Estudiante estudiante;
+    private EstudianteDTO estudianteDTO;
 
     /**
      * Constructor por ausencia
@@ -24,11 +23,20 @@ public class BloqueoDTOEditar {
     public BloqueoDTOEditar() {
     }
 
-    public BloqueoDTOEditar(Calendar fechaBloqueo, Calendar fechaLiberacion, String motivo, Estudiante estudiante) {
+    public BloqueoDTOEditar(Long idBloqueo, Calendar fechaBloqueo, Calendar fechaLiberacion, String motivo, EstudianteDTO estudianteDTO) {
         this.fechaBloqueo = fechaBloqueo;
         this.fechaLiberacion = fechaLiberacion;
         this.motivo = motivo;
-        this.estudiante = estudiante;
+        this.idBloqueo = idBloqueo;
+        this.estudianteDTO = estudianteDTO;
+    }
+
+    public Long getIdBloqueo() {
+        return idBloqueo;
+    }
+
+    public void setIdBloqueo(Long idBloqueo) {
+        this.idBloqueo = idBloqueo;
     }
 
     public Calendar getFechaBloqueo() {
@@ -55,17 +63,17 @@ public class BloqueoDTOEditar {
         this.motivo = motivo;
     }
 
-    public Estudiante getEstudiante() {
-        return estudiante;
+    public EstudianteDTO getEstudianteDTO() {
+        return estudianteDTO;
     }
 
-    public void setEstudiante(Estudiante estudiante) {
-        this.estudiante = estudiante;
+    public void setEstudianteDTO(EstudianteDTO estudianteDTO) {
+        this.estudianteDTO = estudianteDTO;
     }
 
     @Override
     public String toString() {
-        return "BloqueoDTOEditar{" + "fechaBloqueo=" + fechaBloqueo + ", fechaLiberacion=" + fechaLiberacion + ", motivo=" + motivo + ", estudiante=" + estudiante + '}';
+        return "BloqueoDTOEditar{" + "fechaBloqueo=" + fechaBloqueo + ", fechaLiberacion=" + fechaLiberacion + ", motivo=" + motivo + ", estudianteDTO=" + estudianteDTO + '}';
     }
     
 }

@@ -5,6 +5,7 @@
 package ModuloAdministracion.Persistencia;
 
 import DTOs.BloqueoDTO;
+import DTOs.BloqueoDTOEditar;
 import DTOs.BloqueoDTOGuardar;
 import Entidades.Bloqueo;
 import Entidades.Estudiante;
@@ -96,5 +97,53 @@ public class BloqueoDAO implements IBloqueoDAO{
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    @Override
+    public Bloqueo editar(BloqueoDTOEditar bloqueoDTO) throws PersistenciaException {
+        EntityManager em = this.em.crearEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            Bloqueo bloqueo = em.find(Bloqueo.class, bloqueoDTO.getIdBloqueo());
+            if (bloqueo == null) {
+                throw new PersistenciaException("No se encontró el bloqueo con id: " + bloqueoDTO.getIdBloqueo());
+            }
+
+                             
+            bloqueo.setFechaBloqueo(bloqueoDTO.getFechaBloqueo());
+            bloqueo.setFechaLiberacion(bloqueoDTO.getFechaLiberacion());
+            bloqueo.setMotivo(bloqueoDTO.getMotivo());
+
+            em.merge(bloqueo);
+            em.getTransaction().commit();
+
+            return bloqueo;
+        } catch (PersistenciaException e) {
+            em.getTransaction().rollback();
+            throw new PersistenciaException("Error al actualizar el bloqueo: " + e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void eliminar(Long idBloqueo) throws PersistenciaException {
+        EntityManager em = this.em.crearEntityManager();
+            try {
+                em.getTransaction().begin();
+                Bloqueo bloqueo = em.find(Bloqueo.class, idBloqueo);
+                if (bloqueo != null) {
+                    em.remove(bloqueo);
+                } else {
+                    throw new PersistenciaException("No se encontró el bloqueo con id: " + idBloqueo);
+                }
+                em.getTransaction().commit();
+            } catch (Exception e) {
+                em.getTransaction().rollback();
+                throw new PersistenciaException("Error al eliminar el bloqueo: " + e.getMessage());
+            } finally {
+                em.close();
+            }
     }
 }

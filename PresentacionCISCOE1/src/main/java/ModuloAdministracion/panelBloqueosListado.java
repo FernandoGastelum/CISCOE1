@@ -13,7 +13,10 @@ import Utilidades.JButtonRenderer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -55,29 +58,67 @@ public class panelBloqueosListado extends javax.swing.JPanel {
         modeloColumnas.getColumn(indiceColumnaEditar)
                 .setCellEditor(new JButtonCellEditor("Editar", onEditarClickListener));
 
-        ActionListener onEliminarClickListener = new ActionListener() {
+        ActionListener onLiberarEliminarClickListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Metodo para eliminar
-                eliminar();
+                int fila = tablaBloqueos.getSelectedRow();
+                String accion = (String) tablaBloqueos.getValueAt(fila, 6);
+
+                if ("Liberar".equals(accion)) {
+                    liberar();
+                } else if ("Eliminar".equals(accion)) {
+                    eliminar();
+                }
             }
         };
         int indiceColumnaEliminar = 6;
-        modeloColumnas = this.tablaBloqueos.getColumnModel();
         modeloColumnas.getColumn(indiceColumnaEliminar)
-                .setCellRenderer(new JButtonRenderer("Eliminar"));
+            .setCellRenderer(new JButtonRenderer("")); 
         modeloColumnas.getColumn(indiceColumnaEliminar)
-                .setCellEditor(new JButtonCellEditor("Eliminar", onEliminarClickListener));
+            .setCellEditor(new JButtonCellEditor(onLiberarEliminarClickListener)); 
     }
 
     private void editar() {
         Long id = this.getIdSeleccionadoTabla();
-        System.out.println("El id que se va a editar es " + id);
+        panelBloqueoEditar panel = new panelBloqueoEditar(bloqueoNegocio, id, estudianteNegocio);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panel, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+        
     }
-
-    private void eliminar() {
+    private void liberar(){
         Long id = this.getIdSeleccionadoTabla();
-        System.out.println("El id que se va a eliminar es " + id);
+        panelBloqueoLiberar panel = new panelBloqueoLiberar(bloqueoNegocio, estudianteNegocio, id);
+        this.setLayout(new BorderLayout());
+        this.removeAll();
+        this.add(panel, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    private void eliminar() {
+        int confirmacion = JOptionPane.showConfirmDialog(
+            this,
+            "¿Estás seguro de que deseas eliminar este bloqueo?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                Long id = getIdSeleccionadoTabla(); 
+                if (id != 0L) {
+                    bloqueoNegocio.eliminar(id);
+                    JOptionPane.showMessageDialog(this, "Bloqueo eliminado con éxito.");
+                    this.metodosIniciales(); 
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecciona un bloqueo válido.");
+                }
+            } catch (NegocioException e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el bloqueo: " + e.getMessage());
+            }
+        }
     }
 
     private Long getIdSeleccionadoTabla() {
@@ -108,16 +149,30 @@ public class panelBloqueosListado extends javax.swing.JPanel {
         }
 
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaBloqueos.getModel();
-        bloqueosLista.forEach(row -> {
-            Object[] fila = new Object[5];
+        modeloTabla.setRowCount(0); 
+
+        for (BloqueoTablaDTO row : bloqueosLista) {
+            Object[] fila = new Object[7];
             fila[0] = row.getIdBloqueo();
-            fila[1] = row.getFechaBloqueo();
+            Calendar calendarioBloqueo = row.getFechaBloqueo();
+            Calendar calendarioLiberacion = row.getFechaLiberacion();
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+            String fechaBloqueo = formatoFecha.format(calendarioBloqueo.getTime());
+            if(calendarioLiberacion==null){
+                fila[4] = row.getFechaLiberacion();
+            }else{
+                String fechaLiberacion = formatoFecha.format(calendarioLiberacion.getTime());
+                fila[4] = fechaLiberacion;
+            }
+            fila[1] = fechaBloqueo;
             fila[2] = row.getMotivo();
             fila[3] = row.getIdInstitucional();
-            fila[4] = row.getFechaLiberacion();
+            
+            fila[5] = "Editar";
+            fila[6] = (row.getFechaLiberacion() == null) ? "Liberar" : "Eliminar";
 
             modeloTabla.addRow(fila);
-        });
+        }
     }
 
     /**
