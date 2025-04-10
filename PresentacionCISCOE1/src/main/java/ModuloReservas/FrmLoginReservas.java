@@ -4,10 +4,13 @@
  */
 package ModuloReservas;
 
+import DTOs.BloqueoDTO;
 import DTOs.ComputadoraDTO;
 import DTOs.EstudianteDTO;
 import DTOs.LaboratorioDTO;
 import Excepcion.NegocioException;
+import ModuloAdministracion.Interfaz.IBloqueoDAO;
+import ModuloAdministracion.Interfaz.IBloqueoNegocio;
 import ModuloAdministracion.Interfaz.IComputadoraDAO;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import ModuloAdministracion.Interfaz.IEntityManager;
@@ -17,10 +20,12 @@ import ModuloAdministracion.Interfaz.IHorarioDAO;
 import ModuloAdministracion.Interfaz.IHorarioNegocio;
 import ModuloAdministracion.Interfaz.ILaboratorioDAO;
 import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
+import ModuloAdministracion.Negocio.BloqueoNegocio;
 import ModuloAdministracion.Negocio.ComputadoraNegocio;
 import ModuloAdministracion.Negocio.EstudianteNegocio;
 import ModuloAdministracion.Negocio.HorarioNegocio;
 import ModuloAdministracion.Negocio.LaboratorioNegocio;
+import ModuloAdministracion.Persistencia.BloqueoDAO;
 import ModuloAdministracion.Persistencia.ComputadoraDAO;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
 import ModuloAdministracion.Persistencia.EstudianteDAO;
@@ -47,6 +52,7 @@ public class FrmLoginReservas extends javax.swing.JFrame {
     private final IComputadoraNegocio computadoraNegocio;
     private final IReservaNegocio reservaNegocio;
     private final IHorarioNegocio horarioNegocio;
+    private final IBloqueoNegocio bloqueoNegocio;
     private LaboratorioDTO laboratorioDTO;
     private final ILaboratorioNegocio laboratorioNegocio;
     
@@ -57,28 +63,46 @@ public class FrmLoginReservas extends javax.swing.JFrame {
      * @param reservaNegocio
      * @param horarioNegocio 
      */
-    public FrmLoginReservas(IEstudianteNegocio estudianteNegocio, IComputadoraNegocio computadoraNegocio,IReservaNegocio reservaNegocio,IHorarioNegocio horarioNegocio,ILaboratorioNegocio laboratorioNegocio) {
+    public FrmLoginReservas(IEstudianteNegocio estudianteNegocio, IComputadoraNegocio computadoraNegocio,IReservaNegocio reservaNegocio,IHorarioNegocio horarioNegocio,ILaboratorioNegocio laboratorioNegocio,IBloqueoNegocio bloqueoNegocio) {
         this.estudianteNegocio = estudianteNegocio;
         this.computadoraNegocio = computadoraNegocio;
         this.reservaNegocio = reservaNegocio;
         this.horarioNegocio = horarioNegocio;
+        this.bloqueoNegocio = bloqueoNegocio;
         this.laboratorioNegocio=laboratorioNegocio;
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.cargarLaboratorio();
     }
-    private boolean validarUsuario(String id){
+//    private boolean validarUsuario(String id){
+//        try {
+//            List<EstudianteDTO> listaEstudiantes = estudianteNegocio.obtener();
+//            for (EstudianteDTO listaEstudiante : listaEstudiantes) {
+//                if(listaEstudiante.getIdInstitucional().equals(id)){
+//                    return listaEstudiante.getEstatusInscripcion()==true;
+//                }
+//            }
+//        } catch (NegocioException ex) {
+//            System.out.println("Error "+ex.getMessage());
+//        }
+//        
+//        return false;
+//    }
+    private boolean tieneBloqueo(Long idEstudiante){
+        Boolean bloqueo = false;
         try {
-            List<EstudianteDTO> listaEstudiantes = estudianteNegocio.obtener();
-            for (EstudianteDTO listaEstudiante : listaEstudiantes) {
-                if(listaEstudiante.getIdInstitucional().equals(id)){
-                    return listaEstudiante.getEstatusInscripcion()==true;
+            List<BloqueoDTO> listaBloqueos = bloqueoNegocio.obtener();
+            for (BloqueoDTO listaBloqueo : listaBloqueos) {
+                if(listaBloqueo.getEstudiante().getIdEstudiante().equals(idEstudiante)){
+                    if(listaBloqueo.getFechaLiberacion()==null){
+                        bloqueo = true;
+                    }
                 }
             }
         } catch (NegocioException ex) {
-            System.out.println("Error "+ex.getMessage());
+            System.out.println("Error: "+ ex.getMessage());
         }
-        return false;
+        return bloqueo;
     }
     private void cargarLaboratorio(){
         try {
@@ -105,13 +129,41 @@ public class FrmLoginReservas extends javax.swing.JFrame {
             throw new UnknownHostException("No se pudo obtener la IP");
         }
     }
+    private EstudianteDTO obtenerEstudiantePorIdInstitucional(String id) {
+        try {
+            List<EstudianteDTO> listaEstudiantes = estudianteNegocio.obtener();
+            for (EstudianteDTO estudiante : listaEstudiantes) {
+                if (estudiante.getIdInstitucional().equals(id)) {
+                    return estudiante;
+                }
+            }
+        } catch (NegocioException ex) {
+            System.out.println("Error al obtener estudiante: " + ex.getMessage());
+        }
+        return null;
+    }
     private void Login(){
-        if(validarUsuario(usuarioTextField.getText())){
+        String idInstitucional = usuarioTextField.getText();
+        EstudianteDTO estudiante = obtenerEstudiantePorIdInstitucional(idInstitucional);
+
+        if (estudiante != null && estudiante.getEstatusInscripcion()) {
+            if (tieneBloqueo(estudiante.getIdEstudiante())) {
+                JOptionPane.showMessageDialog(rootPane, "El estudiante con ID " + idInstitucional + " tiene un bloqueo activo y no puede realizar reservas.");
+                return;
+            }
+
             this.dispose();
-            FrmReservas frmReserva = new FrmReservas(computadoraNegocio,estudianteNegocio,horarioNegocio,usuarioTextField.getText(),reservaNegocio,laboratorioDTO);
+            FrmReservas frmReserva = new FrmReservas(
+                computadoraNegocio,
+                estudianteNegocio,
+                horarioNegocio,
+                idInstitucional,
+                reservaNegocio,
+                laboratorioDTO
+            );
             frmReserva.setVisible(true);
-        }else{
-            JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+usuarioTextField.getText()+" No existe o no esta inscrito");
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "El usuario con el ID: " + idInstitucional + " no existe o no está inscrito.");
         }
     }
     
@@ -261,6 +313,8 @@ public class FrmLoginReservas extends javax.swing.JFrame {
                 IReservaNegocio reservaNegocio = new ReservaNegocio(reservaDAO);
                 ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(entityManager);
                 ILaboratorioNegocio laboratorioNegocio = new LaboratorioNegocio(laboratorioDAO);
+                IBloqueoDAO bloqueoDAO = new BloqueoDAO(entityManager);
+                IBloqueoNegocio bloqueoNegocio = new BloqueoNegocio(bloqueoDAO);
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -289,7 +343,7 @@ public class FrmLoginReservas extends javax.swing.JFrame {
             @Override
             public void run() {
                 
-                new FrmLoginReservas(estudianteNegocio, computadoraNegocio,reservaNegocio,horarioNegocio,laboratorioNegocio).setVisible(true);
+                new FrmLoginReservas(estudianteNegocio, computadoraNegocio,reservaNegocio,horarioNegocio,laboratorioNegocio,bloqueoNegocio).setVisible(true);
             }
         });
     }

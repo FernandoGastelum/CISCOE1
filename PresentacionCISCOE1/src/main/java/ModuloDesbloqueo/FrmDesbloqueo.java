@@ -82,25 +82,36 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
         }
     }
     private EstudianteDTO cargarAlumno() throws NegocioException {
-    while (true) {
-        String alumno = JOptionPane.showInputDialog(this, "Ingrese el ID institucional del alumno:");
-        
-        if (alumno == null || alumno.trim().isEmpty()) {
-            int opcion = JOptionPane.showConfirmDialog(this, "¿Desea cancelar el proceso de desbloqueo?", "Cancelar", JOptionPane.YES_NO_OPTION);
-            if (opcion == JOptionPane.YES_OPTION) {
-                dispose(); 
-                throw new NegocioException("Proceso cancelado por el usuario.");
-            }
-            continue; 
-        }
+        List<ReservaDTO> listaReservasDTO = reservaNegocio.obtener();
+            
+        while (true) {
+            String alumno = JOptionPane.showInputDialog(this, "Ingrese el ID institucional del alumno:");
 
-        try {
-            return estudianteNegocio.obtenerPorIdInstitucional(alumno.trim());
-        } catch (NegocioException ex) {
-            JOptionPane.showMessageDialog(this, "No se encontró un estudiante con el ID: " + alumno.trim(), "ID inválido", JOptionPane.WARNING_MESSAGE);
+            if (alumno == null || alumno.trim().isEmpty()) {
+                int opcion = JOptionPane.showConfirmDialog(this, "¿Desea cancelar el proceso de desbloqueo?", "Cancelar", JOptionPane.YES_NO_OPTION);
+                if (opcion == JOptionPane.YES_OPTION) {
+                    dispose(); 
+                    throw new NegocioException("Proceso cancelado por el usuario.");
+                }
+                continue; 
+            }
+
+            try {
+                for (ReservaDTO reservaDTO : listaReservasDTO) {
+                    if(reservaDTO.getEstudiante().getIdEstudiante().equals(alumno)){
+                        if(reservaDTO.getHoraFin()==null){
+                            return estudianteNegocio.obtenerPorIdInstitucional(alumno.trim());
+                        }
+                    }
+                }
+                JOptionPane.showMessageDialog(this, "No se encontró una reserva para el estudiante: "+alumno.trim());
+                this.dispose();
+                
+            } catch (NegocioException ex) {
+                JOptionPane.showMessageDialog(this, "No se encontró un estudiante con el ID: " + alumno.trim(), "ID inválido", JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
-}
     private void cargarComputadora(ComputadoraDTO computadoraDTO){
         Icon icono = new ImageIcon(new ImageIcon(getClass().getResource("/images/pcGif.gif")).getImage().getScaledInstance(207, 220, 0));
         imagenLabel.setIcon(icono);
