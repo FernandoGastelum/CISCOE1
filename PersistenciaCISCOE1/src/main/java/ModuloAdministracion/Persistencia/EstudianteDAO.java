@@ -110,7 +110,8 @@ public class EstudianteDAO implements IEstudianteDAO {
                                                          SELECT e
                                                          FROM Estudiante e
                                                          """, Estudiante.class);
-        if (query.getResultList() == null) {
+        List<Estudiante> resultado = query.getResultList();
+        if (resultado.isEmpty()) {
             throw new PersistenciaException("No se encontraron resultados");
         }
         return query.getResultList();

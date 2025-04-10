@@ -5,12 +5,16 @@ import DTOs.CarreraDTOEditar;
 import DTOs.CarreraDTOGuardar;
 import Entidades.Carrera;
 import Excepcion.PersistenciaException;
+import ModuloAdministracion.Interfaz.ICarreraDAO;
 import ModuloAdministracion.Interfaz.IEntityManager;
+import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import ModuloAdministracion.Persistencia.CarreraDAO;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
+import ModuloAdministracion.Persistencia.EstudianteDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.RollbackException;
+import org.junit.AfterClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -21,6 +25,17 @@ import static org.junit.Assert.*;
 public class CarreraDAOTest {
     
     public CarreraDAOTest() {
+    }
+    @AfterClass
+    public static void tearDown() throws PersistenciaException {
+        IEntityManager em = new EntityManagerDAO();
+        ICarreraDAO carreraDAO = new CarreraDAO(em);
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+
+        entity.createQuery("DELETE FROM Carrera").executeUpdate();
+
+        entity.getTransaction().commit();
     }
 
     /**

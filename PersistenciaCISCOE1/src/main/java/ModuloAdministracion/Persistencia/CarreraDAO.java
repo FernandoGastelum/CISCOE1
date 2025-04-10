@@ -93,10 +93,11 @@ public class CarreraDAO implements ICarreraDAO{
                                                          SELECT c
                                                          FROM Carrera c
                                                          """, Carrera.class);
-        if(query.getResultList()==null){
+        List<Carrera> resultado = query.getResultList();
+        if(resultado.isEmpty()){
             throw new PersistenciaException("No se encontraron resultados");
         }
-        return query.getResultList();
+        return resultado;
     }
 
     @Override

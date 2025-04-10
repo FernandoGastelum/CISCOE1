@@ -8,13 +8,17 @@ import Entidades.Carrera;
 import Entidades.Estudiante;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IEntityManager;
+import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
 import ModuloAdministracion.Persistencia.EstudianteDAO;
+import ModuloAdministracion.Persistencia.InstitutoDAO;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import org.junit.AfterClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 
 /**
  *
@@ -23,6 +27,18 @@ import static org.junit.Assert.*;
 public class EstudianteDAOTest {
     
     public EstudianteDAOTest() {
+    }
+    
+    @AfterClass
+    public static void tearDown() throws PersistenciaException {
+        IEntityManager em = new EntityManagerDAO();
+        IEstudianteDAO estudianteDAO = new EstudianteDAO(em);
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+
+        entity.createQuery("DELETE FROM Estudiante").executeUpdate();
+
+        entity.getTransaction().commit();
     }
 
     /**
@@ -243,5 +259,7 @@ public class EstudianteDAOTest {
             instance.obtener();
         });
     }
+    
+    
     
 }
