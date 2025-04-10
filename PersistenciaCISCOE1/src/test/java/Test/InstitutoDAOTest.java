@@ -65,7 +65,7 @@ public class InstitutoDAOTest {
         assertEquals("Prueab", resultado.getNombreAbreviado());
     }
     @Test(expected = PersistenciaException.class)
-    public void testGuardar_Fallo() throws Exception {
+    public void testGuardarFallo() throws Exception {
         IEntityManager em = new EntityManagerDAO(); 
         InstitutoDAO instance = new InstitutoDAO(em);
 
@@ -83,7 +83,7 @@ public class InstitutoDAOTest {
         assertNotNull(result);
     }
     @Test(expected = PersistenciaException.class)
-    public void testObtenerPorID_Fallo() throws Exception {
+    public void testObtenerPorIDFallo() throws Exception {
         IEntityManager em = new EntityManagerDAO();
         InstitutoDAO instance = new InstitutoDAO(em);
 
@@ -125,7 +125,7 @@ public class InstitutoDAOTest {
         assertNull(dto);
     }
     @Test
-    public void testEliminar_Exito() throws Exception {
+    public void testEliminarExito() throws Exception {
         
         EntityManager em = new EntityManagerDAO().crearEntityManager();
         InstitutoDAO instance = new InstitutoDAO(new EntityManagerDAO());
@@ -141,7 +141,7 @@ public class InstitutoDAOTest {
         
     }
     @Test(expected = PersistenciaException.class)
-    public void testEliminar_Fallo() throws Exception {
+    public void testEliminarFallo() throws Exception {
         IEntityManager em = new EntityManagerDAO();
         InstitutoDAO instance = new InstitutoDAO(em);
 

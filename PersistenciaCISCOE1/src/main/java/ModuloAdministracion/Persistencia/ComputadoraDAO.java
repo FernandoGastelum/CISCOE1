@@ -36,6 +36,9 @@ public class ComputadoraDAO implements IComputadoraDAO{
 
     @Override
     public Computadora guardar(ComputadoraDTOGuardar computadora) throws PersistenciaException {
+        if (computadora == null) {
+            throw new PersistenciaException("El instituto no puede ser null");
+        }
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
         
@@ -46,7 +49,7 @@ public class ComputadoraDAO implements IComputadoraDAO{
         return computadoraEntidad;
     }
     
-    private Computadora convertirEntidad(ComputadoraDTOGuardar computadora) throws PersistenciaException{
+    public Computadora convertirEntidad(ComputadoraDTOGuardar computadora) throws PersistenciaException{
         ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(em);
         ICarreraDAO carreraDAO = new CarreraDAO(em);
         
@@ -55,7 +58,7 @@ public class ComputadoraDAO implements IComputadoraDAO{
         Computadora computadoraEntidad = new Computadora(computadora.getNumeroMaquina(), computadora.getDireccionIp(), laboratorioEntidad, carreraEntidad,computadora.getTipo());
         return computadoraEntidad;
     }
-    private Computadora convertirEntidad(ComputadoraDTOEditar computadora) throws PersistenciaException {
+    public Computadora convertirEntidad(ComputadoraDTOEditar computadora) throws PersistenciaException {
         ILaboratorioDAO laboratorioDAO = new LaboratorioDAO(em);
         ICarreraDAO carreraDAO = new CarreraDAO(em);
 
@@ -92,10 +95,11 @@ public class ComputadoraDAO implements IComputadoraDAO{
                                                          SELECT c
                                                          FROM Computadora c
                                                          """, Computadora.class);
-        if(query.getResultList()==null){
+        List<Computadora> resultados = query.getResultList();
+        if(resultados.isEmpty()){
             throw new PersistenciaException("No se encontraron resultados");
         }
-        return query.getResultList();
+        return resultados;
     }
     @Override
     public boolean existeComputadoraRepetida(Integer numero, String tipo, Long idLaboratorio) throws PersistenciaException {
@@ -137,9 +141,6 @@ public class ComputadoraDAO implements IComputadoraDAO{
           .where(cb.equal(computadora.get("idComputadora"), id));
 
         TypedQuery<ComputadoraDTO> query = entity.createQuery(cq);
-        if(query.getSingleResult()==null){
-            throw new PersistenciaException("No se encontraron resultados");
-        }
         try {
             return query.getSingleResult();
         } catch (NoResultException e) {
