@@ -29,7 +29,11 @@ public class ReservaNegocio implements IReservaNegocio{
     @Override
     public List<ReservaDTO> obtener() throws NegocioException {
         try {
+            
                 List<Reserva> listaReserva = this.reservaDAO.obtener();
+                if(listaReserva==null){
+                    return null;
+                }
                 return listaReserva.stream().map(reserva -> this.reservaDAO.obtenerReservaDTO(reserva.getIdReserva())).collect(Collectors.toList());
             } catch (PersistenciaException ex) {
                 throw new NegocioException("Error "+ex.getMessage());

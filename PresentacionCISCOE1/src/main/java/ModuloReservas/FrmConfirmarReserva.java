@@ -85,34 +85,51 @@ public class FrmConfirmarReserva extends javax.swing.JFrame {
         frmReservas.cargarMinutosdDisponibles();
         this.dispose();
     }
-    private void guardarReserva(){
-        if(frmReservas.getMinutosDisponibles()<Integer.parseInt(minutos)){
+    private void guardarReserva() {
+        if ("".equals(minutos)) {
+            JOptionPane.showMessageDialog(this, "Minutos no puede estar vacío");
+            this.volver();
+            return;
+        }
+
+        if (frmReservas.getMinutosDisponibles() < Integer.parseInt(minutos)) {
             JOptionPane.showMessageDialog(this, "El tiempo que tiene disponible no es suficiente.");
             this.volver();
+            return;
         }
-        Boolean reservaActiva = false;
+
+        boolean reservaActiva = false;
         ReservaDTOGuardar dto = new ReservaDTOGuardar();
         dto.setHoraInicio(Calendar.getInstance());
         dto.setComputadoraDTO(computadoraDTO);
         dto.setEstudianteDTO(estudianteDTO);
         dto.setHorario(horarioDTO);
         dto.setMinutos(Integer.parseInt(minutos));
+
         try {
             List<ReservaDTO> listaReservas = reservaNegocio.obtener();
-            for (ReservaDTO listaReserva : listaReservas) {
-                if(listaReserva.getEstudiante().getIdInstitucional().equals(estudianteDTO.getIdInstitucional())){
-                    if(listaReserva.getHoraFin()==null){
-                        reservaActiva=true;
-                        JOptionPane.showMessageDialog(this, "El estudiante tiene una reserva activa, primero libere la reserva antes de hacer una nueva");
+            if (listaReservas != null) {
+                for (ReservaDTO reserva : listaReservas) {
+                    if (reserva == null || reserva.getEstudiante() == null) continue;
+
+                    String idInstitucionalReserva = reserva.getEstudiante().getIdInstitucional();
+                    if (idInstitucionalReserva != null && idInstitucionalReserva.equals(estudianteDTO.getIdInstitucional())) {
+                        if (reserva.getHoraFin() == null) {
+                            reservaActiva = true;
+                            JOptionPane.showMessageDialog(this, "El estudiante tiene una reserva activa, primero libere la reserva antes de hacer una nueva");
+                            break;
+                        }
                     }
                 }
             }
-            if(reservaActiva==false){
+
+            if (!reservaActiva) {
                 ReservaDTO resultado = reservaNegocio.guardar(dto);
                 JOptionPane.showMessageDialog(this, "Reserva guardada con éxito para equipo " + resultado.getComputadora().getNumeroMaquina());
-                this.volver();
+                this.dispose();
+                frmReservas.cerrar();
             }
-            
+
         } catch (NegocioException ex) {
             JOptionPane.showMessageDialog(this, "Error al guardar la reserva: " + ex.getMessage());
         }

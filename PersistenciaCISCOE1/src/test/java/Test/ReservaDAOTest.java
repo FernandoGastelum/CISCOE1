@@ -86,7 +86,7 @@ public class ReservaDAOTest {
     private HorarioDTOGuardar horarioDTOGuardar;
     
     @Before
-    public void setUp() {
+    public void setUp() throws PersistenciaException {
         em = new EntityManagerDAO();
         reservaDAO = new ReservaDAO(em);
         estudianteDAO = new EstudianteDAO(em);
@@ -95,7 +95,15 @@ public class ReservaDAOTest {
         laboratorioDAO = new LaboratorioDAO(em);
         institutoDAO = new InstitutoDAO(em);
         horarioDAO = new HorarioDAO(em);
+        limpiarRegistros();
+        limpiarHorario();
+        limpiarComputadora();
+        limpiarLaboratorio();
+        limpiarInstituto();
+        limpiarEstudiantes();
+        limpiarCarreras();
     }
+    
     @After
     public void tearDown() throws PersistenciaException {
         limpiarRegistros();
@@ -236,8 +244,6 @@ public class ReservaDAOTest {
         em.createQuery("DELETE FROM Reserva").executeUpdate();
         em.getTransaction().commit();
 
-        assertThrows(PersistenciaException.class, () -> {
-            instance.obtener();
-        });
+        assertNull(instance.obtener());
     } 
 }

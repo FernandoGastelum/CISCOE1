@@ -108,17 +108,23 @@ public class panelComputadorasListado extends javax.swing.JPanel {
                 if (id != 0L) {
                     List<ReservaDTO> listaReserva = reservaNegocio.obtener();
                     ComputadoraDTO computadoraDTO = computadoraNegocio.obtenerPorID(id);
-                    for (ReservaDTO reservaDTO : listaReserva) {
-                        if(reservaDTO.getComputadora().getIdComputadora().equals(computadoraDTO.getIdComputadora())){
-                            computadoraLigada=true;
+
+                    if (listaReserva != null && !listaReserva.isEmpty()) {
+                        for (ReservaDTO reservaDTO : listaReserva) {
+                            if (reservaDTO.getComputadora().getIdComputadora()
+                                    .equals(computadoraDTO.getIdComputadora())) {
+                                computadoraLigada = true;
+                                break; 
+                            }
                         }
                     }
-                    if(!computadoraLigada){
+
+                    if (!computadoraLigada) {
                         computadoraNegocio.eliminar(id);
-                    JOptionPane.showMessageDialog(this, "Computadora eliminada con éxito.");
-                    this.metodosIniciales(); 
-                    }else{
-                        JOptionPane.showMessageDialog(this, "La computadora esta ligada a una reserva");
+                        JOptionPane.showMessageDialog(this, "Computadora eliminada con éxito.");
+                        this.metodosIniciales(); 
+                    } else {
+                        JOptionPane.showMessageDialog(this, "La computadora está ligada a una reserva.");
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "Selecciona una computadora válida.");

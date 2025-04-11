@@ -108,6 +108,9 @@ public class FrmReservas extends javax.swing.JFrame {
     public String getMinutos(){
         return this.minutosTextField.getText();
     }
+    public void cerrar(){
+        this.dispose();
+    }
     public EstudianteDTO cargarEstudianteLogeado() throws NegocioException{
         EstudianteDTO estudianteDTO = estudianteNegocio.obtenerPorIdInstitucional(idUsuario);
         return estudianteDTO;
@@ -160,25 +163,32 @@ public class FrmReservas extends javax.swing.JFrame {
 
         try {
             List<ReservaDTO> listaReservas = reservaNegocio.obtener();
-            Calendar hoy = Calendar.getInstance();
 
-            for (ReservaDTO listaReserva : listaReservas) {
-                if (listaReserva.getEstudiante().getIdEstudiante().equals(estudianteDTO.getIdEstudiante())) {
+            if (listaReservas != null) {
+                Calendar hoy = Calendar.getInstance();
 
-                    Calendar fechaReserva = listaReserva.getHorario().getFecha(); 
+                for (ReservaDTO reserva : listaReservas) {
+                    if (reserva == null || reserva.getEstudiante() == null || reserva.getHorario() == null || reserva.getHorario().getFecha() == null) {
+                        continue; // Saltamos esta reserva si tiene datos nulos
+                    }
 
-                    boolean mismoDia =
-                        hoy.get(Calendar.YEAR) == fechaReserva.get(Calendar.YEAR) &&
-                        hoy.get(Calendar.MONTH) == fechaReserva.get(Calendar.MONTH) &&
-                        hoy.get(Calendar.DAY_OF_MONTH) == fechaReserva.get(Calendar.DAY_OF_MONTH);
+                    if (reserva.getEstudiante().getIdEstudiante().equals(estudianteDTO.getIdEstudiante())) {
+                        Calendar fechaReserva = reserva.getHorario().getFecha();
 
-                    if (mismoDia) {
-                        minutosUsados += listaReserva.getMinutos();
+                        boolean mismoDia =
+                            hoy.get(Calendar.YEAR) == fechaReserva.get(Calendar.YEAR) &&
+                            hoy.get(Calendar.MONTH) == fechaReserva.get(Calendar.MONTH) &&
+                            hoy.get(Calendar.DAY_OF_MONTH) == fechaReserva.get(Calendar.DAY_OF_MONTH);
+
+                        if (mismoDia) {
+                            minutosUsados += reserva.getMinutos();
+                        }
                     }
                 }
             }
+
         } catch (NegocioException ex) {
-            System.out.println("error: " + ex.getMessage());
+            System.out.println("Error al obtener reservas: " + ex.getMessage());
         }
 
         int minutosDisponibles = minutosMaximos - minutosUsados;

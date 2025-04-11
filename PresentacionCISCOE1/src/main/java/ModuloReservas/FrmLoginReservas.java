@@ -113,10 +113,15 @@ public class FrmLoginReservas extends javax.swing.JFrame {
                     this.laboratorioDTO = this.obtenerLab(listaComputadora.getLaboratorio().getIdLaboratorio());
                 }
             }
+            if(this.laboratorioDTO==null){
+                JOptionPane.showMessageDialog(this, "No se encontro una computadora de seleccion con la ipLocal");
+                throw new NegocioException("No se encontro una computadora Apropiada");
+            }
         } catch (NegocioException | UnknownHostException ex) {
             System.out.println("Error: "+ex.getMessage());
         }
     }
+    
     private LaboratorioDTO obtenerLab(Long id) throws NegocioException{
         return laboratorioNegocio.obtenerPorID(id);
     }

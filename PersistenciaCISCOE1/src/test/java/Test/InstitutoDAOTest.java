@@ -154,9 +154,7 @@ public class InstitutoDAOTest {
         em.createQuery("DELETE FROM Instituto").executeUpdate();
         em.getTransaction().commit();
 
-        assertThrows(PersistenciaException.class, () -> {
-            instance.obtener();
-        });
+        assertNull(instance.obtener());
     }    
     
 }

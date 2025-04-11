@@ -73,6 +73,7 @@ public class panelBloqueoEditar extends javax.swing.JPanel {
 
         bloqueoDTOEditar.setIdBloqueo(this.idBloqueo);
         bloqueoDTOEditar.setFechaBloqueo(bloqueoDTO.getFechaBloqueo());
+        bloqueoDTOEditar.setMotivo(bloqueoDTO.getMotivo());
 
         try {
             BloqueoDTO resultado = bloqueoNegocio.editar(bloqueoDTOEditar);

@@ -132,7 +132,7 @@ public class panelComputadoraEditar extends javax.swing.JPanel {
         } else {
             computadoraDTOEditar.setLaboratorioDTO((LaboratorioDTO) laboratorioComboBox.getSelectedItem());
         }
-
+        computadoraDTOEditar.setId(this.idComputadora);
         try {
             ComputadoraDTO resultado = computadoraNegocio.actualizar(computadoraDTOEditar);
             JOptionPane.showMessageDialog(this, "Computadora actualizada con éxito con el numero: " + resultado.getNumeroMaquina());

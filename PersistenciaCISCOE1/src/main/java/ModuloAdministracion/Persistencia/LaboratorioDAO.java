@@ -113,7 +113,8 @@ public class LaboratorioDAO implements ILaboratorioDAO {
                                                            """, Laboratorio.class);
         List<Laboratorio> resultados = query.getResultList();
         if (resultados.isEmpty()) {
-            throw new PersistenciaException("No se encontraron resultados");
+            
+            return null;
         }
         return resultados;
     }

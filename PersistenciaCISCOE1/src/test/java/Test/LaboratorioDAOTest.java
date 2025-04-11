@@ -242,9 +242,7 @@ public class LaboratorioDAOTest {
         em.createQuery("DELETE FROM Laboratorio").executeUpdate();
         em.getTransaction().commit();
 
-        assertThrows(PersistenciaException.class, () -> {
-            instance.obtener();
-        });
+        assertNull(instance.obtener());
     }
     
 }

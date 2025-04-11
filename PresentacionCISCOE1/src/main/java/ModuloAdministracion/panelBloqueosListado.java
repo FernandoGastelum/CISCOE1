@@ -110,8 +110,9 @@ public class panelBloqueosListado extends javax.swing.JPanel {
                 Long id = getIdSeleccionadoTabla(); 
                 if (id != 0L) {
                     bloqueoNegocio.eliminar(id);
+                    this.buscarTabla();
                     JOptionPane.showMessageDialog(this, "Bloqueo eliminado con éxito.");
-                    this.metodosIniciales(); 
+                    
                 } else {
                     JOptionPane.showMessageDialog(this, "Selecciona un bloqueo válido.");
                 }
@@ -140,15 +141,13 @@ public class panelBloqueosListado extends javax.swing.JPanel {
             DefaultTableModel modelo = (DefaultTableModel) this.tablaBloqueos.getModel();
             modelo.setRowCount(0);
             this.agregarRegistrosTabla(bloqueosTablaLista);
+            modelo.fireTableDataChanged();
         } catch (NegocioException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
     private void agregarRegistrosTabla(List<BloqueoTablaDTO> bloqueosLista) {
-        if (bloqueosLista == null) {
-            return;
-        }
 
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaBloqueos.getModel();
         modeloTabla.setRowCount(0); 

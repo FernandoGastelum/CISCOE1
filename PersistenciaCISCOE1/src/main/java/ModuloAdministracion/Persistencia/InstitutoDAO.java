@@ -68,7 +68,7 @@ public class InstitutoDAO implements IInstitutoDAO{
                                                          """, Instituto.class);
         List<Instituto> resultados = query.getResultList();
         if(resultados.isEmpty()){
-            throw new PersistenciaException("No se encontraron resultados");
+            return null;
         }
         return resultados;
     }

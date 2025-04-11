@@ -79,7 +79,7 @@ public class ReservaDAO implements IReservaDAO{
                                                          """, Reserva.class);
         List<Reserva> resultado = query.getResultList();
         if(resultado.isEmpty()){
-            throw new PersistenciaException("No se encontraron resultados");
+            return null;
         }
         return query.getResultList();
     }

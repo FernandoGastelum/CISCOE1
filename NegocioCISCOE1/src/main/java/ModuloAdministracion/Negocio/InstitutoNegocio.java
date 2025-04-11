@@ -42,7 +42,11 @@ public class InstitutoNegocio implements IInstitutoNegocio {
     @Override
     public List<InstitutoDTO> obtener() throws NegocioException {
         try {
+            
             List<Instituto> listaInstitutos = this.institutoDAO.obtener();
+            if(listaInstitutos==null){
+                return null;
+            }
             List<InstitutoDTO> dtos = new ArrayList<>();
             for (Instituto instituto : listaInstitutos) {
                 dtos.add(this.institutoDAO.obtenerDTO(instituto.getIdInstituto()));

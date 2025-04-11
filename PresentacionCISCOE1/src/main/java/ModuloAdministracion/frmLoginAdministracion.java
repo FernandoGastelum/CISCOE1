@@ -114,7 +114,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
             List<LaboratorioDTO> laboratorios = laboratorioNegocio.obtener();
             List<InstitutoDTO> institutos = institutoNegocio.obtener();
 
-            if (laboratorios.isEmpty() && institutos.isEmpty()) {
+            if (laboratorios==null && institutos==null) {
                 this.registrarLab();
             } else {
                 JOptionPane.showMessageDialog(this, "Ya existen registros de laboratorios e institutos");

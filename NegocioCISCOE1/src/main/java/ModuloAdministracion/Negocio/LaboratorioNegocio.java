@@ -39,6 +39,9 @@ public class LaboratorioNegocio implements ILaboratorioNegocio {
     public List<LaboratorioDTO> obtener() throws NegocioException {
         try {
             List<Laboratorio> listaLaboratorios = this.laboratorioDAO.obtener();
+            if(listaLaboratorios==null){
+                return null;
+            }
             List<LaboratorioDTO> dtos = new ArrayList<>();
             for (Laboratorio laboratorio : listaLaboratorios) {
                 dtos.add(this.laboratorioDAO.obtenerDTO(laboratorio.getIdLaboratorio()));

@@ -67,7 +67,25 @@ public class FrmDesbloqueoIniciado extends javax.swing.JFrame {
         this.colorPanel.setMinimumSize(new Dimension(231, 290));   
     }
     private void cargarMinutos() {
-        int tiempoTotalSegundos = reservaDTO.getMinutos() * 60; 
+        Calendar horaInicio = reservaDTO.getHoraInicio();
+        int duracionMinutos = reservaDTO.getMinutos();
+
+        Calendar horaLimite = (Calendar) horaInicio.clone();
+        horaLimite.add(Calendar.MINUTE, duracionMinutos);
+
+        Calendar horaActual = Calendar.getInstance();
+        System.out.println("Hora de inicio: " + horaInicio.getTime());
+        System.out.println("Duración minutos: " + duracionMinutos);
+        System.out.println("Hora límite: " + horaLimite.getTime());
+        System.out.println("Hora actual: " + horaActual.getTime());
+        if (horaActual.after(horaLimite)) {
+            JOptionPane.showMessageDialog(this, "El tiempo de la reserva ya ha expirado. Se liberará la computadora.");
+            liberarReserva();
+            cerrar();
+            return;
+        }
+
+        int tiempoTotalSegundos = (int) ((horaLimite.getTimeInMillis() - horaActual.getTimeInMillis()) / 1000);
 
         Timer timer = new Timer(1000, new ActionListener() {
             int segundosRestantes = tiempoTotalSegundos;
@@ -82,27 +100,32 @@ public class FrmDesbloqueoIniciado extends javax.swing.JFrame {
 
                     tiempoLabel.setText(String.format("Tiempo Restante: %02d:%02d", minutos, segundos));
                 } else {
-                    ((Timer) e.getSource()).stop(); // Detener el timer
-                    JOptionPane.showMessageDialog(null, "Tiempo agotado");
+                    ((Timer) e.getSource()).stop();
+                    JOptionPane.showMessageDialog(null, "Tiempo agotado. Se liberará la computadora.");
+                    liberarReserva();
+                    cerrar();
                 }
             }
         });
 
         timer.start();
     }
-    public void liberarReserva(){
+    private void cerrar(){
+        this.dispose();
+    }
+    public void liberarReserva() {
         reservaDTO.setHoraFin(Calendar.getInstance());
         ReservaDTOEditar reservaDTOEditar = new ReservaDTOEditar(reservaDTO);
         try {
             ReservaDTO resultado = reservaNegocio.actualizar(reservaDTOEditar);
             SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
             String soloHora = formatoHora.format(resultado.getHoraFin().getTime());
-            JOptionPane.showMessageDialog(this, "Reserva liberada con exito con hora de fin: " + soloHora);
-            this.dispose();
+            JOptionPane.showMessageDialog(this, "Reserva liberada con éxito con hora de fin: " + soloHora);
         } catch (NegocioException ex) {
-            System.out.println("Error: "+ex.getMessage());
+            System.out.println("Error: " + ex.getMessage());
+        } finally {
+            this.dispose(); 
         }
-        
     }
 
     /**

@@ -31,6 +31,7 @@ import Utilidades.ColorUtil;
 import Utilidades.ContraseniaUtil;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,13 +71,16 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
         Icon icono = new ImageIcon(new ImageIcon(getClass().getResource("/images/Background.png")).getImage().getScaledInstance(1920, 1080, 0));
         lblBackground.setIcon(icono);
     }
-    private void cargarIconoComputadora(){
+    private void cargarIconoComputadora() {
         try {
             List<ReservaDTO> listaReservasDTO = reservaNegocio.obtener();
+            if (listaReservasDTO == null) return;
+
             for (ReservaDTO reservaDTO : listaReservasDTO) {
-                if(reservaDTO.getEstudiante().getIdInstitucional().equals(estudianteDTO.getIdInstitucional())){
-                    if(reservaDTO.getHoraFin()==null){
-                        
+                if (reservaDTO == null || reservaDTO.getEstudiante() == null) continue;
+
+                if (reservaDTO.getEstudiante().getIdInstitucional().equals(estudianteDTO.getIdInstitucional())) {
+                    if (reservaDTO.getHoraFin() == null) {
                         computadoraDTO = computadoraNegocio.obtenerPorID(reservaDTO.getComputadora().getIdComputadora());
                         this.reservaDTO = reservaDTO;
                         this.cargarComputadora(computadoraDTO);
@@ -85,12 +89,19 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
                 }
             }
         } catch (NegocioException ex) {
-            System.out.println("Error "+ex.getMessage());
+            System.out.println("Error " + ex.getMessage());
         }
     }
     private EstudianteDTO cargarAlumno() throws NegocioException {
         List<ReservaDTO> listaReservasDTO = reservaNegocio.obtener();
+        if (listaReservasDTO == null) {
+            listaReservasDTO = new ArrayList<>();
+        }
+
         List<BloqueoDTO> listaBloqueosDTO = bloqueoNegocio.obtener(); 
+        if (listaBloqueosDTO == null) {
+            listaBloqueosDTO = new ArrayList<>();
+        }
 
         while (true) {
             String alumno = JOptionPane.showInputDialog(this, "Ingrese el ID institucional del alumno:");
@@ -109,7 +120,9 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
 
                 boolean tieneReservaActiva = false;
                 for (ReservaDTO reservaDTO : listaReservasDTO) {
-                    if (reservaDTO.getEstudiante().getIdInstitucional().equals(alumno) &&
+                    if (reservaDTO == null || reservaDTO.getEstudiante() == null) continue;
+
+                    if (alumno.equals(reservaDTO.getEstudiante().getIdInstitucional()) &&
                         reservaDTO.getHoraFin() == null) {
                         tieneReservaActiva = true;
                         break;
@@ -118,13 +131,14 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
 
                 if (!tieneReservaActiva) {
                     JOptionPane.showMessageDialog(this, "El estudiante no tiene una reserva activa.");
-                    dispose();
-                    throw new NegocioException("El estudiante no tiene una reserva activa.");
+                    continue;
                 }
 
                 boolean tieneBloqueoActivo = false;
                 for (BloqueoDTO bloqueoDTO : listaBloqueosDTO) {
-                    if (bloqueoDTO.getEstudiante().getIdInstitucional().equals(alumno) &&
+                    if (bloqueoDTO == null || bloqueoDTO.getEstudiante() == null) continue;
+
+                    if (alumno.equals(bloqueoDTO.getEstudiante().getIdInstitucional()) &&
                         bloqueoDTO.getFechaLiberacion() == null) {
                         tieneBloqueoActivo = true;
                         break;
@@ -133,8 +147,7 @@ public class FrmDesbloqueo extends javax.swing.JFrame {
 
                 if (tieneBloqueoActivo) {
                     JOptionPane.showMessageDialog(this, "El estudiante tiene un bloqueo activo.");
-                    dispose();
-                    throw new NegocioException("El estudiante tiene un bloqueo activo.");
+                    continue;
                 }
 
                 return estudiante;
