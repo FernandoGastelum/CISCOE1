@@ -39,12 +39,30 @@ public class panelCarreraEditar extends javax.swing.JPanel {
     
     private void editarCarrera() {
         CarreraDTOEditar carreraEditada = new CarreraDTOEditar();
-        carreraEditada.setNombreCarrera(txtNombre.getText());
-        carreraEditada.setTiempoMaximoDiario(Integer.valueOf(txtMinutosDiarios.getText()));
+        
+        if ("".equals(txtNombre.getText())) {
+            JOptionPane.showMessageDialog(null, "El nombre no puede estar vacio", "Nombre vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            carreraEditada.setNombreCarrera(txtNombre.getText());
+        }
+        
+        String texto = txtMinutosDiarios.getText().trim();
+        if (!texto.isEmpty()) {
+            try {
+                int minutos = Integer.parseInt(texto);
+                carreraEditada.setTiempoMaximoDiario(minutos);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Los minutos deben ser un número entero", "Minutos inválidos", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
         carreraEditada.setColor(this.getColorHex());
+        
         try {
             CarreraDTO resultado = carreraNegocio.editar(idCarrera, carreraEditada);
             JOptionPane.showMessageDialog(this, "Carrera editada con éxito con el nombre: " + resultado.getNombreCarrera());
+            this.regresar();
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error al guardar la carrera: " + e.getMessage());
         }
@@ -58,7 +76,7 @@ public class panelCarreraEditar extends javax.swing.JPanel {
             System.out.println("Color seleccionado: " + colorSeleccionado);
             System.out.println("Color en formato HEX: " + colorHex);
         } else {
-            System.out.println("No se seleccionó ningún color.");
+            JOptionPane.showMessageDialog(null, "No se seleccionó ningún color.", "Color vacío", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -69,6 +87,10 @@ public class panelCarreraEditar extends javax.swing.JPanel {
     public String getColorHex() {
         return colorHex;
     }
+    
+    public void setColorHex(String colorHex) {
+        this.colorHex = colorHex;
+    }
 
     private String convertirColorAHex(Color color) {
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
@@ -78,6 +100,7 @@ public class panelCarreraEditar extends javax.swing.JPanel {
         this.lblID.setText(Long.toString(idCarrera));
         this.txtNombre.setText(carreraDTO.getNombreCarrera());
         this.txtMinutosDiarios.setText(Integer.toString(carreraDTO.getTiempoMaximoDiario()));
+        this.setColorHex(carreraDTO.getColor());
     }
     
     private void regresar() {
@@ -272,7 +295,6 @@ public class panelCarreraEditar extends javax.swing.JPanel {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         this.editarCarrera();
-        this.regresar();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnRestaurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestaurarActionPerformed

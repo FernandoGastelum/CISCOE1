@@ -70,6 +70,7 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent e) {
                 //Metodo para eliminar
                 eliminar();
+                metodosIniciales();
             }
         };
         int indiceColumnaEliminar = 5;
@@ -105,7 +106,6 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 laboratorioNegocio.eliminar(id);
-                this.metodosIniciales();
                 JOptionPane.showMessageDialog(this, "Laboratorio eliminado con éxito con el id: " + id);
             } catch (NegocioException e) {
                 JOptionPane.showMessageDialog(this, "Error al eliminar el laboratorio: " + e.getMessage());

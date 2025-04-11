@@ -59,18 +59,33 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
 
     private void guardarLaboratorio() throws NegocioException, ParseException {
         LaboratorioDTOGuardar laboratorioDTO = new LaboratorioDTOGuardar();
-        laboratorioDTO.setNombre(txtNombre.getText());
-        laboratorioDTO.setInstitutoDTO((InstitutoDTO) cboInstituto.getSelectedItem());
 
-        if (!((String) cboApertura.getSelectedItem()).matches("^\\d{2}:\\d{2}$")
-                || !((String) cboCierre.getSelectedItem()).matches("^\\d{2}:\\d{2}$")) {
-            JOptionPane.showMessageDialog(this, "Las horas deben tener el formato HH:mm", "Formato incorrecto", JOptionPane.WARNING_MESSAGE);
+        if ("".equals(txtNombre.getText())) {
+            JOptionPane.showMessageDialog(null, "El nombre no puede estar vacio", "Nombre vacio", JOptionPane.ERROR_MESSAGE);
+            return;
         } else {
-            Calendar horaApertura = parseHora((String) cboApertura.getSelectedItem());
-            Calendar horaCierre = parseHora((String) cboCierre.getSelectedItem());
+            laboratorioDTO.setNombre(txtNombre.getText());
+        }
 
-            laboratorioDTO.setHoraApertura(horaApertura);
-            laboratorioDTO.setHoraCierre(horaCierre);
+        if (cboInstituto.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Debes elegir un instituto", "Sin instituto", JOptionPane.ERROR_MESSAGE);
+        } else {
+            laboratorioDTO.setInstitutoDTO((InstitutoDTO) cboInstituto.getSelectedItem());
+        }
+
+        if (cboApertura.getSelectedItem() == null || cboCierre.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Debes elegir las horas", "Sin horas", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (!((String) cboApertura.getSelectedItem()).matches("^\\d{2}:\\d{2}$")
+                    || !((String) cboCierre.getSelectedItem()).matches("^\\d{2}:\\d{2}$")) {
+                JOptionPane.showMessageDialog(this, "Las horas deben tener el formato HH:mm", "Formato incorrecto", JOptionPane.WARNING_MESSAGE);
+            } else {
+                Calendar horaApertura = parseHora((String) cboApertura.getSelectedItem());
+                Calendar horaCierre = parseHora((String) cboCierre.getSelectedItem());
+
+                laboratorioDTO.setHoraApertura(horaApertura);
+                laboratorioDTO.setHoraCierre(horaCierre);
+            }
         }
 
         if (verificarContrasenias(this.contraseniaFIeld, this.confirmarContraseniaField)) {
@@ -83,6 +98,7 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
         try {
             LaboratorioDTO resultado = laboratorioNegocio.guardar(laboratorioDTO);
             JOptionPane.showMessageDialog(this, "Laboratorio guardada con éxito con el nombre: " + resultado.getNombre());
+            this.regresar();
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error al guardar el laboratorio: " + e.getMessage());
         }
@@ -367,7 +383,6 @@ public class panelLaboratorioNuevo extends javax.swing.JPanel {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         try {
             this.guardarLaboratorio();
-            this.regresar();
         } catch (NegocioException | ParseException ex) {
             System.out.println("Error: " + ex.getMessage());
         }

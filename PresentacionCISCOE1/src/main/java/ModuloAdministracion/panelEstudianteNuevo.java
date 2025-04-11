@@ -48,10 +48,36 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
         String idInstitucional = String.format("%011d", randomNumber);
 
         EstudianteDTOGuardar estudianteDTO = new EstudianteDTOGuardar();
-        estudianteDTO.setNombre(txtNombre.getText());
-        estudianteDTO.setApellidoPaterno(txtApellidoPaterno.getText());
-        estudianteDTO.setApellidoMaterno(txtApellidoMaterno.getText());
-        estudianteDTO.setCarreraDTO((CarreraDTO) cboCarrera.getSelectedItem());
+        
+        if ("".equals(txtNombre.getText())) {
+            JOptionPane.showMessageDialog(null, "El nombre no puede estar vacio", "Nombre vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            estudianteDTO.setNombre(txtNombre.getText());
+        }
+        
+        if ("".equals(txtApellidoPaterno.getText())) {
+            JOptionPane.showMessageDialog(null, "El apellido paterno no puede estar vacio", "Apellido paterno vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            estudianteDTO.setApellidoPaterno(txtApellidoPaterno.getText());
+        }
+        
+        if ("".equals(txtApellidoMaterno.getText())) {
+            JOptionPane.showMessageDialog(null, "El apellido materno no puede estar vacio", "Apellido materno vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            estudianteDTO.setApellidoMaterno(txtApellidoMaterno.getText());
+        }
+        
+        if (cboCarrera.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Debes elegir una carrera", "Sin carrera", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            estudianteDTO.setCarreraDTO((CarreraDTO) cboCarrera.getSelectedItem());
+        }
+        
+        
         estudianteDTO.setIdInstitucional(idInstitucional);  // Establecer el idInstitucional formateado
 
         if (verificarContrasenias(this.contraseniaFIeld, this.confirmarContraseniaField)) {
@@ -63,6 +89,7 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
             try {
                 EstudianteDTO resultado = estudianteNegocio.guardar(estudianteDTO);
                 JOptionPane.showMessageDialog(this, "Estudiante guardado con éxito con el id institucional: " + resultado.getIdInstitucional());
+                this.regresar();
             } catch (NegocioException e) {
                 JOptionPane.showMessageDialog(this, "Error al guardar el estudiante: " + e.getMessage());
             }
@@ -332,7 +359,6 @@ public class panelEstudianteNuevo extends javax.swing.JPanel {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         try {
             this.guardarEstudiante();
-            this.regresar();
         } catch (NegocioException ex) {
             System.out.println("Error: " + ex.getMessage());
         }

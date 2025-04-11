@@ -105,11 +105,11 @@ public class BloqueoDAO implements IBloqueoDAO{
 
     @Override
     public Bloqueo editar(BloqueoDTOEditar bloqueoDTO) throws PersistenciaException {
-        EntityManager em = this.em.crearEntityManager();
+        EntityManager entity = this.em.crearEntityManager();
         try {
-            em.getTransaction().begin();
+            entity.getTransaction().begin();
 
-            Bloqueo bloqueo = em.find(Bloqueo.class, bloqueoDTO.getIdBloqueo());
+            Bloqueo bloqueo = entity.find(Bloqueo.class, bloqueoDTO.getIdBloqueo());
             if (bloqueo == null) {
                 throw new PersistenciaException("No se encontró el bloqueo con id: " + bloqueoDTO.getIdBloqueo());
             }
@@ -119,15 +119,15 @@ public class BloqueoDAO implements IBloqueoDAO{
             bloqueo.setFechaLiberacion(bloqueoDTO.getFechaLiberacion());
             bloqueo.setMotivo(bloqueoDTO.getMotivo());
 
-            em.merge(bloqueo);
-            em.getTransaction().commit();
+            entity.merge(bloqueo);
+            entity.getTransaction().commit();
 
             return bloqueo;
         } catch (PersistenciaException e) {
-            em.getTransaction().rollback();
+            entity.getTransaction().rollback();
             throw new PersistenciaException("Error al actualizar el bloqueo: " + e.getMessage());
         } finally {
-            em.close();
+            entity.close();
         }
     }
 

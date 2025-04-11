@@ -31,6 +31,7 @@ public class panelBloqueoNuevo extends javax.swing.JPanel {
         this.estudianteNegocio = estudianteNegocio;
         initComponents();
         this.cargarEstudiante();
+        cboEstudiante.setSelectedIndex(-1);
     }
     
     private void cargarEstudiante() {
@@ -51,14 +52,27 @@ public class panelBloqueoNuevo extends javax.swing.JPanel {
     private void guardarBloqueo() {
         BloqueoDTOGuardar bloqueoDTO = new BloqueoDTOGuardar();
         
-        bloqueoDTO.setEstudianteDTO((EstudianteDTO) cboEstudiante.getSelectedItem());
-        bloqueoDTO.setMotivo(txtMotivo.getText());
+        if (cboEstudiante.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Debes elegir un estudiante", "Sin estudiante", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+          bloqueoDTO.setEstudianteDTO((EstudianteDTO) cboEstudiante.getSelectedItem());
+        }
+        
+        if ("".equals(txtMotivo.getText())) {
+            JOptionPane.showMessageDialog(null, "El motivo no puede estar vacio", "Motivo vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            bloqueoDTO.setMotivo(txtMotivo.getText());
+        }
+        
         Calendar fecha = Calendar.getInstance();
         bloqueoDTO.setFechaBloqueo(fecha);
         
         try {
             BloqueoDTO resultado = bloqueoNegocio.guardar(bloqueoDTO);
             JOptionPane.showMessageDialog(this, "Bloqueo guardada con éxito para el estudiante con el ID institutocional: " + resultado.getEstudiante().getIdInstitucional());
+            this.regresar();
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error al guardar el bloqueo: " + e.getMessage());
         }

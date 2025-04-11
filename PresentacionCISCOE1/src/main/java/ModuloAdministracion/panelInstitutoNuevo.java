@@ -35,12 +35,24 @@ public class panelInstitutoNuevo extends javax.swing.JPanel {
     private void guardarInstituto() {
         InstitutoDTOGuardar institutoDTO = new InstitutoDTOGuardar();
         
-        institutoDTO.setNombreOficial(txtNombreOficial.getText());
-        institutoDTO.setNombreAbreviado(txtAbreviatura.getText());
+        if ("".equals(txtNombreOficial.getText())) {
+            JOptionPane.showMessageDialog(null, "El nombre no puede estar vacio", "Nombre vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            institutoDTO.setNombreOficial(txtNombreOficial.getText());
+        }
+        
+        if ("".equals(txtAbreviatura.getText())) {
+            JOptionPane.showMessageDialog(null, "La abreviatura no puede estar vacio", "Abreviatura vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            institutoDTO.setNombreAbreviado(txtAbreviatura.getText());
+        }
         
         try {
             InstitutoDTO resultado = institutoNegocio.guardar(institutoDTO);
             JOptionPane.showMessageDialog(this, "Instituto guardado con éxito con el nombre: " + resultado.getNombreOficial());
+            this.regresar();
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error al guardar el instituto: " + e.getMessage());
         }

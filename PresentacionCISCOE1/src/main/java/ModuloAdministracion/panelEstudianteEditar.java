@@ -70,10 +70,34 @@ public class panelEstudianteEditar extends javax.swing.JPanel {
 
     private void editarEstudiante() throws NegocioException {
         EstudianteDTOEditar estudianteEditado = new EstudianteDTOEditar();
-        estudianteEditado.setNombre(txtNombre.getText());
-        estudianteEditado.setApellidoPaterno(txtApellidoPaterno.getText());
-        estudianteEditado.setApellidoMaterno(txtApellidoMaterno.getText());
-        estudianteEditado.setCarreraDTO((CarreraDTO) cboCarrera.getSelectedItem());
+        
+        if ("".equals(txtNombre.getText())) {
+            JOptionPane.showMessageDialog(null, "El nombre no puede estar vacio", "Nombre vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            estudianteEditado.setNombre(txtNombre.getText());
+        }
+        
+        if ("".equals(txtApellidoPaterno.getText())) {
+            JOptionPane.showMessageDialog(null, "El apellido paterno no puede estar vacio", "Apellido paterno vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            estudianteEditado.setApellidoPaterno(txtApellidoPaterno.getText());
+        }
+        
+        if ("".equals(txtApellidoMaterno.getText())) {
+            JOptionPane.showMessageDialog(null, "El apellido materno no puede estar vacio", "Apellido materno vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            estudianteEditado.setApellidoMaterno(txtApellidoMaterno.getText());
+        }
+        
+        if (cboCarrera.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Debes elegir una carrera", "Sin carrera", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            estudianteEditado.setCarreraDTO((CarreraDTO) cboCarrera.getSelectedItem());
+        }
 
         if (chkBoxInscrito.isSelected()) {
             estudianteEditado.setEstatusInscripcion(true);
@@ -88,6 +112,7 @@ public class panelEstudianteEditar extends javax.swing.JPanel {
             try {
                 EstudianteDTO resultado = estudianteNegocio.editar(idEstudiante, estudianteEditado);
                 JOptionPane.showMessageDialog(this, "Estudiante editado con éxito con el id institucional: " + resultado.getIdInstitucional());
+                this.regresar();
             } catch (NegocioException e) {
                 JOptionPane.showMessageDialog(this, "Error al editar el estudiante: " + e.getMessage());
             }
@@ -366,7 +391,6 @@ public class panelEstudianteEditar extends javax.swing.JPanel {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             this.editarEstudiante();
-            this.regresar();
         } catch (NegocioException ex) {
             System.out.println("Error: " + ex.getMessage());
         }

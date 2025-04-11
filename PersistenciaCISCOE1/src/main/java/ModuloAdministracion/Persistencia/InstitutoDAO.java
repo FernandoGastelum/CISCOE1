@@ -95,12 +95,12 @@ public class InstitutoDAO implements IInstitutoDAO{
     }
 
     @Override
-    public Instituto editar(InstitutoDTOEditar instituto) throws PersistenciaException {
+    public Instituto editar(Long id, InstitutoDTOEditar instituto) throws PersistenciaException {
         EntityManager entity = em.crearEntityManager();
         try {
             entity.getTransaction().begin();
 
-            Instituto institutoExistente = this.obtenerPorID(instituto.getId());
+            Instituto institutoExistente = entity.find(Instituto.class, id);
 
             if (institutoExistente == null) {
                 throw new PersistenciaException("El instituto con ID " + instituto.getId() + " no existe.");

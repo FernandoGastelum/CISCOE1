@@ -20,14 +20,16 @@ import javax.swing.JOptionPane;
  * @author Knocmare
  */
 public class panelBloqueoEditar extends javax.swing.JPanel {
+
     private final IBloqueoNegocio bloqueoNegocio;
     private final IEstudianteNegocio estudianteNegocio;
     private final Long idBloqueo;
     private BloqueoDTO bloqueoDTO;
+
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelBloqueoEditar(IBloqueoNegocio bloqueoNegocio, Long idBloqueo,IEstudianteNegocio estudianteNegocio) {
+    public panelBloqueoEditar(IBloqueoNegocio bloqueoNegocio, Long idBloqueo, IEstudianteNegocio estudianteNegocio) {
         this.bloqueoNegocio = bloqueoNegocio;
         this.estudianteNegocio = estudianteNegocio;
         this.idBloqueo = idBloqueo;
@@ -35,50 +37,72 @@ public class panelBloqueoEditar extends javax.swing.JPanel {
         this.cargarDatos();
         this.cargarEstudiantes();
     }
-    private BloqueoDTO obtenerBloqueo(Long id) throws NegocioException{
+
+    private BloqueoDTO obtenerBloqueo(Long id) throws NegocioException {
         return bloqueoNegocio.obtenerPorID(id);
     }
-    private void cargarDatos(){
+
+    private void cargarDatos() {
         try {
             bloqueoDTO = this.obtenerBloqueo(this.idBloqueo);
         } catch (NegocioException ex) {
-            System.out.println("Error: "+ ex.getMessage());
+            System.out.println("Error: " + ex.getMessage());
         }
         this.lblID.setText(this.idBloqueo.toString());
         this.txtMotivo.setText(bloqueoDTO.getMotivo());
         this.estudianteComboBox.setSelectedItem(bloqueoDTO.getEstudiante());
     }
-    private void editar(){
+
+    private void editar() {
         BloqueoDTOEditar bloqueoDTOEditar = new BloqueoDTOEditar();
+
+        String motivo = txtMotivo.getText();
+        if (motivo == null || motivo.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El motivo no puede estar vacío", "Motivo vacío", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            bloqueoDTO.setMotivo(motivo);
+        }
+
+        if (estudianteComboBox.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Debes elegir un estudiante", "Sin estudiante", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            bloqueoDTOEditar.setEstudianteDTO((EstudianteDTO) estudianteComboBox.getSelectedItem());
+        }
+
         bloqueoDTOEditar.setIdBloqueo(this.idBloqueo);
-        bloqueoDTOEditar.setMotivo(txtMotivo.getText());
         bloqueoDTOEditar.setFechaBloqueo(bloqueoDTO.getFechaBloqueo());
-        bloqueoDTOEditar.setEstudianteDTO((EstudianteDTO) estudianteComboBox.getSelectedItem());
+
         try {
             BloqueoDTO resultado = bloqueoNegocio.editar(bloqueoDTOEditar);
             JOptionPane.showMessageDialog(this, "Bloqueo actualizado con éxito con el id: " + resultado.getIdBloqueo());
+            this.regresar();
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error al actualizar el bloqueo: " + e.getMessage());
         }
     }
-    private void cargarEstudiantes(){
+
+    private void cargarEstudiantes() {
         try {
             List<EstudianteDTO> listaEstudiantes = estudianteNegocio.obtener();
-            if(listaEstudiantes!=null){
+            if (listaEstudiantes != null) {
                 for (EstudianteDTO listaEstudiante : listaEstudiantes) {
                     this.estudianteComboBox.addItem(listaEstudiante);
                 }
-            }else{
+            } else {
                 throw new NegocioException("No hay estudiantes registradas");
             }
         } catch (NegocioException ex) {
             System.out.println("Error al cargar las combo boxes " + ex.getMessage());
         }
     }
-    private void restaurar(){
+
+    private void restaurar() {
         this.cargarDatos();
     }
-    private void regresar(){
+
+    private void regresar() {
         panelBloqueosListado panel = new panelBloqueosListado(bloqueoNegocio, estudianteNegocio);
         this.setLayout(new BorderLayout());
         this.removeAll();

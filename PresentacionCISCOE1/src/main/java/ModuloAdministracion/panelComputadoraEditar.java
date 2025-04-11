@@ -7,7 +7,6 @@ package ModuloAdministracion;
 import DTOs.CarreraDTO;
 import DTOs.ComputadoraDTO;
 import DTOs.ComputadoraDTOEditar;
-import DTOs.ComputadoraDTOGuardar;
 import DTOs.LaboratorioDTO;
 import Excepcion.NegocioException;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
@@ -16,8 +15,6 @@ import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
 import ModuloReservas.Interfaz.IReservaNegocio;
 import java.awt.BorderLayout;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -36,26 +33,27 @@ public class panelComputadoraEditar extends javax.swing.JPanel {
     /**
      * Creates new form panelListadoEstudiantes
      */
-    public panelComputadoraEditar(IComputadoraNegocio computadoraNegocio,ILaboratorioNegocio laboratorioNegocio,ICarreraNegocio carreraNegocio,Long idComputadora, IReservaNegocio reservaNegocio) {
+    public panelComputadoraEditar(IComputadoraNegocio computadoraNegocio, ILaboratorioNegocio laboratorioNegocio, ICarreraNegocio carreraNegocio, Long idComputadora, IReservaNegocio reservaNegocio) {
         this.computadoraNegocio = computadoraNegocio;
         this.carreraNegocio = carreraNegocio;
         this.laboratorioNegocio = laboratorioNegocio;
-        this.idComputadora=idComputadora;
+        this.idComputadora = idComputadora;
         this.reservaNegocio = reservaNegocio;
         initComponents();
         this.cargarCarreras();
         this.cargarLaboratorios();
         this.cargarDatos();
-        
     }
-    private ComputadoraDTO obtenerComputadora(Long id) throws NegocioException{
+
+    private ComputadoraDTO obtenerComputadora(Long id) throws NegocioException {
         return computadoraNegocio.obtenerPorID(id);
     }
-    private void cargarDatos(){
+
+    private void cargarDatos() {
         try {
             computadoraDTO = this.obtenerComputadora(this.idComputadora);
         } catch (NegocioException ex) {
-            System.out.println("Error: "+ ex.getMessage());
+            System.out.println("Error: " + ex.getMessage());
         }
         this.lblID.setText(this.idComputadora.toString());
         this.txtIP.setText(computadoraDTO.getDireccionIp());
@@ -64,6 +62,7 @@ public class panelComputadoraEditar extends javax.swing.JPanel {
         this.laboratorioComboBox.setSelectedItem(computadoraDTO.getLaboratorio());
         this.tipoComboBox.setSelectedItem(computadoraDTO.getTipo());
     }
+
     private void cargarCarreras() {
         try {
             List<CarreraDTO> listaCarreras = carreraNegocio.obtener();
@@ -93,27 +92,62 @@ public class panelComputadoraEditar extends javax.swing.JPanel {
             System.out.println("Error al cargar las combo boxes " + ex.getMessage());
         }
     }
+
     private void actualizarComputadora() {
         ComputadoraDTOEditar computadoraDTOEditar = new ComputadoraDTOEditar();
-        computadoraDTOEditar.setId(this.idComputadora);
-        computadoraDTOEditar.setDireccionIp(txtIP.getText());
-        computadoraDTOEditar.setNumeroMaquina(Integer.valueOf(txtNumeroMaquina.getText()));
+
+        if ("".equals(txtIP.getText())) {
+            JOptionPane.showMessageDialog(null, "La direccion IP no puede estar vacio", "Direccion IP vacia", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            computadoraDTOEditar.setDireccionIp(txtIP.getText());
+        }
+
+        if ("".equals(txtNumeroMaquina.getText())) {
+            JOptionPane.showMessageDialog(null, "El numero de maquina no puede estar vacio", "Numero de maquina vacia", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            computadoraDTOEditar.setNumeroMaquina(Integer.valueOf(txtNumeroMaquina.getText()));
+        }
+
         computadoraDTOEditar.setEstatus(true);
-        computadoraDTOEditar.setTipo((String) tipoComboBox.getSelectedItem());
-        computadoraDTOEditar.setCarreraDTO((CarreraDTO) carreraComboBox.getSelectedItem());
-        computadoraDTOEditar.setLaboratorioDTO((LaboratorioDTO) laboratorioComboBox.getSelectedItem());
+
+        if (tipoComboBox.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Debes elegir un tipo", "Sin tipo", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            computadoraDTOEditar.setTipo((String) tipoComboBox.getSelectedItem());
+        }
+
+        if (carreraComboBox.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Debes elegir una carrera", "Sin carrera", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            computadoraDTOEditar.setCarreraDTO((CarreraDTO) carreraComboBox.getSelectedItem());
+        }
+
+        if (laboratorioComboBox.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Debes elegir un laboratorio", "Sin laboratorio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            computadoraDTOEditar.setLaboratorioDTO((LaboratorioDTO) laboratorioComboBox.getSelectedItem());
+        }
+
         try {
             ComputadoraDTO resultado = computadoraNegocio.actualizar(computadoraDTOEditar);
             JOptionPane.showMessageDialog(this, "Computadora actualizada con éxito con el numero: " + resultado.getNumeroMaquina());
+            this.regresar();
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error al actualizar la computadora: " + e.getMessage());
         }
     }
-    private void restaurarCampos(){
+
+    private void restaurarCampos() {
         this.cargarDatos();
     }
-    private void regresar(){
-        panelComputadorasListado panel = new panelComputadorasListado(computadoraNegocio, carreraNegocio, laboratorioNegocio,reservaNegocio);
+
+    private void regresar() {
+        panelComputadorasListado panel = new panelComputadorasListado(computadoraNegocio, carreraNegocio, laboratorioNegocio, reservaNegocio);
         this.setLayout(new BorderLayout());
         this.removeAll();
         this.add(panel, BorderLayout.CENTER);
@@ -139,7 +173,7 @@ public class panelComputadoraEditar extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         txtNumeroMaquina = new javax.swing.JTextField();
         txtIP = new javax.swing.JTextField();
-        btnCancelar = new javax.swing.JButton();
+        btnRestaurar = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         lblID = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -197,13 +231,13 @@ public class panelComputadoraEditar extends javax.swing.JPanel {
 
         txtIP.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
 
-        btnCancelar.setBackground(new java.awt.Color(255, 0, 0));
-        btnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
-        btnCancelar.setText("Restaurar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+        btnRestaurar.setBackground(new java.awt.Color(255, 0, 0));
+        btnRestaurar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnRestaurar.setForeground(new java.awt.Color(255, 255, 255));
+        btnRestaurar.setText("Restaurar");
+        btnRestaurar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
+                btnRestaurarActionPerformed(evt);
             }
         });
 
@@ -232,6 +266,7 @@ public class panelComputadoraEditar extends javax.swing.JPanel {
 
         tipoComboBox.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
         tipoComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccion", "Comun" }));
+        tipoComboBox.setSelectedIndex(-1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -240,7 +275,7 @@ public class panelComputadoraEditar extends javax.swing.JPanel {
             .addComponent(jPanelPantalla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(78, 78, 78)
-                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnRestaurar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(80, 80, 80))
@@ -306,7 +341,7 @@ public class panelComputadoraEditar extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 175, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
-                    .addComponent(btnCancelar))
+                    .addComponent(btnRestaurar))
                 .addGap(71, 71, 71))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -315,9 +350,9 @@ public class panelComputadoraEditar extends javax.swing.JPanel {
         this.actualizarComputadora();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-       this.restaurarCampos();
-    }//GEN-LAST:event_btnCancelarActionPerformed
+    private void btnRestaurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestaurarActionPerformed
+        this.restaurarCampos();
+    }//GEN-LAST:event_btnRestaurarActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.regresar();
@@ -325,9 +360,9 @@ public class panelComputadoraEditar extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnRegresar;
+    private javax.swing.JButton btnRestaurar;
     private javax.swing.JComboBox<CarreraDTO> carreraComboBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

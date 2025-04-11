@@ -25,7 +25,7 @@ public interface IInstitutoDAO {
     
     InstitutoDTO obtenerDTO(Long id) throws PersistenciaException;
     
-    Instituto editar(InstitutoDTOEditar instituto) throws PersistenciaException;
+    Instituto editar(Long id, InstitutoDTOEditar instituto) throws PersistenciaException;
     
     void eliminar(Long id) throws PersistenciaException;
 }

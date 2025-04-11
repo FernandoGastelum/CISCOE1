@@ -28,11 +28,15 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
 
     private final ILaboratorioNegocio laboratorioNegocio;
     private final IInstitutoNegocio institutoNegocio;
-    private Long idLaboratorio;
-    private LaboratorioDTO laboratorioDTO;
+    private final Long idLaboratorio;
+    private final LaboratorioDTO laboratorioDTO;
 
     /**
      * Creates new form panelListadoEstudiantes
+     * @param laboratorioNegocio
+     * @param institutoNegocio
+     * @param ID
+     * @throws Excepcion.NegocioException
      */
     public panelLaboratorioEditar(ILaboratorioNegocio laboratorioNegocio, IInstitutoNegocio institutoNegocio, Long ID) throws NegocioException {
         this.laboratorioNegocio = laboratorioNegocio;
@@ -65,18 +69,32 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
     private void editarLaboratorio() throws NegocioException, ParseException {
         LaboratorioDTOEditar laboratorioEditado = new LaboratorioDTOEditar();
 
-        laboratorioEditado.setNombre(txtNombre.getText());
-        laboratorioEditado.setInstitutoDTO((InstitutoDTO) cboInstituto.getSelectedItem());
-
-        if (!((String) cboApertura.getSelectedItem()).matches("^\\d{2}:\\d{2}$")
-                || !((String) cboCierre.getSelectedItem()).matches("^\\d{2}:\\d{2}$")) {
-            JOptionPane.showMessageDialog(this, "Las horas deben tener el formato HH:mm", "Formato incorrecto", JOptionPane.WARNING_MESSAGE);
+        if ("".equals(txtNombre.getText())) {
+            JOptionPane.showMessageDialog(null, "El nombre no puede estar vacio", "Nombre vacio", JOptionPane.ERROR_MESSAGE);
+            return;
         } else {
-            Calendar horaApertura = parseHora((String) cboApertura.getSelectedItem());
-            Calendar horaCierre = parseHora((String) cboCierre.getSelectedItem());
+            laboratorioEditado.setNombre(txtNombre.getText());
+        }
 
-            laboratorioEditado.setHoraApertura(horaApertura);
-            laboratorioEditado.setHoraCierre(horaCierre);
+        if (cboInstituto.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Debes elegir un instituto", "Sin instituto", JOptionPane.ERROR_MESSAGE);
+        } else {
+            laboratorioEditado.setInstitutoDTO((InstitutoDTO) cboInstituto.getSelectedItem());
+        }
+
+        if (cboApertura.getSelectedItem() == null || cboCierre.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Debes elegir las horas", "Sin horas", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (!((String) cboApertura.getSelectedItem()).matches("^\\d{2}:\\d{2}$")
+                    || !((String) cboCierre.getSelectedItem()).matches("^\\d{2}:\\d{2}$")) {
+                JOptionPane.showMessageDialog(this, "Las horas deben tener el formato HH:mm", "Formato incorrecto", JOptionPane.WARNING_MESSAGE);
+            } else {
+                Calendar horaApertura = parseHora((String) cboApertura.getSelectedItem());
+                Calendar horaCierre = parseHora((String) cboCierre.getSelectedItem());
+
+                laboratorioEditado.setHoraApertura(horaApertura);
+                laboratorioEditado.setHoraCierre(horaCierre);
+            }
         }
 
         if (verificarContrasenias(this.contraseniaFIeld, this.confirmarContraseniaField)) {
@@ -144,7 +162,7 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
             cboCierre.addItem(hora);
         }
     }
-    
+
     private void regresar() {
         panelLaboratoriosListado panelLaboratorio = new panelLaboratoriosListado(laboratorioNegocio, institutoNegocio);
         this.setLayout(new BorderLayout());
@@ -393,7 +411,6 @@ public class panelLaboratorioEditar extends javax.swing.JPanel {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             this.editarLaboratorio();
-            this.regresar();
         } catch (NegocioException | ParseException ex) {
             System.out.println("Error: " + ex.getMessage());
         }

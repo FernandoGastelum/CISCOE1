@@ -26,6 +26,8 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
 
     /**
      * Creates new form panelListadoEstudiantes
+     *
+     * @param carreraNegocio
      */
     public panelCarreraNuevo(ICarreraNegocio carreraNegocio) {
         this.carreraNegocio = carreraNegocio;
@@ -34,12 +36,29 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
 
     private void guardarCarrera() {
         CarreraDTOGuardar carreraDTO = new CarreraDTOGuardar();
-        carreraDTO.setNombreCarrera(txtNombre.getText());
-        carreraDTO.setTiempoMaximoDiario(Integer.valueOf(txtMinutosDiarios.getText()));
+        
+        if ("".equals(txtNombre.getText())) {
+            JOptionPane.showMessageDialog(null, "El nombre no puede estar vacio", "Nombre vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            carreraDTO.setNombreCarrera(txtNombre.getText());
+        }
+        
+        String texto = txtMinutosDiarios.getText().trim();
+        if (!texto.isEmpty()) {
+            try {
+                int minutos = Integer.parseInt(texto);
+                carreraDTO.setTiempoMaximoDiario(minutos);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Los minutos deben ser un número entero", "Minutos inválidos", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
         carreraDTO.setColor(this.getColorHex());
         try {
             CarreraDTO resultado = carreraNegocio.guardar(carreraDTO);
             JOptionPane.showMessageDialog(this, "Carrera guardada con éxito con el nombre: " + resultado.getNombreCarrera());
+            this.regresar();
         } catch (NegocioException e) {
             JOptionPane.showMessageDialog(this, "Error al guardar la carrera: " + e.getMessage());
         }
@@ -53,7 +72,7 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
             System.out.println("Color seleccionado: " + colorSeleccionado);
             System.out.println("Color en formato HEX: " + colorHex);
         } else {
-            System.out.println("No se seleccionó ningún color.");
+            JOptionPane.showMessageDialog(null, "No se seleccionó ningún color.", "Color vacío", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -68,7 +87,7 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
     private String convertirColorAHex(Color color) {
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
-    
+
     private void regresar() {
         panelCarrerasListado panelCarrera = new panelCarrerasListado(carreraNegocio);
         this.setLayout(new BorderLayout());
@@ -77,7 +96,7 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
         this.revalidate();
         this.repaint();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -250,7 +269,6 @@ public class panelCarreraNuevo extends javax.swing.JPanel {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         this.guardarCarrera();
-        this.regresar();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed

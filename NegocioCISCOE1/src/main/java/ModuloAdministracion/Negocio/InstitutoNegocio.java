@@ -99,9 +99,9 @@ public class InstitutoNegocio implements IInstitutoNegocio {
     }
 
     @Override
-    public InstitutoDTO editar(InstitutoDTOEditar instituto) throws NegocioException {
+    public InstitutoDTO editar(Long id, InstitutoDTOEditar instituto) throws NegocioException {
         try {
-            Instituto institutoEntidad = institutoDAO.editar(instituto);
+            Instituto institutoEntidad = institutoDAO.editar(id, instituto);
             return institutoDAO.obtenerDTO(institutoEntidad.getIdInstituto());
         } catch (PersistenciaException e) {
             throw new NegocioException("Ocurrio un error "+ e.getMessage());

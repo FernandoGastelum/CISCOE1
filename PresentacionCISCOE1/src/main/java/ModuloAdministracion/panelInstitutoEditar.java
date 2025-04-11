@@ -59,10 +59,26 @@ public class panelInstitutoEditar extends javax.swing.JPanel {
         this.txtAbreviatura.setText(InstitutoDTO.getNombreAbreviado());
     }
     private void editar(){
-        InstitutoDTOEditar institutoEditarDTO = new InstitutoDTOEditar(txtNombreOficial.getText(), txtAbreviatura.getText(), this.idInstituto);
+        InstitutoDTOEditar institutoEditarDTO = new InstitutoDTOEditar();
+        
+        if ("".equals(txtNombreOficial.getText())) {
+            JOptionPane.showMessageDialog(null, "El nombre no puede estar vacio", "Nombre vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            institutoEditarDTO.setNombreOficial(txtNombreOficial.getText());
+        }
+        
+        if ("".equals(txtAbreviatura.getText())) {
+            JOptionPane.showMessageDialog(null, "La abreviatura no puede estar vacio", "Abreviatura vacio", JOptionPane.ERROR_MESSAGE);
+            return;
+        } else {
+            institutoEditarDTO.setNombreAbreviado(txtAbreviatura.getText());
+        }
+        
         try {
-            InstitutoDTO resultado = institutoNegocio.editar(institutoEditarDTO);
+            InstitutoDTO resultado = institutoNegocio.editar(idInstituto, institutoEditarDTO);
             JOptionPane.showMessageDialog(this, "Instituto actualizado con éxito con el nombre: " + resultado.getNombreAbreviado());
+            this.regresar();
         } catch (NegocioException | HeadlessException e) {
             JOptionPane.showMessageDialog(this, "Error al actualizar el instituto: " + e.getMessage());
         }

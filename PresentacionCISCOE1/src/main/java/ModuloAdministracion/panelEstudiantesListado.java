@@ -67,6 +67,7 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
         ActionListener onEliminarClickListener = (ActionEvent e) -> {
             //Metodo para eliminar
             eliminar();
+            metodosIniciales();
         };
         int indiceColumnaEliminar = 4;
         modeloColumnas = this.tablaEstudiantes.getColumnModel();
@@ -96,8 +97,7 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
-                estudianteNegocio.eliminar(id); 
-                this.metodosIniciales(); 
+                estudianteNegocio.eliminar(id);
                 JOptionPane.showMessageDialog(this, "Estudiante eliminado con éxito con el id institucional: " + id);
             } catch (NegocioException e) {
                 JOptionPane.showMessageDialog(this, "Error al eliminar el estudiante: " + e.getMessage());

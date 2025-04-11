@@ -13,7 +13,9 @@ import java.util.List;
  */
 public interface IInstitutoNegocio {
     InstitutoDTO guardar(InstitutoDTOGuardar instituto) throws NegocioException;
-    InstitutoDTO editar(InstitutoDTOEditar instituto) throws NegocioException;
+    
+    InstitutoDTO editar(Long id, InstitutoDTOEditar instituto) throws NegocioException;
+    
     void eliminar(Long id) throws NegocioException;
     
     List<InstitutoDTO> obtener() throws NegocioException;
