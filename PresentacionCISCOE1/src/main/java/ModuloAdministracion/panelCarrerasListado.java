@@ -134,19 +134,20 @@ public class panelCarrerasListado extends javax.swing.JPanel {
     }
 
     private void agregarRegistrosTabla(List<CarreraTablaDTO> carrerasLista) {
-        if (carrerasLista == null) {
-            return;
-        }
+        
 
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaCarreras.getModel();
-        carrerasLista.forEach(row -> {
-            Object[] fila = new Object[3];
-            fila[0] = row.getIdCarrera();
-            fila[1] = row.getNombreCarrera();
-            fila[2] = row.getTiempoMaximoDiario();
-
-            modeloTabla.addRow(fila);
-        });
+        if(!carrerasLista.isEmpty()){
+            carrerasLista.forEach(row -> {
+                Object[] fila = new Object[3];
+                fila[0] = row.getIdCarrera();
+                fila[1] = row.getNombreCarrera();
+                fila[2] = row.getTiempoMaximoDiario();
+                
+                modeloTabla.addRow(fila);
+            });
+        } 
+        
     }
 
     /**

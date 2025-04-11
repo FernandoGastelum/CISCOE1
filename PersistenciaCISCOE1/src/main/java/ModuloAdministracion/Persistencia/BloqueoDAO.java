@@ -74,7 +74,7 @@ public class BloqueoDAO implements IBloqueoDAO{
                                                          """, Bloqueo.class);
         List<Bloqueo> resultado = query.getResultList();
         if(resultado.isEmpty()){
-            throw new PersistenciaException("No se encontraron resultados");
+            return null;
         }
         return query.getResultList();
     }

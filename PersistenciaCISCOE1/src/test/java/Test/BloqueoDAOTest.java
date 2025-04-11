@@ -170,10 +170,7 @@ public class BloqueoDAOTest {
         em.getTransaction().begin();
         em.createQuery("DELETE FROM Bloqueo").executeUpdate();
         em.getTransaction().commit();
-
-        assertThrows(PersistenciaException.class, () -> {
-            instance.obtener();
-        });
+        assertNull(instance.obtener());
     }
     
 }

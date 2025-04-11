@@ -42,6 +42,9 @@ public class BloqueoNegocio implements IBloqueoNegocio {
     public List<BloqueoDTO> obtener() throws NegocioException {
         try {
             List<Bloqueo> listaBloqueos = this.bloqueoDAO.obtener();
+            if(listaBloqueos == null){
+                return null;
+            }
             List<BloqueoDTO> dtos = new ArrayList<>();
             for (Bloqueo bloqueo : listaBloqueos) {
                 dtos.add(this.bloqueoDAO.obtenerDTO(bloqueo.getIdBloqueo()));
@@ -56,6 +59,9 @@ public class BloqueoNegocio implements IBloqueoNegocio {
     public List<BloqueoTablaDTO> obtenerTabla() throws NegocioException {
         try {
             List<Bloqueo> listaBloqueos = this.bloqueoDAO.obtener();
+            if(listaBloqueos==null){
+                return null;
+            }
             List<BloqueoDTO> dtos = new ArrayList<>();
             for (Bloqueo bloqueo : listaBloqueos) {
                 dtos.add(this.bloqueoDAO.obtenerDTO(bloqueo.getIdBloqueo()));

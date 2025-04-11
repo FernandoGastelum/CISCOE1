@@ -149,11 +149,10 @@ public class panelInstitutosListado extends javax.swing.JPanel {
     }
 
     private void agregarRegistrosTabla(List<InstitutoTablaDTO> institutosLista) {
-        if (institutosLista == null) {
-            return;
-        }
+        
 
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaInstitutos.getModel();
+        if(institutosLista!=null){
         institutosLista.forEach(row -> {
             Object[] fila = new Object[3];
             fila[0] = row.getIdInstituto();
@@ -161,7 +160,7 @@ public class panelInstitutosListado extends javax.swing.JPanel {
             fila[2] = row.getNombreAbreviado();
 
             modeloTabla.addRow(fila);
-        });
+        });}
     }
 
     /**

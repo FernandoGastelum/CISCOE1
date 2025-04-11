@@ -140,13 +140,12 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
     }
 
     private void agregarRegistrosTabla(List<LaboratorioTablaDTO> laboratoriossLista) {
-        if (laboratoriossLista == null) {
-            return;
-        }
+        
 
         SimpleDateFormat horaFormato = new SimpleDateFormat("HH:mm");
-
+        
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaLaboratorios.getModel();
+        if (laboratoriossLista != null) {
         laboratoriossLista.forEach(row -> {
             Object[] fila = new Object[4];
             fila[0] = row.getIdLaboratorio();
@@ -155,7 +154,8 @@ public class panelLaboratoriosListado extends javax.swing.JPanel {
             fila[3] = horaFormato.format(row.getHoraCierre().getTime());
 
             modeloTabla.addRow(fila);
-        });
+            });
+        }
     }
 
     /**

@@ -68,42 +68,50 @@ public class FrmDesbloqueoIniciado extends javax.swing.JFrame {
     }
     private void cargarMinutos() {
         Calendar horaInicio = reservaDTO.getHoraInicio();
-        int duracionMinutos = reservaDTO.getMinutos();
-
-        Calendar horaLimite = (Calendar) horaInicio.clone();
-        horaLimite.add(Calendar.MINUTE, duracionMinutos);
-
         Calendar horaActual = Calendar.getInstance();
+
+        // Convertir a minutos desde medianoche
+        int minutosInicio = horaInicio.get(Calendar.HOUR_OF_DAY) * 60 + horaInicio.get(Calendar.MINUTE);
+        int minutosActual = horaActual.get(Calendar.HOUR_OF_DAY) * 60 + horaActual.get(Calendar.MINUTE);
+
+        int duracionMinutos = reservaDTO.getMinutos();
+        int minutosLimite = minutosInicio + duracionMinutos;
+
+        // Convertimos minutos límite en un Calendar para mostrar la hora límite
+        Calendar horaLimite = (Calendar) horaInicio.clone();
+        horaLimite.set(Calendar.HOUR_OF_DAY, minutosLimite / 60);
+        horaLimite.set(Calendar.MINUTE, minutosLimite % 60);
+
         System.out.println("Hora de inicio: " + horaInicio.getTime());
         System.out.println("Duración minutos: " + duracionMinutos);
         System.out.println("Hora límite: " + horaLimite.getTime());
         System.out.println("Hora actual: " + horaActual.getTime());
-        if (horaActual.after(horaLimite)) {
-            JOptionPane.showMessageDialog(this, "El tiempo de la reserva ya ha expirado. Se liberará la computadora.");
-            liberarReserva();
-            cerrar();
-            return;
-        }
 
-        int tiempoTotalSegundos = (int) ((horaLimite.getTimeInMillis() - horaActual.getTimeInMillis()) / 1000);
+        if (minutosActual >= minutosLimite) {
+            JOptionPane.showMessageDialog(this, "El tiempo de la reserva ya ha expirado. Se liberará la computadora.");
+            this.liberarReserva();
+        }else{
+            timer(minutosLimite, minutosActual);
+        }
+        
+    }
+    private void timer(int minutosLimite, int minutosActual){
+        int segundosRestantes = (minutosLimite - minutosActual) * 60;
 
         Timer timer = new Timer(1000, new ActionListener() {
-            int segundosRestantes = tiempoTotalSegundos;
+            int segundos = segundosRestantes;
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (segundosRestantes > 0) {
-                    segundosRestantes--;
-
-                    int minutos = segundosRestantes / 60;
-                    int segundos = segundosRestantes % 60;
-
-                    tiempoLabel.setText(String.format("Tiempo Restante: %02d:%02d", minutos, segundos));
+                if (segundos > 0) {
+                    segundos--;
+                    int min = segundos / 60;
+                    int seg = segundos % 60;
+                    tiempoLabel.setText(String.format("Tiempo Restante: %02d:%02d", min, seg));
                 } else {
                     ((Timer) e.getSource()).stop();
                     JOptionPane.showMessageDialog(null, "Tiempo agotado. Se liberará la computadora.");
                     liberarReserva();
-                    cerrar();
                 }
             }
         });
@@ -121,6 +129,7 @@ public class FrmDesbloqueoIniciado extends javax.swing.JFrame {
             SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
             String soloHora = formatoHora.format(resultado.getHoraFin().getTime());
             JOptionPane.showMessageDialog(this, "Reserva liberada con éxito con hora de fin: " + soloHora);
+            this.dispose();
         } catch (NegocioException ex) {
             System.out.println("Error: " + ex.getMessage());
         } finally {

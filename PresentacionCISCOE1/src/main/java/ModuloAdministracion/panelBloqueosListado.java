@@ -151,28 +151,29 @@ public class panelBloqueosListado extends javax.swing.JPanel {
 
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaBloqueos.getModel();
         modeloTabla.setRowCount(0); 
+        if(bloqueosLista !=null){
+            for (BloqueoTablaDTO row : bloqueosLista) {
+                Object[] fila = new Object[7];
+                fila[0] = row.getIdBloqueo();
+                Calendar calendarioBloqueo = row.getFechaBloqueo();
+                Calendar calendarioLiberacion = row.getFechaLiberacion();
+                SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+                String fechaBloqueo = formatoFecha.format(calendarioBloqueo.getTime());
+                if(calendarioLiberacion==null){
+                    fila[4] = row.getFechaLiberacion();
+                }else{
+                    String fechaLiberacion = formatoFecha.format(calendarioLiberacion.getTime());
+                    fila[4] = fechaLiberacion;
+                }
+                fila[1] = fechaBloqueo;
+                fila[2] = row.getMotivo();
+                fila[3] = row.getIdInstitucional();
 
-        for (BloqueoTablaDTO row : bloqueosLista) {
-            Object[] fila = new Object[7];
-            fila[0] = row.getIdBloqueo();
-            Calendar calendarioBloqueo = row.getFechaBloqueo();
-            Calendar calendarioLiberacion = row.getFechaLiberacion();
-            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-            String fechaBloqueo = formatoFecha.format(calendarioBloqueo.getTime());
-            if(calendarioLiberacion==null){
-                fila[4] = row.getFechaLiberacion();
-            }else{
-                String fechaLiberacion = formatoFecha.format(calendarioLiberacion.getTime());
-                fila[4] = fechaLiberacion;
+                fila[5] = "Editar";
+                fila[6] = (row.getFechaLiberacion() == null) ? "Liberar" : "Eliminar";
+
+                modeloTabla.addRow(fila);
             }
-            fila[1] = fechaBloqueo;
-            fila[2] = row.getMotivo();
-            fila[3] = row.getIdInstitucional();
-            
-            fila[5] = "Editar";
-            fila[6] = (row.getFechaLiberacion() == null) ? "Liberar" : "Eliminar";
-
-            modeloTabla.addRow(fila);
         }
     }
 

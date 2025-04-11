@@ -165,16 +165,18 @@ public class panelComputadorasListado extends javax.swing.JPanel {
         }
 
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaComputadoras.getModel();
-        computadorasLista.forEach(row -> {
-            Object[] fila = new Object[5];
-            fila[0] = row.getIdComputadora();
-            fila[1] = row.getNumeroMaquina();
-            fila[2] = row.getDireccionIp();
-            fila[3] = row.getEstatus();
-            fila[4] = row.getTipo();
-
-            modeloTabla.addRow(fila);
-        });
+        if(!computadorasLista.isEmpty()) {
+            computadorasLista.forEach(row -> {
+                Object[] fila = new Object[5];
+                fila[0] = row.getIdComputadora();
+                fila[1] = row.getNumeroMaquina();
+                fila[2] = row.getDireccionIp();
+                fila[3] = row.getEstatus();
+                fila[4] = row.getTipo();
+                
+                modeloTabla.addRow(fila);
+            });
+        }
     }
     private void agregar(){
         panelComputadoraNuevo panelComputadora = new panelComputadoraNuevo(computadoraNegocio,carreraNegocio, laboratorioNegocio,reservaNegocio);

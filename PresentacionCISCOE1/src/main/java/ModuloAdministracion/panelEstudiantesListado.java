@@ -131,13 +131,12 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
     }
 
     private void agregarRegistrosTabla(List<EstudianteTablaDTO> estudiantesLista) {
-        if (estudiantesLista == null) {
-            return;
-        }
+       
 
         this.estudiantesLista = estudiantesLista;
 
         DefaultTableModel modeloTabla = (DefaultTableModel) this.tablaEstudiantes.getModel();
+        if(!estudiantesLista.isEmpty()){
         estudiantesLista.forEach(row -> {
             Object[] fila = new Object[3];
             fila[0] = row.getIdInstitucional();
@@ -145,7 +144,7 @@ public class panelEstudiantesListado extends javax.swing.JPanel {
             fila[2] = row.getEstatusInscripcion();
 
             modeloTabla.addRow(fila);
-        });
+        });}
     }
 
     /**

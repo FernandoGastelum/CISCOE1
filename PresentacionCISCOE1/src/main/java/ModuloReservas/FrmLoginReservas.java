@@ -92,6 +92,9 @@ public class FrmLoginReservas extends javax.swing.JFrame {
         Boolean bloqueo = false;
         try {
             List<BloqueoDTO> listaBloqueos = bloqueoNegocio.obtener();
+            if(listaBloqueos==null){
+                return bloqueo;
+            }
             for (BloqueoDTO listaBloqueo : listaBloqueos) {
                 if(listaBloqueo.getEstudiante().getIdEstudiante().equals(idEstudiante)){
                     if(listaBloqueo.getFechaLiberacion()==null){
