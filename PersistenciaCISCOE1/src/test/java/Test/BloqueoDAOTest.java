@@ -61,12 +61,21 @@ public class BloqueoDAOTest {
     public void tearDown() throws PersistenciaException {
         limpiarRegistros();
         limpiarEstudiantes();
+        limpiarCarreras();
     }
     private void limpiarEstudiantes()throws PersistenciaException{
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
 
         entity.createQuery("DELETE FROM Estudiante").executeUpdate();
+
+        entity.getTransaction().commit();
+    }
+    private void limpiarCarreras()throws PersistenciaException{
+        EntityManager entity = em.crearEntityManager();
+        entity.getTransaction().begin();
+
+        entity.createQuery("DELETE FROM Carrera").executeUpdate();
 
         entity.getTransaction().commit();
     }

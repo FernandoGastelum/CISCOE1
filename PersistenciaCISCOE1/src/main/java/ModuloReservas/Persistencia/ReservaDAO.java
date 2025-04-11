@@ -43,6 +43,9 @@ public class ReservaDAO implements IReservaDAO{
     }
     @Override
     public Reserva guardar(ReservaDTOGuardar reserva) throws PersistenciaException {
+        if(reserva == null){
+            throw new PersistenciaException("La reserva esta vacia");
+        }
         EntityManager entity = em.crearEntityManager();
         entity.getTransaction().begin();
         
@@ -74,7 +77,8 @@ public class ReservaDAO implements IReservaDAO{
                                                          SELECT r
                                                          FROM Reserva r
                                                          """, Reserva.class);
-        if(query.getResultList()==null){
+        List<Reserva> resultado = query.getResultList();
+        if(resultado.isEmpty()){
             throw new PersistenciaException("No se encontraron resultados");
         }
         return query.getResultList();
