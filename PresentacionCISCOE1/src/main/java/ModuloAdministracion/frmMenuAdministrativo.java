@@ -76,6 +76,8 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
         OpcionLaboratoriosListado = new javax.swing.JMenuItem();
         jMenuInstituto = new javax.swing.JMenu();
         OpcionInstitutosListado = new javax.swing.JMenuItem();
+        jMenuReporte = new javax.swing.JMenu();
+        OpcionGenerarReporte = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -198,6 +200,19 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenuInstituto);
 
+        jMenuReporte.setText("Reporte");
+        jMenuReporte.setFont(new java.awt.Font("Segoe UI", 0, 40)); // NOI18N
+
+        OpcionGenerarReporte.setText("Generar reporte");
+        OpcionGenerarReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionGenerarReporteActionPerformed(evt);
+            }
+        });
+        jMenuReporte.add(OpcionGenerarReporte);
+
+        jMenuBar1.add(jMenuReporte);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -268,6 +283,15 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
         jPanelCambiante.revalidate();
         jPanelCambiante.repaint();
     }//GEN-LAST:event_OpcionInstitutosListadoActionPerformed
+
+    private void OpcionGenerarReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionGenerarReporteActionPerformed
+        panelReporte panelReporte = new panelReporte(laboratorioNegocio);
+        jPanelCambiante.setLayout(new BorderLayout());
+        jPanelCambiante.removeAll();
+        jPanelCambiante.add(panelReporte, BorderLayout.CENTER);
+        jPanelCambiante.revalidate();
+        jPanelCambiante.repaint();
+    }//GEN-LAST:event_OpcionGenerarReporteActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -275,6 +299,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     private javax.swing.JMenuItem OpcionCarrerasListado;
     private javax.swing.JMenuItem OpcionComputadorasListado;
     private javax.swing.JMenuItem OpcionEstudiantesListado;
+    private javax.swing.JMenuItem OpcionGenerarReporte;
     private javax.swing.JMenuItem OpcionInstitutosListado;
     private javax.swing.JMenuItem OpcionLaboratoriosListado;
     private javax.swing.JLabel jLabel1;
@@ -285,6 +310,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuEstudiantes;
     private javax.swing.JMenu jMenuInstituto;
     private javax.swing.JMenu jMenuLaboratorio;
+    private javax.swing.JMenu jMenuReporte;
     private javax.swing.JPanel jPanelCambiante;
     private javax.swing.JPanel jPanelPantalla;
     // End of variables declaration//GEN-END:variables
