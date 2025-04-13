@@ -6,6 +6,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -28,11 +29,18 @@ public class GeneradorReportePDF {
         table.addCell("Hora Apertura");
         table.addCell("Hora Cierre");
 
+        // Formato de hora (24 horas)
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
         for (LaboratorioTablaDTO lab : laboratorios) {
             table.addCell(String.valueOf(lab.getIdLaboratorio()));
             table.addCell(lab.getNombre());
-            table.addCell(lab.getHoraApertura().toString());
-            table.addCell(lab.getHoraCierre().toString());
+
+            String horaApertura = sdf.format(lab.getHoraApertura().getTime());
+            String horaCierre = sdf.format(lab.getHoraCierre().getTime());
+
+            table.addCell(horaApertura);
+            table.addCell(horaCierre);
         }
 
         document.add(table);

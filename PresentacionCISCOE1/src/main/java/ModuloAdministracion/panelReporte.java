@@ -101,6 +101,7 @@ public class panelReporte extends javax.swing.JPanel {
     private void btnGenerarReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarReporteActionPerformed
         try {
             GeneradorReportePDF.generar(laboratorioNegocio.obtenerTabla(), "reporte_laboratorios.pdf");
+            JOptionPane.showMessageDialog(this, "Reporte generado con éxito");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al obtener los datos: " + ex.getMessage());
         }
