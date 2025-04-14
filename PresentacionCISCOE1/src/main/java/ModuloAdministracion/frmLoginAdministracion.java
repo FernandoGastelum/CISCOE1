@@ -18,6 +18,8 @@ import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Interfaz.IEstudianteDAO;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import ModuloAdministracion.Interfaz.IHorarioDAO;
+import ModuloAdministracion.Interfaz.IHorarioNegocio;
 import ModuloAdministracion.Interfaz.IInstitutoDAO;
 import ModuloAdministracion.Interfaz.IInstitutoNegocio;
 import ModuloAdministracion.Interfaz.ILaboratorioDAO;
@@ -26,6 +28,7 @@ import ModuloAdministracion.Negocio.BloqueoNegocio;
 import ModuloAdministracion.Negocio.CarreraNegocio;
 import ModuloAdministracion.Negocio.ComputadoraNegocio;
 import ModuloAdministracion.Negocio.EstudianteNegocio;
+import ModuloAdministracion.Negocio.HorarioNegocio;
 import ModuloAdministracion.Negocio.InstitutoNegocio;
 import ModuloAdministracion.Negocio.LaboratorioNegocio;
 import ModuloAdministracion.Persistencia.BloqueoDAO;
@@ -33,6 +36,7 @@ import ModuloAdministracion.Persistencia.CarreraDAO;
 import ModuloAdministracion.Persistencia.ComputadoraDAO;
 import ModuloAdministracion.Persistencia.EntityManagerDAO;
 import ModuloAdministracion.Persistencia.EstudianteDAO;
+import ModuloAdministracion.Persistencia.HorarioDAO;
 import ModuloAdministracion.Persistencia.InstitutoDAO;
 import ModuloAdministracion.Persistencia.LaboratorioDAO;
 import ModuloReservas.Interfaz.IReservaDAO;
@@ -58,7 +62,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
     private final ICarreraNegocio carreraNegocio;
     private final IBloqueoNegocio bloqueoNegocio;
     private final IReservaNegocio reservaNegocio;
-    
+    private final IHorarioNegocio horarioNegocio;
     /**
      * Creates new form frmLoginAdministracion
      * @param laboratorioDAO
@@ -70,7 +74,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
      */
     public frmLoginAdministracion(ILaboratorioDAO laboratorioDAO, IInstitutoDAO institutoDAO, 
             IEstudianteDAO estudianteDAO, IComputadoraDAO computadoraDAO, 
-            ICarreraDAO carreraDAO, IBloqueoDAO bloqueoDAO,IReservaNegocio reservaNegocio) {
+            ICarreraDAO carreraDAO, IBloqueoDAO bloqueoDAO,IReservaNegocio reservaNegocio,IHorarioNegocio horarioNegocio) {
         this.laboratorioNegocio = new LaboratorioNegocio(laboratorioDAO);
         this.institutoNegocio = new InstitutoNegocio(institutoDAO);
         this.estudianteNegocio = new EstudianteNegocio(estudianteDAO);
@@ -78,6 +82,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         this.carreraNegocio = new CarreraNegocio(carreraDAO);
         this.bloqueoNegocio = new BloqueoNegocio(bloqueoDAO);
         this.reservaNegocio = reservaNegocio;
+        this.horarioNegocio = horarioNegocio;
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
@@ -304,7 +309,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
             this.dispose();
             frmMenuAdministrativo menuAdministrativo = new frmMenuAdministrativo(
                     laboratorioNegocio, institutoNegocio, estudianteNegocio, 
-                    computadoraNegocio, carreraNegocio, bloqueoNegocio,reservaNegocio);
+                    computadoraNegocio, carreraNegocio, bloqueoNegocio,reservaNegocio,horarioNegocio);
             menuAdministrativo.setVisible(true);
         }else{
             JOptionPane.showMessageDialog(rootPane, "El usuario con el id: "+txtUsuario.getText()+" no existe");
@@ -328,6 +333,8 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
                 IBloqueoDAO bloqueoNegocio = new BloqueoDAO(entityManager);
                 IReservaDAO reservaDAO = new ReservaDAO(entityManager);
                 IReservaNegocio reservaNegocio = new ReservaNegocio(reservaDAO);
+                IHorarioDAO horarioDAO = new HorarioDAO(entityManager);
+                IHorarioNegocio horarioNegocio = new HorarioNegocio(horarioDAO);
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -354,7 +361,7 @@ public class frmLoginAdministracion extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmLoginAdministracion(laboratorioDAO, institutoDAO, estudianteDAO, computadoraNegocio, carreraNegocio, bloqueoNegocio,reservaNegocio).setVisible(true);
+                new frmLoginAdministracion(laboratorioDAO, institutoDAO, estudianteDAO, computadoraNegocio, carreraNegocio, bloqueoNegocio,reservaNegocio,horarioNegocio).setVisible(true);
             }
         });
     }

@@ -1,6 +1,7 @@
 package Utilidades;
 
 import DTOs.LaboratorioTablaDTO;
+import DTOs.ReporteTablaDTO;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class GeneradorReportePDF {
 
-    public static void generar(List<LaboratorioTablaDTO> laboratorios, String ruta) throws Exception {
+    public static void generar(List<ReporteTablaDTO> laboratorios, String ruta) throws Exception {
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(ruta));
         document.open();
@@ -23,24 +24,22 @@ public class GeneradorReportePDF {
         document.add(new Paragraph("Reporte de Laboratorios"));
         document.add(new Paragraph(" "));
 
-        PdfPTable table = new PdfPTable(4);
-        table.addCell("ID");
-        table.addCell("Nombre");
-        table.addCell("Hora Apertura");
-        table.addCell("Hora Cierre");
+        PdfPTable table = new PdfPTable(5);
+        table.addCell("Laboratorio");
+        table.addCell("Fecha");
+        table.addCell("Tiempo de Servicio");
+        table.addCell("Tiempo de Uso");
+        table.addCell("Tiempo Sin Uso");
 
         // Formato de hora (24 horas)
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        for (LaboratorioTablaDTO lab : laboratorios) {
-            table.addCell(String.valueOf(lab.getIdLaboratorio()));
-            table.addCell(lab.getNombre());
-
-            String horaApertura = sdf.format(lab.getHoraApertura().getTime());
-            String horaCierre = sdf.format(lab.getHoraCierre().getTime());
-
-            table.addCell(horaApertura);
-            table.addCell(horaCierre);
+        for (ReporteTablaDTO lab : laboratorios) {
+            table.addCell(String.valueOf(lab.getNombreLaboratorio()));
+            table.addCell(sdf.format(lab.getFecha().getTime()));
+            table.addCell(String.valueOf(lab.getTiempoServicio()));
+            table.addCell(String.valueOf(lab.getTiempoUso()));
+            table.addCell(String.valueOf(lab.getTiempoSinUso()));
         }
 
         document.add(table);

@@ -6,9 +6,12 @@ package ModuloAdministracion.Interfaz;
 
 import DTOs.HorarioDTO;
 import DTOs.HorarioDTOGuardar;
+import DTOs.ReporteTablaDTO;
 import Entidades.Horario;
 import Excepcion.PersistenciaException;
+import java.util.Calendar;
 import java.util.List;
+import javax.persistence.PersistenceException;
 
 /**
  *
@@ -25,4 +28,6 @@ public interface IHorarioDAO {
     HorarioDTO obtenerDTO(Long id) throws PersistenciaException;
     
     Horario obtenerHorarioDelDia(Long idLaboratorio) throws PersistenciaException;
+    
+    List<ReporteTablaDTO> obtenerReporte(Calendar fechaInicio, Calendar fechaFin)throws PersistenceException;
 }

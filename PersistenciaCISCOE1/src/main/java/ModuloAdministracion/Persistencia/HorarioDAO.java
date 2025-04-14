@@ -6,20 +6,30 @@ package ModuloAdministracion.Persistencia;
 
 import DTOs.HorarioDTO;
 import DTOs.HorarioDTOGuardar;
+import DTOs.ReporteTablaDTO;
 import Entidades.Horario;
 import Entidades.Laboratorio;
+import Entidades.Reserva;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IEntityManager;
 import ModuloAdministracion.Interfaz.IHorarioDAO;
 import ModuloAdministracion.Interfaz.ILaboratorioDAO;
+import ModuloAdministracion.Persistencia.LaboratorioDAO;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
@@ -103,6 +113,52 @@ public class HorarioDAO implements IHorarioDAO {
         } catch (NoResultException e) {
             return null;
         }
+    }
+    @Override
+    public List<ReporteTablaDTO> obtenerReporte(Calendar fechaInicio, Calendar fechaFin)throws PersistenceException{
+        EntityManager entity = em.crearEntityManager();
+        List<ReporteTablaDTO> resultados = new ArrayList<>();
+
+        try {
+            String sql = "SELECT l.nombre AS laboratorio, h.fecha, " +
+            "TIMESTAMPDIFF(MINUTE, h.hora_apertura, h.hora_cierre) AS tiempo_servicio, " +
+            "IFNULL(SUM(r.minutos), 0) AS tiempo_uso, " +
+            "TIMESTAMPDIFF(MINUTE, h.hora_apertura, h.hora_cierre) - IFNULL(SUM(r.minutos), 0) AS tiempo_sin_uso " +
+            "FROM horarios h " +
+            "JOIN laboratorios l ON h.id_laboratorio = l.id_laboratorio " +
+            "LEFT JOIN reservas r ON h.id_horario = r.id_horario " +
+            "WHERE h.fecha BETWEEN ? AND ? " +
+            "GROUP BY l.nombre, h.fecha, h.hora_apertura, h.hora_cierre " +
+            "ORDER BY l.nombre, h.fecha";
+
+        Query query = entity.createNativeQuery(sql);
+        query.setParameter(1, fechaInicio.getTime());  
+        query.setParameter(2, fechaFin.getTime());
+
+            List<Object[]> rows = query.getResultList();
+
+            for (Object[] row : rows) {
+                String nombreLaboratorio = (String) row[0];
+                Date fechaSQL = (Date)row[1];
+                Calendar fecha = Calendar.getInstance();
+                fecha.setTime(fechaSQL);
+                int tiempoServicio = ((Number) row[2]).intValue();
+                int tiempoUso = ((Number) row[3]).intValue();
+                int tiempoSinUso = ((Number) row[4]).intValue();
+
+                ReporteTablaDTO dto = new ReporteTablaDTO(
+                    nombreLaboratorio, fecha, tiempoServicio, tiempoUso, tiempoSinUso
+                );
+
+                resultados.add(dto);
+            }
+
+        } finally {
+            entity.close();
+        }
+
+        return resultados;
+    
     }
 
     @Override

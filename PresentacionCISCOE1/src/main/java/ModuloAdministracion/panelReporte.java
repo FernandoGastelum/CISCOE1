@@ -1,7 +1,12 @@
 package ModuloAdministracion;
 
+import ModuloAdministracion.Interfaz.IHorarioNegocio;
 import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
 import Utilidades.GeneradorReportePDF;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 /**
@@ -10,16 +15,47 @@ import javax.swing.JOptionPane;
  */
 public class panelReporte extends javax.swing.JPanel {
 
-    private final ILaboratorioNegocio laboratorioNegocio;
+    private final IHorarioNegocio horarioNegocio;
+    private Calendar fechaInicio;
+    private Calendar fechaFin;
 
     /**
      * Creates new form panelListadoEstudiantes
      *
      * @param laboratorioNegocio
      */
-    public panelReporte(ILaboratorioNegocio laboratorioNegocio) {
-        this.laboratorioNegocio = laboratorioNegocio;
+    public panelReporte(IHorarioNegocio horarioNegocio) {
+        this.horarioNegocio = horarioNegocio;
+        
         initComponents();
+    }
+    private void generarReporta(){
+        try {
+            if(this.fechaInicioDatePicker.getDate()==null||this.fechaFinDatePicker.getDate()==null){
+                JOptionPane.showMessageDialog(this, "Las fechas no pueden estar vacias");
+            }
+            else{
+                this.convertirFecha();
+                GeneradorReportePDF.generar(horarioNegocio.obtenerReporte(fechaInicio, fechaFin), "reporte_laboratorios.pdf");
+                JOptionPane.showMessageDialog(this, "Reporte generado con éxito");
+                
+            }
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al obtener los datos: " + ex.getMessage());
+            System.out.println("Error al obtener los datos: " + ex.getMessage());
+        }
+    }
+    private void convertirFecha(){
+        LocalDate fechaInicioLocal = this.fechaInicioDatePicker.getDate();
+        LocalDate fechaFinLocal = this.fechaFinDatePicker.getDate();
+        Date fechaInicioDate = Date.from(fechaInicioLocal.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date fechaFinDate = Date.from(fechaFinLocal.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        fechaInicio = Calendar.getInstance();
+        fechaFin = Calendar.getInstance();
+        fechaInicio.setTime(fechaInicioDate);
+        fechaFin.setTime(fechaFinDate);
+        
     }
 
     /**
@@ -35,6 +71,10 @@ public class panelReporte extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         btnGenerarReporte = new javax.swing.JButton();
+        fechaInicioDatePicker = new com.github.lgooddatepicker.components.DatePicker();
+        fechaFinDatePicker = new com.github.lgooddatepicker.components.DatePicker();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(35, 35, 35));
 
@@ -74,6 +114,14 @@ public class panelReporte extends javax.swing.JPanel {
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Fecha Inicio");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Fecha Fin");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -83,7 +131,15 @@ public class panelReporte extends javax.swing.JPanel {
                 .addGap(638, 638, 638)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnGenerarReporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnGenerarReporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fechaInicioDatePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(fechaFinDatePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(502, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -92,26 +148,33 @@ public class panelReporte extends javax.swing.JPanel {
                 .addComponent(jPanelPantalla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(99, 99, 99)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 339, Short.MAX_VALUE)
+                .addGap(76, 76, 76)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fechaInicioDatePicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fechaFinDatePicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 198, Short.MAX_VALUE)
                 .addComponent(btnGenerarReporte)
                 .addGap(295, 295, 295))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGenerarReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarReporteActionPerformed
-        try {
-            GeneradorReportePDF.generar(laboratorioNegocio.obtenerTabla(), "reporte_laboratorios.pdf");
-            JOptionPane.showMessageDialog(this, "Reporte generado con éxito");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al obtener los datos: " + ex.getMessage());
-        }
+        this.generarReporta();
     }//GEN-LAST:event_btnGenerarReporteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGenerarReporte;
+    private com.github.lgooddatepicker.components.DatePicker fechaFinDatePicker;
+    private com.github.lgooddatepicker.components.DatePicker fechaInicioDatePicker;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanelPantalla;
     // End of variables declaration//GEN-END:variables
 }

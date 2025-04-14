@@ -6,13 +6,16 @@ package ModuloAdministracion.Negocio;
 
 import DTOs.HorarioDTO;
 import DTOs.HorarioDTOGuardar;
+import DTOs.ReporteTablaDTO;
 import Entidades.Horario;
 import Excepcion.NegocioException;
 import Excepcion.PersistenciaException;
 import ModuloAdministracion.Interfaz.IHorarioDAO;
 import ModuloAdministracion.Interfaz.IHorarioNegocio;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import javax.persistence.PersistenceException;
 
 /**
  *
@@ -87,6 +90,15 @@ public class HorarioNegocio implements IHorarioNegocio {
             return null;
         } catch (PersistenciaException e) {
             throw new NegocioException("Error " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ReporteTablaDTO> obtenerReporte(Calendar fechaInicio, Calendar fechaFin) throws NegocioException {
+        try {
+            return horarioDAO.obtenerReporte(fechaInicio, fechaFin);
+        } catch (PersistenceException e) {
+            throw new NegocioException("Error: "+e.getMessage());
         }
     }
 }

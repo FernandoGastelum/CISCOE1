@@ -8,6 +8,7 @@ import ModuloAdministracion.Interfaz.IBloqueoNegocio;
 import ModuloAdministracion.Interfaz.ICarreraNegocio;
 import ModuloAdministracion.Interfaz.IComputadoraNegocio;
 import ModuloAdministracion.Interfaz.IEstudianteNegocio;
+import ModuloAdministracion.Interfaz.IHorarioNegocio;
 import ModuloAdministracion.Interfaz.IInstitutoNegocio;
 import ModuloAdministracion.Interfaz.ILaboratorioNegocio;
 import ModuloReservas.Interfaz.IReservaNegocio;
@@ -26,6 +27,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     private final ICarreraNegocio carreraNegocio;
     private final IBloqueoNegocio bloqueoNegocio;
     private final IReservaNegocio reservaNegocio;
+    private final IHorarioNegocio horarioNegocio;
     
     /**
      * Creates new form frmLoginPresentacion
@@ -39,7 +41,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     public frmMenuAdministrativo(ILaboratorioNegocio laboratorioNegocio, 
             IInstitutoNegocio institutoNegocio, IEstudianteNegocio estudianteNegocio, 
             IComputadoraNegocio computadoraNegocio, ICarreraNegocio carreraNegocio, 
-            IBloqueoNegocio bloqueoNegocio,IReservaNegocio reservaNegocio) {
+            IBloqueoNegocio bloqueoNegocio,IReservaNegocio reservaNegocio, IHorarioNegocio horarioNegocio) {
         this.laboratorioNegocio = laboratorioNegocio;
         this.institutoNegocio = institutoNegocio;
         this.estudianteNegocio = estudianteNegocio;
@@ -47,6 +49,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
         this.carreraNegocio = carreraNegocio;
         this.bloqueoNegocio = bloqueoNegocio;
         this.reservaNegocio = reservaNegocio;
+        this.horarioNegocio = horarioNegocio;
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
@@ -285,7 +288,7 @@ public class frmMenuAdministrativo extends javax.swing.JFrame {
     }//GEN-LAST:event_OpcionInstitutosListadoActionPerformed
 
     private void OpcionGenerarReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionGenerarReporteActionPerformed
-        panelReporte panelReporte = new panelReporte(laboratorioNegocio);
+        panelReporte panelReporte = new panelReporte(horarioNegocio);
         jPanelCambiante.setLayout(new BorderLayout());
         jPanelCambiante.removeAll();
         jPanelCambiante.add(panelReporte, BorderLayout.CENTER);
